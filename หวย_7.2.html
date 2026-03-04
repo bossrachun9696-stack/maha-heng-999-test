@@ -1,0 +1,2152 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="มหาเฮง 99">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="icon" type="image/png" href="icon.png">
+    
+    <title>มหาเฮง 99 - Ultimate Pro V20 (Fixed Save & Size)</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Charmonman:wght@400;700&family=Fahkwang:wght@400;600;700&family=Itim&family=Kanit:wght@300;400;600;900&family=KoHo:wght@400;600;700&family=Mali:wght@400;600;700&family=Pattaya&family=Prompt:wght@400;600;900&family=Sriracha&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --grid-bg-1: #ffffff; --grid-bg-2: #f0f0f0; --grid-border-color: rgba(0,0,0,0.1); --grid-border-width: 1px; --grid-shape: 12px;
+            --grid-shadow-dist: 3px; --grid-shadow-blur: 6px; --grid-shadow-dark: #a3a3a3; --grid-shadow-light: #ffffff;
+            --grid-font-family: 'Kanit', sans-serif; --grid-text-color: #333333; --grid-font-size: 1.6rem; --grid-font-weight: 900;
+            --grid-text-stroke-color: transparent; --grid-text-stroke-width: 0px;
+            --label-bg: #ff4757; --label-text: #ffffff; --label-border: transparent; --label-shape: 5px; --label-scale: 1;
+            
+            /* Floating Boxes Defaults */
+            --p-font: 'Mali', sans-serif; --p-color: #333; --p-size: 1.8rem; --p-weight: 900; --p-stroke: transparent; --p-stroke-w: 0px;
+        }
+
+        body { margin: 0; background: #fdf2ad; font-family: 'Kanit', sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 80px; user-select: none; -webkit-tap-highlight-color: transparent; }
+
+        /* Login Screen */
+        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow-y: auto; padding: 20px; box-sizing: border-box; }
+        #login-screen::-webkit-scrollbar { display: none; }
+        .login-card { background: white; width: 100%; max-width: 450px; padding: 30px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); text-align: center; }
+        .app-logo { font-size: 3rem; margin-bottom: 10px; display: block; }
+        .app-title { font-size: 2rem; font-weight: 900; background: linear-gradient(45deg, #FF6B6B, #4D96FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 5px; }
+        .trial-status { font-size: 0.9rem; color: #ff4757; font-weight: bold; margin-bottom: 10px; display: block; background: #fff0f0; padding: 5px; border-radius: 5px; }
+        .feature-list { text-align: left; margin: 20px 0; font-size: 0.85rem; color: #555; background: #f8f9fa; padding: 15px; border-radius: 10px; line-height: 1.6; }
+        .contact-box { background: #e3f2fd; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 0.9rem; color: #1565c0; text-align: center; border: 1px solid #90caf9; }
+        .contact-row { margin-bottom: 5px; font-weight: bold; }
+        .login-input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 50px; text-align: center; font-family: 'Kanit'; font-size: 1.1rem; outline: none; transition: 0.3s; margin-bottom: 10px; box-sizing: border-box; }
+        .login-input:focus { border-color: #4D96FF; }
+        .btn-main { width: 100%; padding: 12px; border: none; border-radius: 50px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-bottom: 10px; font-family: 'Kanit'; transition: 0.2s; }
+        .btn-login { background: #4D96FF; color: rgb(3, 3, 3); box-shadow: 0 4px 15px rgba(77, 150, 255, 0.3); }
+        .btn-trial { background: #2ed573; color: rgb(26, 25, 25); box-shadow: 0 4px 15px rgba(46, 213, 115, 0.3); }
+        .btn-main:active { transform: scale(0.95); }
+
+        /* Main App */
+        #main-content { display: none; width: 100%; flex-direction: column; align-items: center; }
+        .board-nav { width: 100%; max-width: 800px; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; box-sizing: border-box; background: rgba(255,255,255,0.8); border-radius: 20px; margin-top: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .nav-btn { background: #b84cff; color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); display: flex; justify-content: center; align-items: center; transition: 0.2s; }
+        .nav-btn:active { transform: scale(0.9); }
+        .nav-info { font-weight: 900; font-size: 1.2rem; color: #333; cursor: pointer; border-bottom: 2px dashed #ccc; }
+        .nav-add { background: #2ed573; } .nav-del { background: #ff4757; width: 30px; height: 30px; font-size: 0.9rem; margin-left: 10px; }
+        
+        .board-search-container { width: 100%; max-width: 800px; padding: 0 20px; box-sizing: border-box; margin-top: 5px; }
+        .board-select { width: 100%; padding: 8px; border-radius: 10px; border: 1px solid #ddd; font-family: 'Kanit'; outline: none; background: rgba(255,255,255,0.9); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+
+        .wrapper { position: relative; width: 100%; max-width: 800px; aspect-ratio: 1 / 1.25; background: #fff url('bg.jpg') no-repeat center top/contain; background-size: 100% 100%; margin-top: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); border-radius: 20px; overflow: hidden; touch-action: pan-y; transition: background-image 0.3s ease; }
+        
+        /* Floating Items */
+        .floating-item { 
+            position: absolute; z-index: 80; cursor: grab; 
+            display: flex; justify-content: center; align-items: center; 
+            box-sizing: border-box;
+            min-width: 60px; min-height: 40px; 
+        }
+        .floating-item:active { cursor: grabbing; }
+        .floating-item input { 
+            width: 100%; height: 100%;
+            border: none; background: transparent; text-align: center; outline: none; pointer-events: auto; 
+            box-sizing: border-box; padding: 0; margin: 0;
+        }
+        
+        /* Resize Handle */
+        .resize-handle {
+            display: none;
+            width: 20px; height: 20px;
+            background: linear-gradient(135deg, transparent 50%, #ff4757 50%);
+            position: absolute; bottom: 0; right: 0;
+            cursor: nwse-resize;
+            border-bottom-right-radius: 10px;
+            z-index: 90;
+        }
+        .wrapper.edit-mode .floating-item { border: 2px dashed #ff4757 !important; }
+        .wrapper.edit-mode .resize-handle { display: block; }
+
+        #box-price input { font-family: var(--p-font); color: var(--p-color); font-size: var(--p-size); font-weight: var(--p-weight); -webkit-text-stroke: var(--p-stroke-w) var(--p-stroke); }
+        
+        .edit-hint { display: none; position: absolute; top: 10px; left: 0; width: 100%; text-align: center; background: rgba(0,0,0,0.8); color: #fff; padding: 8px; font-size: 0.9rem; pointer-events: none; z-index: 100; }
+        .wrapper.edit-mode .edit-hint { display: block; }
+        
+        .add-box-btn { display: none; position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: #2ed573; color: white; padding: 10px 20px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 101; border: none; }
+        .wrapper.edit-mode .add-box-btn { display: block; }
+
+        /* Date Container Modifications */
+        .date-container { 
+            position: absolute; display: flex; align-items: center; justify-content: center; 
+            background: #ff4757; border-radius: 50px; border: 2px solid #b33939; 
+            box-shadow: 0 4px 0 #b33939; z-index: 90; 
+        }
+        #dateDisplay { font-size: 0.9rem; font-weight: 900; color: #fff; pointer-events: none; }
+        #lottoDate { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 2; }
+        .wrapper.edit-mode #lottoDate { pointer-events: none; }
+
+        .grid { position: absolute; top: 33.5%; left: 4.5%; width: 91%; height: 61%; display: grid; grid-template-columns: repeat(10, 1fr); grid-template-rows: repeat(10, 1fr); gap: 6px; padding: 2px; }
+        .num { background: linear-gradient(135deg, var(--grid-bg-1), var(--grid-bg-2)); border: var(--grid-border-width) solid var(--grid-border-color); border-radius: var(--grid-shape); display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; box-shadow: var(--grid-shadow-dist) var(--grid-shadow-dist) var(--grid-shadow-blur) var(--grid-shadow-dark), calc(var(--grid-shadow-dist)*-1) calc(var(--grid-shadow-dist)*-1) var(--grid-shadow-blur) var(--grid-shadow-light); transition: transform 0.1s; }
+        .num:active { transform: scale(0.95); box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1); }
+        .num .val { font-family: var(--grid-font-family); color: var(--grid-text-color); font-size: var(--grid-font-size); font-weight: var(--grid-font-weight); -webkit-text-stroke: var(--grid-text-stroke-width) var(--grid-text-stroke-color); }
+        .num.booked { background: #e0e0e0 !important; box-shadow: inset 3px 3px 6px rgba(0,0,0,0.1) !important; }
+        .num.booked .val { opacity: 0.2; -webkit-text-stroke: 0; color: #888; }
+        .num .label { position: absolute; font-size: 9px; font-weight: 900; display: none; z-index: 2; background: var(--label-bg); color: var(--label-text); border: 1px solid var(--label-border); border-radius: var(--label-shape); transform: rotate(-15deg) scale(var(--label-scale)); padding: 2px 5px; box-shadow: 2px 2px 5px rgba(0,0,0,0.2); white-space: nowrap; justify-content: center; align-items: center; }
+        .num.booked .label { display: flex !important; }
+
+        .admin-section { width: 95%; max-width: 800px; margin-top: 25px; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); box-sizing: border-box; }
+        
+        .admin-filter-row { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+        .filter-input { flex: 2; min-width: 150px; padding: 12px; border: 2px solid #f1f2f6; border-radius: 12px; font-family: 'Kanit'; outline: none; box-sizing: border-box; }
+        .filter-select { flex: 1; min-width: 120px; padding: 12px; border: 2px solid #f1f2f6; border-radius: 12px; font-family: 'Kanit'; outline: none; box-sizing: border-box; background: white; }
+        
+       /* --- ชุดโค้ดใหม่: จัดการตารางเลื่อนได้และล็อคหัว --- */
+        .table-container { 
+            max-height: 500px; /* จำกัดความสูงให้โชว์ประมาณ 15-20 แถว */
+            overflow-y: auto;  /* เพิ่มแถบเลื่อนแนวตั้งให้ใช้นิ้วปัดได้ */
+            overflow-x: auto; 
+            border: 1px solid #fa0f0f; 
+            border-radius: 10px;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th { 
+            background: #f599f0; /* สีพื้นหลังหัวตาราง */
+            color: #000000;      /* สีตัวหนังสือหัวตาราง */
+            padding: 12px; 
+            text-align: left; 
+            font-size: 0.85rem; 
+            position: sticky;    /* พระเอกของเรา: สั่งให้ล็อคอยู่กับที่! */
+            top: 0; 
+            z-index: 10; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+        }
+        td { border-bottom: 1px solid #f1f2f6; padding: 12px; font-size: 0.95rem; white-space: nowrap; vertical-align: middle; }
+        .btn-group { display: flex; gap: 10px; margin-top: 25px; flex-wrap: wrap; }
+        .admin-btn { padding: 12px; border: none; border-radius: 50px; font-family: 'Kanit'; font-weight: 700; cursor: pointer; flex: 1; min-width: 100px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.2s; }
+        .admin-btn:active { transform: scale(0.95); }
+
+        /* Custom Checkbox for Pay Status */
+        .pay-checkbox { width: 20px; height: 20px; cursor: pointer; accent-color: #2ed573; }
+
+        /* Modals & UI Elements */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 3000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-box { background: white; width: 90%; max-width: 380px; padding: 25px; border-radius: 25px; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
+        .modal-input { width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #f1f2f6; border-radius: 12px; font-family: 'Kanit'; outline: none; text-align: center; box-sizing: border-box; font-size: 1.1rem; }
+        
+        .editor-section { background: #f9f9f9; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #eee; text-align:left; }
+        .editor-head { font-size: 1rem; font-weight: bold; margin-bottom: 10px; color:#555; border-bottom:1px solid #ddd; padding-bottom:5px; }
+        .control-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        input[type="color"] { border: none; width: 35px; height: 35px; cursor: pointer; background: none; }
+        input[type="range"] { width: 100px; accent-color: #b84cff; }
+        select { padding: 5px; border-radius: 5px; border: 1px solid #ddd; font-family: 'Kanit'; font-size: 0.8rem; width: 150px; }
+        
+        /* Fixed Preview Box */
+        .preview-box { 
+            padding: 40px; 
+            background: #f8f9fa; 
+            border: 2px dashed #ddd; 
+            margin-bottom: 15px; 
+            border-radius: 10px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 120px;
+            overflow: hidden;
+            background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee), linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+        }
+        
+        #previewElement {
+            display: flex; justify-content: center; align-items: center;
+            padding: 10px;
+            transition: 0.2s;
+            position: relative;
+        }
+
+        .bg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+        .bg-thumb { width: 100%; aspect-ratio: 1/1.25; object-fit: cover; border-radius: 8px; border: 2px solid #eee; cursor: pointer; transition: 0.2s; }
+        .bg-thumb:hover, .bg-thumb.active { border-color: #b84cff; transform: scale(1.05); }
+
+        /* Dark Theme Excel Table Modal */
+        .dark-modal-box { background: #1e272e; color: #f1f2f6; max-width: 900px; width: 95%; max-height: 90vh; display: flex; flex-direction: column; padding: 20px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+        .dark-table-wrapper { overflow-x: auto; flex-grow: 1; border-radius: 10px; border: 1px solid #57606f; background: #2f3542; margin-bottom: 15px; }
+        .dark-table { width: 100%; border-collapse: collapse; text-align: center; }
+        .dark-table th { background: #222f3e; padding: 15px 10px; font-weight: bold; border-bottom: 2px solid #57606f; color: #a4b0be; white-space: nowrap; }
+        .dark-table td { padding: 12px 10px; border-bottom: 1px solid #57606f; vertical-align: middle; white-space: nowrap; }
+        .dark-table tr:hover { background: #353b48; }
+        .badge-status { padding: 5px 10px; border-radius: 50px; font-size: 0.8rem; font-weight: bold; }
+        .bg-paid { background: rgba(46, 213, 115, 0.2); color: #2ed573; border: 1px solid #2ed573; }
+        .bg-unpaid { background: rgba(255, 71, 87, 0.2); color: #ff4757; border: 1px solid #ff4757; }
+        .bg-partial { background: rgba(255, 165, 2, 0.2); color: #ffa502; border: 1px solid #ffa502; }
+        @media (max-width: 600px) { .num .val { font-size: 1.1rem; } .floating-item input { font-size: 1.4rem; } .grid { gap: 4px; } }
+  /* =======================================================
+   --- เริ่มต้น CSS สำหรับ Modern Card Slider Modal ---
+   ======================================================= */
+  .card-slider-overlay {
+    display: none; 
+    position: fixed; 
+    top: 0; left: 0; 
+    width: 100%; height: 100%; 
+    background: rgba(0,0,0,0.6); 
+    backdrop-filter: blur(8px); 
+    z-index: 4000; 
+    justify-content: center; 
+    align-items: center;
+}
+
+.card-slider-container {
+    width: 90%;
+    max-width: 400px;
+    background: #fff;
+    border-radius: 30px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-header {
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+    padding: 20px;
+    text-align: center;
+    color: #333;
+    position: relative;
+}
+
+.card-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-family: 'Mali', sans-serif;
+}
+
+.close-slider-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: rgba(255,255,255,0.5);
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ff4757;
+}
+
+.slider-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.slider-track {
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+}
+
+.customer-card {
+    min-width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.customer-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #fecfef;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+    background: #f0f0f0;
+}
+
+.customer-name {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.customer-numbers {
+    background: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 15px;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    margin-bottom: 10px;
+    border: 1px dashed #ccc;
+}
+
+.number-badge {
+    display: inline-block;
+    background: #a1c1ee;
+    color: rgb(0, 0, 0);
+    padding: 3px 8px;
+    border-radius: 10px;
+    margin: 2px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.customer-total {
+    font-size: 1.4rem;
+    color: #ff4757;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Seller Section (ด้านล่าง) */
+.seller-section {
+    background: #fdfbfb;
+    border-top: 2px dashed #eee;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.seller-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    object-fit: cover;
+    border: 2px solid #ddd;
+}
+
+.seller-info {
+    flex-grow: 1;
+}
+
+.seller-info-title {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 2px;
+}
+
+.seller-info-text {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Navigation Dots (จุดกลมๆ ด้านล่าง) */
+.slider-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 15px;
+    background: #fff;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ddd;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.dot.active {
+    background: #ff4757;
+    transform: scale(1.2);
+}
+
+/* Navigation Arrows (ลูกศรซ้ายขวา) */
+.slider-arrow {
+    position: absolute;
+    top: 45%;
+    transform: translateY(-50%);
+    background: white;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    font-size: 1.2rem;
+    color: #333;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.slider-arrow:active { transform: translateY(-50%) scale(0.9); }
+.arrow-left { left: 10px; }
+.arrow-right { right: 10px; }
+/* =======================================================
+   --- สิ้นสุด CSS สำหรับ Modern Card Slider Modal ---
+   ======================================================= */
+    </style>
+</head>
+<body>
+
+<div id="login-screen">
+    <div class="login-card">
+        <span class="app-logo">🎰</span>
+        <div class="app-title">มหาเฮง 999</div>
+        <div style="font-size:0.9rem; color:#888; margin-bottom:15px;">ระบบจัดการหวยออนไลน์ครบวงจร</div>
+        <div id="trial-info" class="trial-status" style="display:none;"></div>
+        
+        <div class="feature-list">
+            <b>✨ จุดเด่นแอพพลิเคชั่น:</b>
+            <ul>
+                <li>✅ เพิ่มแผงหวยได้ไม่จำกัด แยกการตั้งค่าอิสระ</li>
+                <li>✅ ปรับแต่งธีม สี ฟอนต์ ได้อย่างอิสระ</li>
+                <li>✅ อัพโหลดรูปพื้นหลัง และกำหนดขนาดรูปได้เอง</li>
+                <li>✅ เลื่อนลากจัดวางตำแหน่งปฏิทิน/ข้อความได้อย่างอิสระ</li>
+                <li>✅ แนบรูปภาพสลิป หรือรูปลูกค้า ตอนจองเบอร์ได้</li>
+                <li>✅ ระบบจองอัตโนมัติ สรุปยอดเงินทันที</li>
+                <li>✅ ติ๊กสถานะจ่ายเงิน และหน้ารายละเอียดแบบ Excel ดูง่าย</li>
+            </ul>
+        </div>
+
+        <div class="contact-box">
+            <b>📞 ติดต่อผู้พัฒนา / ซื้อ Token ถาวร</b><br>
+            โทร: 093-281-5229 | Line: @boss0932815229<br>
+            FB: Rachan Taksin
+        </div>
+        <input type="text" id="tokenInput" class="login-input" placeholder="กรอก Token เพื่อเข้าใช้งาน">
+        <button id="btnLogin" class="btn-main btn-login" onclick="checkTokenLogin()">เข้าสู่ระบบ</button>
+        <button id="trialBtn" class="btn-main btn-trial" onclick="startTrial()">ทดลองใช้งานฟรี 9 วัน</button>
+        <div id="login-msg" style="color:red; margin-top:10px; font-size:0.9rem;"></div>
+    </div>
+</div>
+
+<div id="main-content">
+    <div class="board-nav">
+        <button class="nav-btn" onclick="prevBoard()">❮</button>
+        <div style="display:flex; align-items:center;">
+            <span id="boardNameDisplay" class="nav-info" onclick="renameBoard()">แผงที่ 1</span>
+            <button class="nav-btn nav-del" onclick="deleteCurrentBoard()" id="btnDeleteBoard">🗑️</button>
+        </div>
+        <div style="display:flex; gap:5px;">
+            <button class="nav-btn nav-add" onclick="addNewBoard()">+</button>
+            <button class="nav-btn" onclick="nextBoard()">❯</button>
+        </div>
+    </div>
+    
+    <div class="board-search-container" style="display: flex; gap: 8px;">
+        <select id="boardSelectorJump" class="board-select" onchange="jumpToBoard()" style="flex: 1;">
+        </select>
+        <button onclick="openSellerInfoModal()" style="background: #4D96FF; color: white; border: none; border-radius: 10px; padding: 0 15px; font-family: 'Kanit'; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+            👤 User
+        </button>
+    </div>
+    <div class="wrapper" id="gameWrapper">
+        <div class="edit-hint">👆 ลาก/ขยายด้วยสองนิ้ว | แตะเพื่อแก้ไข</div>
+        <button class="add-box-btn" onclick="addNewTextBox()">+ เพิ่มข้อความ</button>
+        
+        <div id="box-price" class="floating-item" data-type="p" style="top:15%; left:5%;">
+            <input type="text" id="pricePerTicket" value="40" onchange="saveGameSettings()">
+            <div class="resize-handle"></div>
+        </div>
+        
+        <div class="date-container floating-item" id="dateBox" data-type="date">
+            <span id="dateDisplay">งวดวันที่</span>
+            <input type="date" id="lottoDate">
+            <div class="resize-handle"></div>
+        </div>
+        
+        <div class="grid" id="grid"></div>
+    </div>
+
+    <div class="admin-section">
+        <div style="font-weight: 900; font-size: 1.4rem; margin-bottom: 15px;">📊 จัดการ & สรุปยอด (แผงปัจจุบัน)</div>
+        
+        <div class="admin-filter-row">
+            <input type="text" id="filterInput" class="filter-input" placeholder="🔍 ค้นหาเบอร์/ชื่อ..." onkeyup="updateAdminTable()">
+            <select id="payFilterStatus" class="filter-select" onchange="updateAdminTable()">
+                <option value="all">สถานะทั้งหมด</option>
+                <option value="paid">✅ จ่ายแล้ว</option>
+                <option value="unpaid">❌ ยังไม่จ่าย</option>
+            </select>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr><th>เบอร์</th><th>ชื่อ</th><th>รูป</th><th>ราคา</th><th>สถานะจ่าย</th><th>วัน/เวลา</th></tr>
+                </thead>
+                <tbody id="adminTableBody"></tbody>
+                <tfoot>
+                    <tr style="background:#f8f9fa; font-weight: 900;">
+                        <td colspan="3" style="text-align:right;">รวม:</td>
+                        <td id="totalSum" style="color:#ff4757; font-size:1.2rem;">0</td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="btn-group">
+            <button class="admin-btn" style="background:#f1f2f6; color:#333;" onclick="logoutApp()">ออกจากระบบ / เปลี่ยน Token</button>
+            <button class="admin-btn" style="background:#ff4757; color:white;" onclick="resetBoard()">ล้างแผงนี้</button>
+            <button class="admin-btn" style="background:#2f3542; color:white;" onclick="window.print()">พิมพ์</button>
+            <button class="admin-btn" style="background: linear-gradient(45deg, #1abc9c, #2ed573); color:white;" onclick="openCardSlider()">💕 สรุปลูกค้า</button>
+            <button class="admin-btn" style="background: linear-gradient(45deg, #FF6B6B, #4D96FF); color:white;" onclick="openBgSelector()">🖼️ พื้นหลัง</button>
+            <button class="admin-btn" style="background: linear-gradient(45deg, #4D96FF, #6BCB77); color:white;" onclick="openGridDesignModal()">🎨 ธีมตาราง</button>
+            <button class="admin-btn" id="btnToggleEdit" style="background: linear-gradient(45deg, #FF9F43, #FF6B6B); color:white;" onclick="toggleEditMode()">🔧 จัดวาง</button>
+            <button id="btnFilterNum" class="admin-btn" style="background: #3498db; color: white;" onclick="toggleFilterBooked()">🔍 ซ่อนเลขจองแล้ว</button>
+            <button id="btnToggleMode" class="admin-btn" style="background: #2ecc71; color: white;" onclick="toggleDisplayMode()">🔠 เปลี่ยนเป็นโหมด (10-19)</button>
+        </div>
+    </div>
+</div>
+
+<div id="bookingModal" class="modal-overlay">
+    <div class="modal-box">
+        <div style="font-size: 1.6rem; font-weight: 900; margin-bottom: 15px;">เบอร์ <span id="modalNum" style="color:#b84cff;"></span></div>
+        <input type="text" id="inputName" class="modal-input" placeholder="ชื่อลูกค้า">
+        <input type="text" id="inputPrice" class="modal-input" placeholder="ราคา">
+        
+        <label for="bookingImage" style="display: block; background: #e3f2fd; color: #1565c0; padding: 12px; border-radius: 10px; cursor: pointer; text-align: center; font-weight: bold; margin-top: 10px; border: 1px dashed #90caf9;">
+            📷 แนบรูป (สลิป/ลูกค้า)
+        </label>
+        <input type="file" id="bookingImage" accept="image/*" style="display:none;" onchange="handleBookingImage(event)">
+        
+        <div id="bookingImagePreview" style="display:none; margin-top:10px; text-align:center;">
+            <img id="bImgSrc" src="" style="max-height:100px; border-radius:10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+        </div>
+
+        <button onclick="confirmBooking()" style="background:#2ed573; color:white; padding:15px; border-radius:50px; border:none; width:100%; font-weight:bold; cursor:pointer; margin-top:15px;">บันทึก</button>
+        <button onclick="closeModal('bookingModal')" style="background:none; border:none; color:#bbb; cursor:pointer; margin-top:15px;">ยกเลิก</button>
+    </div>
+</div>
+
+<div id="imageViewerModal" class="modal-overlay" onclick="closeModal('imageViewerModal')" style="z-index: 4000;">
+    <div style="position: relative; max-width: 90%; max-height: 90%; display: flex; justify-content: center; align-items: center;" onclick="event.stopPropagation()">
+        <img id="fullImageViewer" src="" style="max-width: 100%; max-height: 90vh; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+        <button onclick="closeModal('imageViewerModal')" style="position: absolute; top: -15px; right: -15px; background: #ff4757; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; font-weight: bold; font-size:1.2rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">&times;</button>
+    </div>
+</div>
+
+<div id="detailedSummaryModal" class="modal-overlay">
+    <div class="dark-modal-box" onclick="event.stopPropagation()">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <div style="font-size: 1.4rem; font-weight: 900; color: #4D96FF;">📊 สรุปรายละเอียดรายบุคคล</div>
+            <button onclick="closeModal('detailedSummaryModal')" style="background: #ff4757; border: none; border-radius: 5px; color: white; padding: 8px 15px; cursor: pointer; font-weight: bold;">ปิดหน้าต่าง</button>
+        </div>
+        
+        <div class="dark-table-wrapper">
+            <table class="dark-table">
+                <thead>
+                    <tr>
+                        <th>ชื่อลูกค้า</th>
+                        <th>เบอร์ที่ซื้อ</th>
+                        <th>รวมเงิน (บาท)</th>
+                        <th>สถานะการจ่าย</th>
+                        <th>รูปภาพแนบ</th>
+                    </tr>
+                </thead>
+                <tbody id="detailedTableBody">
+                    </tbody>
+            </table>
+        </div>
+        <div style="text-align: right; color: #2ed573; font-size: 1.2rem; font-weight: bold;">
+            ยอดรวมทั้งหมด: <span id="detailedGrandTotal">0</span> บาท
+        </div>
+    </div>
+</div>
+
+<div id="bgSelectModal" class="modal-overlay">
+    <div class="modal-box" style="max-width:450px;">
+        <div style="font-size: 1.2rem; font-weight: 900; margin-bottom: 15px;">เลือกพื้นหลัง</div>
+        
+        <div class="editor-section" style="margin-bottom: 15px; text-align: left;">
+            <label for="customBgUpload" style="display: block; background: #4D96FF; color: white; padding: 12px; border-radius: 10px; cursor: pointer; text-align: center; font-weight: bold; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                📤 อัพโหลดรูปจากเครื่อง
+            </label>
+            <input type="file" id="customBgUpload" accept="image/*" style="display: none;" onchange="uploadCustomBg(event)">
+            
+            <div class="control-row">
+                <span style="font-weight: bold;">จัดขนาดรูป:</span>
+                <select id="ed-bg-size" onchange="changeBgSize()" style="width: 160px;">
+                    <option value="100% 100%">เต็มพอดี (100% 100%)</option>
+                    <option value="cover">คลุมทั้งหมด (Cover)</option>
+                    <option value="contain">พอดีขอบ (Contain)</option>
+                    <option value="auto">ขนาดจริง (Auto)</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="font-size: 0.9rem; font-weight: bold; margin-bottom: 10px; text-align:left; color:#555;">รูปภาพเริ่มต้น:</div>
+        <div class="bg-grid" id="bgGridContainer"></div>
+        <button onclick="closeModal('bgSelectModal')" style="background:none; border:none; color:#bbb; cursor:pointer; margin-top:20px;">ปิด</button>
+    </div>
+</div>
+
+<div id="gridDesignModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 400px; max-height: 85vh;">
+        <div class="preview-box">
+            <div style="text-align:center;"><div style="font-size:0.8rem; color:#888; margin-bottom:5px;">ปกติ</div><div class="num" style="width:70px; height:70px;"><span class="val">00</span></div></div>
+            <div style="text-align:center;"><div style="font-size:0.8rem; color:#888; margin-bottom:5px;">จองแล้ว</div><div class="num booked" style="width:70px; height:70px;"><span class="val">99</span><span class="label" id="previewLabelText">จองแล้ว</span></div></div>
+        </div>
+        <div style="overflow-y:auto; max-height: 40vh;">
+            <div class="editor-section">
+                <div class="editor-head">📦 กล่อง & รูปทรง</div>
+                <div class="control-row"><span>รูปทรง:</span><select id="ed-grid-shape" onchange="previewGridDesign()"><option value="0px">สี่เหลี่ยม</option><option value="12px">มุมมน</option><option value="50%">วงกลม</option><option value="0px 50% 50% 50%">ใบไม้</option><option value="20px 5px 20px 5px">มนทแยง</option></select></div>
+                <div class="control-row"><span>พื้นหลัง 1:</span> <input type="color" id="ed-bg1" oninput="previewGridDesign()"></div>
+                <div class="control-row"><span>พื้นหลัง 2:</span> <input type="color" id="ed-bg2" oninput="previewGridDesign()"></div>
+                <div class="control-row"><span>ขอบ:</span> <input type="color" id="ed-border" oninput="previewGridDesign()"></div>
+                <div class="control-row"><span>หนาขอบ:</span> <input type="range" id="ed-border-w" min="0" max="5" oninput="previewGridDesign()"></div>
+                <div class="control-row"><span>นูน/เงา:</span> <input type="range" id="ed-shadow" min="0" max="20" oninput="previewGridDesign()"></div>
+                <div class="control-row"><span>เงาเข้ม:</span> <input type="color" id="ed-shadow-dark" oninput="previewGridDesign()"></div>
+                <div class="control-row"><span>เงาสว่าง:</span> <input type="color" id="ed-shadow-light" oninput="previewGridDesign()"></div>
+            </div>
+            <div class="editor-section">
+                <div class="editor-head">🔤 ตัวเลข</div>
+                <div class="control-row"><span>ฟอนต์:</span><select id="ed-grid-font" onchange="previewGridDesign()"><option value="'Kanit', sans-serif">คานิต</option><option value="'Mali', sans-serif">มาลี</option><option value="'Sriracha', sans-serif">ศรีราชา</option><option value="'Pattaya', sans-serif">พัทยา</option><option value="'Chakra Petch', sans-serif">จักรเพชร</option><option value="'Itim', cursive">ไอติม</option><option value="'Charmonman', cursive">ชามนแมน</option><option value="'Fahkwang', sans-serif">ฟ้ากว้าง</option><option value="'KoHo', sans-serif">โก๋</option><option value="'Prompt', sans-serif">พร้อม</option></select></div>
+                <div class="control-row"><span>สี:</span> <input type="color" id="ed-grid-color" oninput="previewGridDesign()"></div>
+                <div class="control-row"><span>ขนาด:</span> <input type="range" id="ed-grid-size" min="10" max="30" oninput="previewGridDesign()"></div>
+                <div class="control-row"><span>หนา:</span> <input type="range" id="ed-grid-weight" min="100" max="900" step="100" oninput="previewGridDesign()"></div>
+                <div class="control-row"><span>สีขอบตัว:</span> <input type="color" id="ed-grid-stroke" oninput="previewGridDesign()"></div>
+                <div class="control-row"><span>หนาขอบตัว:</span> <input type="range" id="ed-grid-stroke-w" min="0" max="30" oninput="previewGridDesign()"></div>
+            </div>
+            <div class="editor-section">
+                <div class="editor-head">🏷️ ป้ายจอง</div>
+                <div class="control-row"><span>ข้อความ:</span> <input type="text" id="ed-label-text-content" oninput="previewGridDesign()" style="width: 100px; padding: 3px; border-radius: 5px; border: 1px solid #ddd; font-family: 'Kanit'; text-align: center;"></div>
+                <div class="control-row"><span>สีพื้น:</span> <input type="color" id="ed-label-bg" oninput="previewGridDesign()"></div>
+                <div class="control-row"><span>สีตัว:</span> <input type="color" id="ed-label-text" oninput="previewGridDesign()"></div>
+                <div class="control-row"><span>ขอบป้าย:</span> <input type="color" id="ed-label-border" oninput="previewGridDesign()"></div>
+                <div class="control-row"><span>รูปทรง:</span><select id="ed-label-shape" onchange="previewGridDesign()"><option value="0px">สี่เหลี่ยม</option><option value="5px">มุมมน</option><option value="50px">แคปซูล</option></select></div>
+                <div class="control-row"><span>ขนาด:</span> <input type="range" id="ed-label-scale" min="5" max="15" oninput="previewGridDesign()"></div>
+            </div>
+        </div>
+        <button onclick="saveGridDesign()" style="background:#2ed573; color:white; padding:12px; border-radius:50px; border:none; width:100%; font-weight:bold; cursor:pointer; margin-top:10px;">บันทึก</button>
+        <button onclick="closeModal('gridDesignModal')" style="background:none; border:none; color:#bbb; cursor:pointer; margin-top:10px;">ปิด</button>
+    </div>
+</div>
+
+<div id="boxDesignModal" class="modal-overlay">
+    <div class="modal-box" style="display: flex; flex-direction: column; overflow: hidden; max-height: 90vh; padding: 20px;">
+        <div style="font-size: 1.2rem; font-weight: 900; margin-bottom: 10px; color:#ff4757; flex-shrink: 0;">✨ แก้ไขช่องนี้</div>
+        
+        <div class="preview-box" style="flex-shrink: 0; margin-bottom: 15px; position: relative; z-index: 10;">
+            <div id="previewElement">
+                <span id="previewText">ตัวอย่าง</span>
+            </div>
+        </div>
+
+        <div style="overflow-y: auto; flex-grow: 1; padding-right: 5px; margin-bottom: 10px;">
+            <div class="editor-section" style="margin-bottom: 0;">
+                <div class="control-row" id="textInputRow" style="display:none;">
+                     <span>ข้อความ:</span> <input type="text" id="ed-box-text" oninput="previewBoxDesign()" style="width:140px; border:1px solid #ddd; border-radius:5px; padding:3px;">
+                </div>
+
+                <div class="control-row"><span>ฟอนต์:</span><select id="ed-box-font" onchange="previewBoxDesign()"><option value="'Kanit', sans-serif">คานิต</option><option value="'Mali', sans-serif">มาลี</option><option value="'Sriracha', sans-serif">ศรีราชา</option><option value="'Pattaya', sans-serif">พัทยา</option><option value="'Chakra Petch', sans-serif">จักรเพชร</option><option value="'Itim', cursive">ไอติม</option><option value="'Charmonman', cursive">ชามนแมน</option><option value="'Fahkwang', sans-serif">ฟ้ากว้าง</option><option value="'KoHo', sans-serif">โก๋</option><option value="'Prompt', sans-serif">พร้อม</option></select></div>
+                <div class="control-row"><span>สีข้อความ:</span> <input type="color" id="ed-box-color" oninput="previewBoxDesign()"></div>
+                <div class="control-row"><span>ขนาดตัว:</span> <input type="range" id="ed-box-size" min="10" max="60" oninput="previewBoxDesign()"></div>
+                <div class="control-row"><span>หนาตัว:</span> <input type="range" id="ed-box-weight" min="100" max="900" step="100" oninput="previewBoxDesign()"></div>
+                <div class="control-row"><span>สีขอบตัว:</span> <input type="color" id="ed-box-stroke" oninput="previewBoxDesign()"></div>
+                <div class="control-row"><span>หนาขอบตัว:</span> <input type="range" id="ed-box-stroke-w" min="0" max="30" oninput="previewBoxDesign()"></div>
+                <div class="control-row"><span>เงา 2 ชั้น:</span> <input type="checkbox" id="ed-box-shadow2" onchange="previewBoxDesign()"> <input type="color" id="ed-box-shadow2-c" value="#000000" oninput="previewBoxDesign()"></div>
+
+                <div class="editor-head" style="margin-top:10px;">🎨 พื้นหลัง & กรอบ</div>
+                <div class="control-row"><span>ความกว้าง:</span> <input type="range" id="ed-box-width" min="50" max="300" oninput="previewBoxDesign()"></div>
+                <div class="control-row"><span>ความสูง:</span> <input type="range" id="ed-box-height" min="30" max="150" oninput="previewBoxDesign()"></div>
+                <div class="control-row"><span>สีพื้น 1:</span> <input type="color" id="ed-box-bg" oninput="previewBoxDesign()"></div>
+                <div class="control-row"><span>สีพื้น 2 (ไล่สี):</span> <input type="color" id="ed-box-bg2" oninput="previewBoxDesign()"></div>
+                <div class="control-row"><span>ความใส:</span> <input type="range" id="ed-box-opacity" min="0" max="100" value="100" oninput="previewBoxDesign()"></div>
+                <div class="control-row"><span>มีเส้นขอบ:</span> <input type="checkbox" id="ed-box-hasBorder" onchange="previewBoxDesign()"></div>
+                <div class="control-row"><span>สีเส้นขอบ:</span> <input type="color" id="ed-box-border" oninput="previewBoxDesign()"></div>
+                <div class="control-row"><span>หนาเส้นขอบ:</span> <input type="range" id="ed-box-border-w" min="0" max="10" oninput="previewBoxDesign()"></div>
+            </div>
+        </div>
+
+        <div style="flex-shrink: 0;">
+            <button onclick="saveBoxDesign()" style="background:#2ed573; color:white; padding:12px; border-radius:50px; border:none; width:100%; font-weight:bold; cursor:pointer; margin-top:5px;">บันทึก</button>
+            <button id="btnDeleteBox" onclick="deleteCustomBox()" style="background:#ff4757; color:white; padding:12px; border-radius:50px; border:none; width:100%; font-weight:bold; cursor:pointer; margin-top:5px; display:none;">ลบกล่องนี้</button>
+            <button onclick="closeModal('boxDesignModal')" style="background:none; border:none; color:#bbb; cursor:pointer; margin-top:10px;">ปิด</button>
+        </div>
+    </div>
+</div>
+<div id="sellerModal" class="modal-overlay">
+    <div class="modal-box">
+        <h3 style="margin-top: 0; color: #4D96FF;">👤 User / รับเงิน</h3>
+        
+        <div style="text-align: left; margin-bottom: 10px;">
+            <label style="font-size: 0.9rem; font-weight: bold;">ข้อความ (ชื่อบัญชี / คำขอบคุณ)</label>
+            <textarea id="sellerText" class="modal-input" rows="3" placeholder="เช่น น.ส.ใจดี รักเรียน ธ.กสิกร 123-4-56789-0"></textarea>
+        </div>
+        
+        <div style="text-align: left; margin-bottom: 10px;">
+            <label style="font-size: 0.9rem; font-weight: bold;">สีข้อความ</label>
+            <input type="color" id="sellerTextColor" oninput="document.getElementById('sellerText').style.color = this.value" value="#333333" style="width: 100%; height: 40px; border: none; border-radius: 10px; cursor: pointer;">
+        </div>
+
+        <div style="text-align: left; margin-bottom: 10px;">
+            <label style="font-size: 0.9rem; font-weight: bold;">รูปภาพ (QR Code / บาร์โค้ด)</label>
+            <input type="file" id="sellerImgUpload" accept="image/*" style="width: 100%; margin-top: 5px; font-family: 'Kanit';">
+            
+            <div style="margin-top: 10px; text-align: center;">
+                <img id="sellerImgPreview" src="" style="max-width: 100%; max-height: 200px; display: none; border-radius: 10px; border: 1px solid #ddd; margin: 0 auto;">
+            </div>
+            <button id="btnRemoveSellerImg" onclick="removeSellerImg()" style="display: none; background: #ff4757; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-top: 10px; cursor: pointer; width: 100%; font-family: 'Kanit';">🗑️ ลบรูปภาพ</button>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button class="btn-main" style="background: #2ed573; color: white; flex: 1; margin: 0;" onclick="saveSellerInfo()">บันทึก</button>
+            <button class="btn-main" style="background: #f1f2f6; color: #333; flex: 1; margin: 0;" onclick="closeSellerInfoModal()">ปิด</button>
+        </div>
+    </div>
+</div>
+<script>
+ let isFiltered = false;
+ function toggleFilterBooked() {
+    isFiltered = !isFiltered;
+    renderGrid();
+    let btn = document.getElementById("btnFilterNum");
+    if (btn) {
+        if (isFiltered) {
+            btn.innerHTML = "👁️ แสดงทั้งหมด";
+            btn.style.background = "#f39c12"; 
+        } else {
+            btn.innerHTML = "🔍 ซ่อนเลขจองแล้ว";
+            btn.style.background = "#3498db"; 
+        }
+    }
+    }
+  // --- ตัวแปรสำหรับสลับโหมด 00-99 และโหมดช่วงข้อความ ---
+let isRangeMode = false;
+
+function toggleDisplayMode() {
+    const b = boards[currentBoardIdx];
+    
+    // แปลงระบบจาก 2 โหมด เป็น 3 โหมด (0, 1, 2)
+    if (typeof b.displayMode === 'undefined') {
+        // ดึงค่าเก่ามาใช้เผื่อแผงไหนเคยตั้งเป็นโหมดข้อความไว้แล้ว
+        b.displayMode = b.isRangeMode ? 1 : 0; 
+    }
+    
+    // วนลูปโหมด: 0 -> 1 -> 2 -> กลับไป 0
+    b.displayMode = (b.displayMode + 1) % 3;
+    
+    // เซฟข้อมูลลงเครื่อง
+    if (typeof saveAll === "function") saveAll(); 
+    else if (typeof saveBoards === "function") saveBoards(); 
+
+    renderGrid(); // โหลดตารางใหม่
+}
+ // --- Login & Device ID Logic ---
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymbOZtjXqlFoeFUfOHzqHaHMNm9d625evuhZgrscQqw96f9I55rrOH9ekCF3imbhCv-g/exec";
+    const fp = window.screen.width + "x" + window.screen.height + "_" + navigator.platform;
+    const loginScreen = document.getElementById("login-screen");
+    const mainContent = document.getElementById("main-content");
+    const loginMsg = document.getElementById("login-msg");
+    const trialBtn = document.getElementById("trialBtn");
+    const loginBtn = document.getElementById("btnLogin");
+
+    function getDeviceId() {
+        let id = localStorage.getItem("lotto_device_unique_id");
+        if (!id) {
+            const raw = navigator.userAgent + (screen.width * screen.height) + navigator.language + new Date().getTimezoneOffset() + (navigator.hardwareConcurrency || 1);
+            let hash = 0;
+            for (let i = 0; i < raw.length; i++) {
+                const char = raw.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            id = 'DEV-' + Math.abs(hash).toString(16).toUpperCase();
+            localStorage.setItem("lotto_device_unique_id", id);
+        }
+        return id;
+    }
+
+    async function checkLoginStatus() {
+        const token = localStorage.getItem("saved_lotto_token");
+        const deviceId = getDeviceId();
+        const trialInfo = document.getElementById("trial-info");
+        
+        trialBtn.disabled = true; loginBtn.disabled = true; trialBtn.innerText = "กำลังตรวจสอบ...";
+
+        if (token) {
+            verifyToken(token);
+            return;
+        }
+
+        try {
+            const response = await fetch(`${SCRIPT_URL}?action=checkTrial&deviceId=${deviceId}`);
+            const result = await response.json();
+            loginScreen.style.display = "flex";
+
+            if (result.status === "exists") {
+                const expDate = new Date(result.expDate);
+                const now = new Date();
+                if (now > expDate) {
+                    loginMsg.innerText = "หมดเวลาทดลองเล่นแล้ว! กรุณาใส่ Token จริง";
+                    trialBtn.style.display = "none";
+                } else {
+                    const daysLeft = Math.ceil((expDate - now) / (1000 * 60 * 60 * 24));
+                    trialInfo.style.display = "block";
+                    trialInfo.innerText = `สถานะ: กำลังทดลองใช้งาน (เหลือ ${daysLeft} วัน)`;
+                    trialBtn.disabled = false;
+                    trialBtn.innerText = `เข้าใช้งานต่อ (${daysLeft} วัน)`;
+                    trialBtn.onclick = enterApp; 
+                    trialBtn.classList.remove("btn-trial");
+                    trialBtn.classList.add("btn-login"); 
+                }
+            } else {
+                trialBtn.disabled = false;
+                trialBtn.innerText = "ทดลองใช้งานฟรี 9 วัน";
+                trialBtn.onclick = startTrial;
+            }
+        } catch (err) {
+            loginScreen.style.display = "flex";
+            loginMsg.innerText = "ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้";
+            trialBtn.innerText = "ลองใหม่อีกครั้ง";
+            trialBtn.disabled = false; 
+        } finally { loginBtn.disabled = false; }
+    }
+
+    function verifyToken(t) {
+        fetch(`${SCRIPT_URL}?action=check&token=${t}&fp=${fp}`).then(r=>r.json()).then(d=>{
+            if(d.status==="ok") enterApp();
+            else { localStorage.removeItem("saved_lotto_token"); location.reload(); }
+        }).catch(()=>{ loginMsg.innerText = "เชื่อมต่อเน็ตไม่ได้"; loginScreen.style.display = "flex"; loginBtn.disabled = false; trialBtn.disabled = false; });
+    }
+
+    function checkTokenLogin() {
+        const t = document.getElementById("tokenInput").value.trim();
+        if(!t) return;
+        loginMsg.innerText = "กำลังตรวจสอบ...";
+        loginBtn.disabled = true;
+        fetch(`${SCRIPT_URL}?action=check&token=${t}&fp=${fp}`).then(r=>r.json()).then(d=>{
+            if(d.status==="ok") {
+                localStorage.setItem("saved_lotto_token", t);
+                location.reload();
+            } else { loginMsg.innerText = "Token ผิดพลาด!"; loginBtn.disabled = false; }
+        }).catch(()=>{ loginMsg.innerText = "เชื่อมต่อเน็ตไม่ได้"; loginBtn.disabled = false; });
+    }
+
+    async function startTrial() {
+        const deviceId = getDeviceId();
+        const expDate = new Date();
+        expDate.setDate(expDate.getDate() + 9);
+        const expStr = expDate.toISOString();
+        trialBtn.disabled = true; trialBtn.innerText = "กำลังลงทะเบียน...";
+        try {
+            const response = await fetch(`${SCRIPT_URL}?action=startTrial&deviceId=${deviceId}&expDate=${expStr}`);
+            const result = await response.json();
+            if (result.status === "ok" || result.status === "exists") {
+                alert("เริ่มทดลองใช้งานฟรี 9 วัน!");
+                location.reload();
+            }
+        } catch (err) { alert("ลงทะเบียนไม่สำเร็จ"); trialBtn.disabled = false; }
+    }
+
+    function enterApp() { loginScreen.style.display = "none"; mainContent.style.display = "flex"; initApp(); }
+    function logoutApp() { if(confirm("ออกจากระบบ?")) { localStorage.removeItem("saved_lotto_token"); location.reload(); } }
+
+    // --- Core Logic ---
+    let boards = [];
+    let currentBoardIdx = 0;
+    let tempBookingImage = null; // เก็บรูประหว่างจอง
+    let currentNum = null;
+
+    const defaultDesign = { 
+        bgImage: "bg.jpg", bgSize: "100% 100%", bg1: "#ffffff", bg2: "#f0f0f0", border: "#eeeeee", borderWidth: 1, gridShape: "12px", 
+        shadow: 4, shadowDark: "#a3a3a3", shadowLight: "#ffffff", labelBg: "#ff4757", labelText: "#ffffff", labelBorder: "#ff4757", labelShape: "5px", labelScale: 1, 
+        labelTextContent: "จองแล้ว", 
+        gridFont: "'Kanit', sans-serif", gridColor: "#333333", gridSize: 1.6, gridWeight: 900, gridStroke: "transparent", gridStrokeWidth: 0, 
+        pFont: "'Mali', sans-serif", pColor: "#333333", pSize: 1.8, pWeight: 900, pStroke: "transparent", pStrokeWidth: 0, pTop: 15, pLeft: 5, 
+        pBg: "transparent", pBg2: "transparent", pOpacity: 100, pBorderOn: false, pBorder: "#000000", pBorderW: 0, pShadow2: false, pShadow2C: "#000000", pWidth: 100, pHeight: 50,
+        dateTop: 25.5, dateLeft: 48.5, 
+        customBoxes: [] 
+    };
+    const defaultSettings = { price: "40", top: "1500", bottom: "1500" };
+
+    const grid = document.getElementById("grid");
+    const dateInput = document.getElementById("lottoDate");
+    const dateDisplay = document.getElementById("dateDisplay");
+
+    function initApp() {
+        const saved = localStorage.getItem("lotto_multi_boards");
+        if(saved) boards = JSON.parse(saved);
+        else boards = [{ id: Date.now(), name: "แผงที่ 1", data: {}, settings: {price:"40", top:"1500", bottom:"1500"}, design: JSON.parse(JSON.stringify(defaultDesign)) }];
+        
+        boards.forEach(b => { 
+            if(!b.design.customBoxes) b.design.customBoxes = []; 
+            if(!b.design.labelTextContent) b.design.labelTextContent = "จองแล้ว";
+        });
+
+        if(localStorage.getItem("formattedDate_final")) {
+            document.getElementById("dateDisplay").textContent = localStorage.getItem("formattedDate_final");
+            document.getElementById("lottoDate").value = localStorage.getItem("rawDate_final");
+        }
+        document.getElementById("lottoDate").onchange = function() {
+            const [y, m, d] = this.value.split("-");
+            const fmt = `${d}/${m}/${parseInt(y)+543}`;
+            document.getElementById("dateDisplay").textContent = fmt;
+            localStorage.setItem("rawDate_final", this.value);
+            localStorage.setItem("formattedDate_final", fmt);
+        };
+        renderBoardUI();
+        initDraggable();
+        initPinch();
+        initSwipe();
+    }
+
+    function saveAll() { localStorage.setItem("lotto_multi_boards", JSON.stringify(boards)); }
+
+    // --- ระบบเลือกแผง (ค้นหา & สลับแผง) ---
+    function renderBoardSelector() {
+    const selector = document.getElementById("boardSelectorJump");
+    selector.innerHTML = "";
+    boards.forEach((b, idx) => {
+        const opt = document.createElement("option");
+        opt.value = idx;
+        // แก้ไขเป็นบรรทัดด้านล่างนี้
+        opt.text = `📌 ${b.name}`; 
+        if(idx === currentBoardIdx) opt.selected = true;
+        selector.appendChild(opt);
+    });
+}
+
+    function jumpToBoard() {
+        const idx = parseInt(document.getElementById("boardSelectorJump").value);
+        if(!isNaN(idx) && idx >= 0 && idx < boards.length) {
+            currentBoardIdx = idx;
+            renderBoardUI();
+        }
+    }
+
+    function renderBoardUI() {
+        const b = boards[currentBoardIdx];
+        document.getElementById("boardNameDisplay").innerText = b.name;
+        applyDesign(b.design);
+        renderBoardSelector(); 
+
+        const pBox = document.getElementById("box-price");
+        pBox.style.top = b.design.pTop+"%"; pBox.style.left = b.design.pLeft+"%";
+        applyBoxStyle(pBox, 'p', b.design);
+
+        const dateBox = document.getElementById("dateBox");
+        if (dateBox) {
+            dateBox.style.top = (b.design.dateTop !== undefined ? b.design.dateTop : 25.5) + "%";
+            dateBox.style.left = (b.design.dateLeft !== undefined ? b.design.dateLeft : 48.5) + "%";
+            if(b.design.dateWidth) dateBox.style.minWidth = b.design.dateWidth + "px";
+            if(b.design.dateHeight) dateBox.style.minHeight = b.design.dateHeight + "px";
+        }
+
+        document.getElementById("pricePerTicket").value = b.settings.price;
+        
+        renderCustomBoxes();
+        renderGrid();
+        updateAdminTable();
+    }
+
+    function hexToRgba(hex, alpha) {
+        let r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+        return `rgba(${r}, ${g}, ${b}, ${alpha/100})`;
+    }
+
+    function applyBoxStyle(el, type, d, customConf) {
+        const conf = customConf || d;
+        const prefix = customConf ? '' : type;
+        const input = el.querySelector('input');
+        
+        input.style.fontFamily = conf[prefix+'Font'];
+        input.style.color = conf[prefix+'Color'];
+        input.style.fontSize = conf[prefix+'Size'] + 'rem';
+        input.style.fontWeight = conf[prefix+'Weight'];
+        input.style.webkitTextStroke = (conf[prefix+'StrokeWidth']||0) + 'px ' + (conf[prefix+'Stroke']||'transparent');
+        
+        const bg1 = conf[prefix+'Bg'] || 'transparent';
+        const bg2 = conf[prefix+'Bg2'] || bg1;
+        const op = conf[prefix+'Opacity'] !== undefined ? conf[prefix+'Opacity'] : 100;
+        
+        if(bg1.startsWith('#') && bg2.startsWith('#')) {
+            el.style.background = `linear-gradient(to bottom, ${hexToRgba(bg1, op)}, ${hexToRgba(bg2, op)})`;
+        } else {
+            el.style.background = bg1;
+            el.style.opacity = op / 100;
+        }
+
+        if (conf[prefix+'BorderOn']) {
+            el.style.border = (conf[prefix+'BorderW'] || 2) + 'px solid ' + (conf[prefix+'Border'] || '#000');
+        } else {
+            el.style.border = 'none';
+        }
+        el.style.borderRadius = '10px';
+
+        // Fix Bug ความยาวกล่องข้อความ: แก้ไขการอ่านชื่อ Key ให้ครอบคลุมการสลับพิมพ์เล็ก-ใหญ่
+        let w = conf[prefix+'Width'];
+        if (w === undefined && conf.width !== undefined) w = conf.width; 
+        if (w === undefined) w = 60;
+        
+        let h = conf[prefix+'Height'];
+        if (h === undefined && conf.height !== undefined) h = conf.height; 
+        if (h === undefined) h = 40;
+        
+        el.style.minWidth = w + 'px';
+        el.style.minHeight = h + 'px';
+
+        if (conf[prefix+'Shadow2']) {
+             input.style.textShadow = `2px 2px 0px ${conf[prefix+'Shadow2C']||'#000'}, 4px 4px 5px rgba(0,0,0,0.3)`;
+        } else {
+             input.style.textShadow = '2px 2px 4px rgba(0,0,0,0.1)';
+        }
+        
+        let cls = 'floating-item';
+        if (customConf) cls += ' custom-box';
+        el.className = cls;
+        
+        if(!el.querySelector('.resize-handle')) {
+            const h = document.createElement('div');
+            h.className = 'resize-handle';
+            el.appendChild(h);
+        }
+    }
+
+    function renderCustomBoxes() {
+        document.querySelectorAll('.custom-box').forEach(e => e.remove());
+        const b = boards[currentBoardIdx];
+        b.design.customBoxes.forEach((box, index) => {
+            const div = document.createElement('div');
+            div.setAttribute('data-type', 'c-' + index);
+            div.style.top = box.top + '%';
+            div.style.left = box.left + '%';
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = box.text;
+            input.onchange = function() {
+                box.text = this.value;
+                saveAll();
+            };
+            
+            div.appendChild(input);
+            document.getElementById('gameWrapper').appendChild(div);
+            
+            applyBoxStyle(div, null, null, box);
+        });
+        initDraggable();
+        initPinch();
+    }
+
+    function addNewTextBox() {
+        const newBox = {
+            text: "ข้อความใหม่", top: 50, left: 50,
+            Font: "'Kanit', sans-serif", Color: "#333333", Size: 1.8, Weight: 900,
+            Stroke: "transparent", StrokeWidth: 0,
+            Bg: "#ffffff", Bg2: "#ffffff", Opacity: 100, BorderOn: false, Border: "#000000", BorderW: 2,
+            Shadow2: false, Shadow2C: "#000000",
+            Width: 100, Height: 50 
+        };
+        boards[currentBoardIdx].design.customBoxes.push(newBox);
+        saveAll(); renderCustomBoxes();
+    }
+
+    function deleteCustomBox() {
+        if(currentEditType && currentEditType.startsWith('c-')) {
+            const index = parseInt(currentEditType.split('-')[1]);
+            if(confirm("ลบข้อความนี้?")) {
+                boards[currentBoardIdx].design.customBoxes.splice(index, 1);
+                saveAll(); renderCustomBoxes(); closeModal('boxDesignModal');
+            }
+        }
+    }
+
+    function handleBookingImage(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const MAX_WIDTH = 600;
+                const MAX_HEIGHT = 600;
+                let width = img.width;
+                let height = img.height;
+
+                if (width > height) {
+                    if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                } else {
+                    if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+                }
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                tempBookingImage = canvas.toDataURL('image/jpeg', 0.8);
+                document.getElementById("bImgSrc").src = tempBookingImage;
+                document.getElementById("bookingImagePreview").style.display = "block";
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+function renderGrid() {
+    const g = document.getElementById("grid");
+    if (!g) return;
+    g.innerHTML = "";
+    
+    const b = boards[currentBoardIdx];
+    const customLabelText = b.design && b.design.labelTextContent ? b.design.labelTextContent : "จองแล้ว";
+    
+    if (typeof b.displayMode === 'undefined') {
+        b.displayMode = b.isRangeMode ? 1 : 0; 
+    }
+    
+    let visibleCount = 0;
+    let itemsToRender = [];
+
+    // --- เลือกข้อมูลตามโหมด ---
+    if (b.displayMode === 1) {
+        // โหมด 1: 00-09
+        itemsToRender = [
+            "00-09", "10-19", "20-29", "30-39", "40-49", 
+            "50-59", "60-69", "70-79", "80-89", "90-99"
+        ];
+    } else if (b.displayMode === 2) {
+        // โหมด 2: จับคู่ (51 ชุด)
+        itemsToRender = [
+            "00-11", "22-33", "44-55", "66-77", "88-99",
+            "01-10", "02-20", "03-30", "04-40", "05-50", 
+            "06-60", "07-70", "08-80", "09-90", "12-21", 
+            "13-31", "14-41", "15-51", "16-61", "17-71", 
+            "18-81", "19-91", "23-32", "24-42", "25-52", 
+            "26-62", "27-72", "28-82", "29-92", "34-43", 
+            "35-53", "36-63", "37-73", "38-83", "39-93",
+            "45-54", "46-64", "47-74", "48-84", "49-94",
+            "56-65", "57-75", "58-85", "59-95", "67-76", 
+            "68-86", "69-96", "78-87", "79-97", "89-98"
+        ];
+    } else {
+        // โหมด 0: 00-99
+        for(let i=0; i<100; i++){
+            itemsToRender.push(i.toString().padStart(2,"0"));
+        }
+    }
+
+    // --- เริ่มสร้างตาราง ---
+    for(let i=0; i < itemsToRender.length; i++){
+        const n = itemsToRender[i];
+        const d = document.createElement("div");
+        d.className = "num";
+        
+        // --- แยกการปรับขนาดตามโหมด ---
+        if (b.displayMode === 1) {
+            d.style.aspectRatio = "auto"; 
+            d.style.minHeight = "40px"; 
+            d.style.padding = "10px"; 
+            d.innerHTML = `<span class="val" style="font-size: clamp(22px, 6vw, 40px); font-weight: bold; white-space: nowrap;">${n}</span>
+                           <span class="label" style="font-size: 0.85em; margin-top: 5px;">${customLabelText}</span>`;
+        } else if (b.displayMode === 2) {
+            d.style.aspectRatio = "auto"; 
+            d.style.minHeight = "20px"; // ลดความสูงลงให้โชว์หลายแถวได้สวยๆ
+            d.style.padding = "5px"; 
+            d.innerHTML = `<span class="val" style="font-size: clamp(14px, 3.5vw, 20px); font-weight: bold; white-space: nowrap;">${n}</span>
+                           <span class="label" style="font-size: 0.7em; margin-top: 2px;">${customLabelText}</span>`;
+        } else {
+            d.style.aspectRatio = ""; 
+            d.style.minHeight = "";
+            d.style.padding = "";
+            d.innerHTML = `<span class="val">${n}</span><span class="label">${customLabelText}</span>`;
+        }
+        
+        if(b.data && b.data[n]) {
+            d.classList.add("booked");
+        }
+        
+        // ระบบซ่อนเลข
+        if (typeof isFiltered !== 'undefined' && isFiltered && b.data && b.data[n]) {
+            d.style.display = "none";
+        } else {
+            d.style.display = "flex";
+            visibleCount++;
+        }
+
+        // ระบบคลิก
+        d.onclick = () => {
+            const wrapper = document.getElementById("gameWrapper");
+            if(wrapper && wrapper.classList.contains("edit-mode")) return;
+
+            if(!d.classList.contains("booked")){
+                if (typeof currentNum !== 'undefined') currentNum = n;
+                if (typeof tempBookingImage !== 'undefined') tempBookingImage = null;
+                
+                const preview = document.getElementById("bookingImagePreview");
+                if(preview) preview.style.display = "none";
+                
+                const modal = document.getElementById("bookModal") || document.getElementById("bookingModal");
+                const title = document.getElementById("modalTitle") || document.getElementById("modalNumDisplay");
+                if(title) title.innerText = n;
+
+                const priceInput = document.getElementById("bookPrice") || document.getElementById("price") || document.querySelector('input[placeholder*="ราคา"]');
+                if (priceInput) {
+                    if (b.lastPrice !== undefined) {
+                        priceInput.value = b.lastPrice;
+                    } else {
+                        priceInput.value = "";
+                    }
+                    
+                    priceInput.oninput = function() {
+                        b.lastPrice = this.value;
+                        if (typeof saveAll === "function") saveAll(); 
+                        else if (typeof saveBoards === "function") saveBoards();
+                    };
+                }
+
+                if(modal) modal.style.display = "flex";
+            } else {
+                if(confirm("ยกเลิกเบอร์ " + n + "?")){ 
+                    delete b.data[n]; 
+                    if (typeof saveAll === "function") saveAll(); 
+                    else if (typeof saveBoards === "function") saveBoards(); 
+                    renderGrid(); 
+                    if (typeof updateAdminTable === "function") updateAdminTable(); 
+                }
+            }
+        };
+        g.appendChild(d);
+    }
+
+    // --- จัดการขนาด Grid ---
+    if (typeof isFiltered !== 'undefined' && isFiltered) {
+        if (visibleCount === 0) visibleCount = 1;
+        let cols = Math.ceil(Math.sqrt(visibleCount));
+        if (b.displayMode === 1 && cols > 2) cols = 2; 
+        if (b.displayMode === 2 && cols > 5) cols = 5; 
+        
+        g.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+        g.style.gridAutoRows = "1fr";
+    } else {
+        if (b.displayMode === 1) {
+            g.style.gridTemplateColumns = `repeat(2, 1fr)`; 
+            g.style.gap = "10px"; 
+        } else if (b.displayMode === 2) {
+            g.style.gridTemplateColumns = `repeat(5, 1fr)`; // โหมดจับคู่ 5 คอลัมน์
+            g.style.gap = "5px"; 
+        } else {
+            g.style.gridTemplateColumns = `repeat(10, 1fr)`; 
+            g.style.gap = ""; 
+        }
+        g.style.gridAutoRows = "unset";
+    }
+
+    // --- อัปเดตปุ่ม ---
+    let btnMode = document.getElementById("btnToggleMode");
+    if (btnMode) {
+        if (b.displayMode === 1) {
+            btnMode.innerHTML = "🔠 เปลี่ยนเป็นโหมด (10-19)";
+            btnMode.style.background = "#2ecc71"; 
+        } else if (b.displayMode === 2) {
+            btnMode.innerHTML = "🔀 เปลี่ยนเป็นโหมดจับคู่";
+            btnMode.style.background = "#e67e22"; 
+        } else {
+            btnMode.innerHTML = "🔢 เปลี่ยนเป็นโหมด 00-99";
+            btnMode.style.background = "#9b59b6"; 
+        }
+    }
+}
+        function confirmBooking() {
+        const name = document.getElementById("inputName").value.trim() || "ไม่ระบุ";
+        const price = document.getElementById("inputPrice").value.trim();
+        const now = new Date();
+        const dateStr = `${now.getDate().toString().padStart(2,'0')}/${(now.getMonth()+1).toString().padStart(2,'0')}/${(now.getFullYear()+543).toString().slice(-2)}`;
+        const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+        
+        boards[currentBoardIdx].data[currentNum] = { 
+            name, price, datetime: `${dateStr} ${timeStr}`, image: tempBookingImage, isPaid: false 
+        };
+        
+        saveAll(); renderGrid(); updateAdminTable(); closeModal('bookingModal');
+    }
+
+    function viewImage(src) {
+        document.getElementById('fullImageViewer').src = src;
+        document.getElementById('imageViewerModal').style.display = 'flex';
+    }
+
+    function togglePayStatus(num) {
+        const data = boards[currentBoardIdx].data;
+        if(data[num]) {
+            data[num].isPaid = !data[num].isPaid;
+            saveAll();
+            updateAdminTable();
+        }
+    }
+
+    function updateAdminTable() {
+        const body = document.getElementById("adminTableBody"); body.innerHTML = "";
+        let total = 0;
+        const data = boards[currentBoardIdx].data;
+        const key = document.getElementById("filterInput").value.toLowerCase();
+        const payFilter = document.getElementById("payFilterStatus").value;
+
+        Object.keys(data).sort().forEach(n => {
+            const item = data[n];
+            const isPaid = item.isPaid || false;
+            
+            if (payFilter === "paid" && !isPaid) return;
+            if (payFilter === "unpaid" && isPaid) return;
+
+            if(n.includes(key) || item.name.toLowerCase().includes(key)){
+                total += parseFloat(item.price.replace(/,/g,'')) || 0;
+                
+                const imgHtml = item.image 
+                    ? `<img src="${item.image}" style="width:35px; height:35px; object-fit:cover; border-radius:5px; cursor:pointer; border:1px solid #ddd;" onclick="viewImage('${item.image}')">` 
+                    : '<span style="color:#ccc;">-</span>';
+                
+                const checkedStr = isPaid ? "checked" : "";
+
+                body.innerHTML += `<tr>
+                    <td>${n}</td>
+                    <td>${item.name}</td>
+                    <td>${imgHtml}</td>
+                    <td>${item.price}</td>
+                    <td><input type="checkbox" class="pay-checkbox" ${checkedStr} onchange="togglePayStatus('${n}')"></td>
+                    <td>${item.datetime}</td>
+                </tr>`;
+            }
+        });
+        document.getElementById("totalSum").innerText = total.toLocaleString();
+        renderBoardSelector(); 
+    }
+
+    function openDetailedSummary() {
+        const data = boards[currentBoardIdx].data;
+        const summary = {};
+        let grandTotal = 0;
+
+        Object.keys(data).forEach(n => {
+            const item = data[n];
+            const customerName = item.name || "ไม่ระบุ";
+            const price = parseFloat(item.price.replace(/,/g,'')) || 0;
+            
+            if(!summary[customerName]) {
+                summary[customerName] = { nums: [], total: 0, allPaid: true, anyPaid: false, images: [] };
+            }
+            
+            summary[customerName].nums.push(n);
+            summary[customerName].total += price;
+            grandTotal += price;
+            
+            if(item.image) summary[customerName].images.push(item.image);
+            
+            if(item.isPaid) summary[customerName].anyPaid = true;
+            else summary[customerName].allPaid = false;
+        });
+
+        const body = document.getElementById("detailedTableBody");
+        body.innerHTML = "";
+
+        Object.keys(summary).sort().forEach(name => {
+            const cust = summary[name];
+            let statusHtml = "";
+            if (cust.allPaid) statusHtml = `<span class="badge-status bg-paid">✅ จ่ายครบแล้ว</span>`;
+            else if (cust.anyPaid) statusHtml = `<span class="badge-status bg-partial">🟡 จ่ายบางส่วน</span>`;
+            else statusHtml = `<span class="badge-status bg-unpaid">❌ ยังไม่จ่าย</span>`;
+
+            let imgHtml = "";
+            cust.images.forEach(imgSrc => {
+                imgHtml += `<img src="${imgSrc}" style="width:30px; height:30px; object-fit:cover; border-radius:5px; cursor:pointer; border:1px solid #57606f; margin-right:3px;" onclick="viewImage('${imgSrc}')">`;
+            });
+            if(!imgHtml) imgHtml = '<span style="color:#747d8c;">-</span>';
+
+            body.innerHTML += `<tr>
+                <td style="font-weight:bold; color:#4D96FF;">${name}</td>
+                <td style="color:#f1f2f6; white-space:normal; max-width:150px; line-height:1.5;">${cust.nums.join(", ")}</td>
+                <td style="color:#eccc68; font-weight:bold;">${cust.total.toLocaleString()}</td>
+                <td>${statusHtml}</td>
+                <td>${imgHtml}</td>
+            </tr>`;
+        });
+
+        document.getElementById("detailedGrandTotal").innerText = grandTotal.toLocaleString();
+        document.getElementById("detailedSummaryModal").style.display = "flex";
+    }
+
+    function resetBoard() { if(confirm("ล้างข้อมูลในแผงนี้ทั้งหมด?")) { boards[currentBoardIdx].data = {}; saveAll(); renderGrid(); updateAdminTable(); } }
+    function addNewBoard() { boards.push({ id: Date.now(), name: "แผงที่ "+(boards.length+1), data: {}, settings: {price:"40", top:"1500", bottom:"1500"}, design: JSON.parse(JSON.stringify(defaultDesign)) }); currentBoardIdx = boards.length-1; saveAll(); renderBoardUI(); }
+    function deleteCurrentBoard() { if(boards.length>1 && confirm("ลบแผงนี้?")){ boards.splice(currentBoardIdx,1); currentBoardIdx=Math.max(0, currentBoardIdx-1); saveAll(); renderBoardUI(); } }
+    function renameBoard() { const n = prompt("ชื่อแผงใหม่:", boards[currentBoardIdx].name); if(n){ boards[currentBoardIdx].name=n; saveAll(); renderBoardUI(); } }
+    function prevBoard() { if(currentBoardIdx>0){ currentBoardIdx--; renderBoardUI(); } }
+    function nextBoard() { if(currentBoardIdx<boards.length-1){ currentBoardIdx++; renderBoardUI(); } }
+    function initSwipe() {
+        let x=0; const w=document.getElementById("gameWrapper");
+        w.ontouchstart=e=>x=e.changedTouches[0].clientX;
+        w.ontouchend=e=>{ const dx=e.changedTouches[0].clientX-x; if(dx<-50)nextBoard(); else if(dx>50)prevBoard(); };
+    }
+    function closeModal(id){ document.getElementById(id).style.display="none"; }
+    function saveGameSettings() { 
+        const s = boards[currentBoardIdx].settings;
+        s.price = document.getElementById("pricePerTicket").value;
+        saveAll();
+    }
+
+    function applyDesign(c) {
+        const r = document.documentElement.style;
+        const wrapper = document.querySelector('.wrapper');
+        
+        wrapper.style.backgroundImage = `url('${c.bgImage}')`;
+        wrapper.style.backgroundSize = c.bgSize || '100% 100%';
+        wrapper.style.backgroundPosition = 'center top';
+        wrapper.style.backgroundRepeat = 'no-repeat';
+
+        r.setProperty('--grid-bg-1', c.bg1); r.setProperty('--grid-bg-2', c.bg2);
+        r.setProperty('--grid-border-color', c.border); r.setProperty('--grid-border-width', c.borderWidth + 'px');
+        const sD = c.shadow / 2; const sB = c.shadow * 1.5;
+        r.setProperty('--grid-shadow-dist', sD + 'px'); r.setProperty('--grid-shadow-blur', sB + 'px');
+        r.setProperty('--grid-shadow-dark', c.shadowDark); r.setProperty('--grid-shadow-light', c.shadowLight);
+        r.setProperty('--grid-shape', c.gridShape);
+        r.setProperty('--label-bg', c.labelBg); r.setProperty('--label-text', c.labelText);
+        r.setProperty('--label-border', c.labelBorder); r.setProperty('--label-shape', c.labelShape); r.setProperty('--label-scale', c.labelScale);
+        r.setProperty('--grid-font-family', c.gridFont); r.setProperty('--grid-text-color', c.gridColor);
+        r.setProperty('--grid-font-size', c.gridSize + 'rem'); r.setProperty('--grid-font-weight', c.gridWeight);
+        r.setProperty('--grid-text-stroke-color', c.gridStroke); r.setProperty('--grid-text-stroke-width', c.gridStrokeWidth + 'px');
+        r.setProperty('--p-font', c.pFont); r.setProperty('--p-color', c.pColor); r.setProperty('--p-size', c.pSize + 'rem'); r.setProperty('--p-weight', c.pWeight); r.setProperty('--p-stroke', c.pStroke); r.setProperty('--p-stroke-w', c.pStrokeWidth + 'px');
+    }
+    
+    let isEditMode = false;
+    let activeItem = null;
+    let isResizing = false;
+    let sX=0, sY=0, sL=0, sT=0; 
+    let sW=0, sH=0; 
+    let initialDist = 0; 
+    let initialWidth = 0, initialHeight = 0; 
+
+    function toggleEditMode() {
+        isEditMode = !isEditMode;
+        const wrapper = document.getElementById("gameWrapper");
+        const btn = document.getElementById("btnToggleEdit");
+        const addBtn = document.querySelector(".add-box-btn");
+        
+        if (isEditMode) { 
+            wrapper.classList.add("edit-mode"); 
+            btn.innerHTML = "💾 บันทึก"; btn.style.background = "#2ed573"; 
+            addBtn.style.display = "block";
+        } else { 
+            wrapper.classList.remove("edit-mode"); 
+            btn.innerHTML = "🔧 จัดวาง"; btn.style.background = "linear-gradient(45deg, #FF9F43, #FF6B6B)"; 
+            addBtn.style.display = "none";
+            savePositions(); 
+        }
+    }
+    
+    function savePositions() {
+        const d = boards[currentBoardIdx].design;
+        
+        const p = document.getElementById("box-price");
+        d.pTop = parseFloat(p.style.top); 
+        d.pLeft = parseFloat(p.style.left);
+        let pW = parseFloat(p.style.minWidth);
+        if(isNaN(pW)) pW = p.offsetWidth;
+        d.pWidth = pW;
+        let pH = parseFloat(p.style.minHeight);
+        if(isNaN(pH)) pH = p.offsetHeight;
+        d.pHeight = pH;
+        
+        const dateBox = document.getElementById("dateBox");
+        if (dateBox) {
+            d.dateTop = parseFloat(dateBox.style.top);
+            d.dateLeft = parseFloat(dateBox.style.left);
+            let dW = parseFloat(dateBox.style.minWidth);
+            if(isNaN(dW)) dW = dateBox.offsetWidth;
+            d.dateWidth = dW;
+            let dH = parseFloat(dateBox.style.minHeight);
+            if(isNaN(dH)) dH = dateBox.offsetHeight;
+            d.dateHeight = dH;
+        }
+
+        // Fix Bug ความยาวกล่องข้อความ: บันทึกข้อมูลให้เป็น Capitalized ตรงตาม Object 
+        document.querySelectorAll('.custom-box').forEach(el => {
+            const idx = parseInt(el.getAttribute('data-type').split('-')[1]);
+            if(d.customBoxes[idx]) {
+                d.customBoxes[idx].top = parseFloat(el.style.top);
+                d.customBoxes[idx].left = parseFloat(el.style.left);
+                let cW = parseFloat(el.style.minWidth);
+                if(isNaN(cW)) cW = el.offsetWidth;
+                d.customBoxes[idx].Width = cW;
+                let cH = parseFloat(el.style.minHeight);
+                if(isNaN(cH)) cH = el.offsetHeight;
+                d.customBoxes[idx].Height = cH;
+            }
+        });
+        saveAll();
+    }
+    
+    function initDraggable() {
+        const wrapper = document.getElementById("gameWrapper");
+        const items = document.querySelectorAll(".floating-item");
+
+        const onStart = (e, item) => {
+            if (!isEditMode) return;
+            if (e.target.classList.contains('resize-handle')) {
+                isResizing = true;
+                activeItem = item;
+                const clientX = e.clientX || e.touches[0].clientX;
+                const clientY = e.clientY || e.touches[0].clientY;
+                sX = clientX; sY = clientY;
+                sW = item.offsetWidth; sH = item.offsetHeight;
+                e.stopPropagation();
+                return;
+            }
+            activeItem = item;
+            const clientX = e.clientX || e.touches[0].clientX;
+            const clientY = e.clientY || e.touches[0].clientY;
+            sX = clientX; sY = clientY;
+            sL = item.offsetLeft; sT = item.offsetTop;
+        };
+
+        const onMove = (e) => {
+            if (!activeItem || !isEditMode) return;
+            e.preventDefault(); 
+            const clientX = e.clientX || e.touches[0].clientX;
+            const clientY = e.clientY || e.touches[0].clientY;
+            const dx = clientX - sX;
+            const dy = clientY - sY;
+            
+            if (isResizing) {
+                activeItem.style.minWidth = (sW + dx) + 'px';
+                activeItem.style.minHeight = (sH + dy) + 'px';
+            } else {
+                activeItem.style.left = ((sL + dx) / wrapper.offsetWidth * 100) + "%";
+                activeItem.style.top = ((sT + dy) / wrapper.offsetHeight * 100) + "%";
+            }
+        };
+
+        const onEnd = () => { if(activeItem) { savePositions(); activeItem = null; isResizing = false; } };
+
+        items.forEach(el => {
+            el.onmousedown = (e) => onStart(e, el);
+            el.ontouchstart = (e) => {
+                if(e.touches.length === 1) onStart(e, el);
+            };
+            el.onclick = (e) => { 
+                if (isEditMode && !isResizing && !e.target.classList.contains('resize-handle')) {
+                    if (el.id !== 'dateBox') {
+                        openBoxDesignModal(el.getAttribute('data-type'));
+                    }
+                }
+            };
+        });
+
+        window.onmousemove = onMove;
+        window.ontouchmove = (e) => {
+            if(e.touches.length === 1) onMove(e);
+        };
+        window.onmouseup = onEnd;
+        window.ontouchend = onEnd;
+    }
+
+    function initPinch() {
+        const items = document.querySelectorAll(".floating-item");
+        items.forEach(el => {
+            el.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 2 && isEditMode) {
+                    e.preventDefault();
+                    initialDist = Math.hypot(
+                        e.touches[0].pageX - e.touches[1].pageX,
+                        e.touches[0].pageY - e.touches[1].pageY
+                    );
+                    initialWidth = el.offsetWidth;
+                    initialHeight = el.offsetHeight;
+                }
+            }, {passive: false});
+
+            el.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 2 && isEditMode) {
+                    e.preventDefault();
+                    const currentDist = Math.hypot(
+                        e.touches[0].pageX - e.touches[1].pageX,
+                        e.touches[0].pageY - e.touches[1].pageY
+                    );
+                    if (initialDist > 0) {
+                        const scale = currentDist / initialDist;
+                        el.style.minWidth = (initialWidth * scale) + 'px';
+                        el.style.minHeight = (initialHeight * scale) + 'px';
+                    }
+                }
+            }, {passive: false});
+            
+            el.addEventListener('touchend', (e) => {
+                if(isEditMode) savePositions();
+            });
+        });
+    }
+
+    function uploadCustomBg(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        const btnLabel = document.querySelector('label[for="customBgUpload"]');
+        const oldText = btnLabel.innerHTML;
+        btnLabel.innerHTML = "⏳ กำลังประมวลผล...";
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                const MAX_WIDTH = 1200;
+                const MAX_HEIGHT = 1600;
+                let width = img.width;
+                let height = img.height;
+
+                if (width > height) {
+                    if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                } else {
+                    if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                try {
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                    boards[currentBoardIdx].design.bgImage = dataUrl;
+                    saveAll(); 
+                    renderBoardUI();
+                    btnLabel.innerHTML = "✅ อัพโหลดสำเร็จ!";
+                    setTimeout(() => btnLabel.innerHTML = oldText, 2000);
+                } catch(err) {
+                    alert("รูปภาพอาจมีขนาดใหญ่เกินไป ทำให้ไม่สามารถบันทึกได้");
+                    btnLabel.innerHTML = oldText;
+                }
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function changeBgSize() {
+        const size = document.getElementById("ed-bg-size").value;
+        boards[currentBoardIdx].design.bgSize = size;
+        saveAll();
+        renderBoardUI();
+    }
+
+    function openBgSelector() {
+        document.getElementById("ed-bg-size").value = boards[currentBoardIdx].design.bgSize || "100% 100%";
+        const c = document.getElementById("bgGridContainer"); c.innerHTML = "";
+        for (let i = 1; i <= 20; i++) {
+            const img = document.createElement("img"); img.src = `Background/bg${i}.jpg`; img.className = "bg-thumb";
+            img.onerror = function() { this.style.display = "none"; };
+            img.onclick = function() { boards[currentBoardIdx].design.bgImage = this.src; saveAll(); renderBoardUI(); closeModal("bgSelectModal"); };
+            c.appendChild(img);
+        }
+        document.getElementById("bgSelectModal").style.display = "flex";
+    }
+    
+    let currentEditType = null;
+    function openBoxDesignModal(type) {
+        currentEditType = type; const d = boards[currentBoardIdx].design;
+        let conf;
+        
+        if (type.startsWith('c-')) {
+            const idx = parseInt(type.split('-')[1]);
+            conf = d.customBoxes[idx];
+            document.getElementById("btnDeleteBox").style.display = "block";
+            document.getElementById("textInputRow").style.display = "flex";
+            document.getElementById("ed-box-text").value = conf.text;
+        } else {
+            document.getElementById("btnDeleteBox").style.display = "none";
+            document.getElementById("textInputRow").style.display = "none";
+            conf = {
+                Font: d[type+'Font'], Color: d[type+'Color'], Size: d[type+'Size'], Weight: d[type+'Weight'], Stroke: d[type+'Stroke'], StrokeWidth: d[type+'StrokeWidth'],
+                Bg: d[type+'Bg'], Bg2: d[type+'Bg2'], Opacity: d[type+'Opacity'], BorderOn: d[type+'BorderOn'], Border: d[type+'Border'], BorderW: d[type+'BorderW'],
+                Shadow2: d[type+'Shadow2'], Shadow2C: d[type+'Shadow2C'], Width: d[type+'Width'], Height: d[type+'Height']
+            };
+        }
+
+        document.getElementById("ed-box-font").value = conf.Font; document.getElementById("ed-box-color").value = conf.Color;
+        document.getElementById("ed-box-size").value = conf.Size * 10; document.getElementById("ed-box-weight").value = conf.Weight;
+        document.getElementById("ed-box-stroke").value = conf.Stroke === "transparent" ? "#ffffff" : conf.Stroke;
+        document.getElementById("ed-box-stroke-w").value = conf.StrokeWidth * 10;
+        
+        document.getElementById("ed-box-bg").value = conf.Bg || "#ffffff";
+        document.getElementById("ed-box-bg2").value = conf.Bg2 || "#ffffff";
+        document.getElementById("ed-box-opacity").value = conf.Opacity !== undefined ? conf.Opacity : 100;
+        document.getElementById("ed-box-hasBorder").checked = conf.BorderOn || false;
+        document.getElementById("ed-box-border").value = conf.Border || "#000000";
+        document.getElementById("ed-box-border-w").value = conf.BorderW !== undefined ? conf.BorderW : 0;
+        document.getElementById("ed-box-shadow2").checked = conf.Shadow2 || false;
+        document.getElementById("ed-box-shadow2-c").value = conf.Shadow2C || "#000000";
+        
+        // อ่านค่า width และ height จาก conf (fallback ตรวจสอบพิมพ์เล็ก-ใหญ่)
+        let cWidth = conf.Width;
+        if(cWidth === undefined) cWidth = conf.width;
+        if(cWidth === undefined) cWidth = 60;
+
+        let cHeight = conf.Height;
+        if(cHeight === undefined) cHeight = conf.height;
+        if(cHeight === undefined) cHeight = 40;
+
+        document.getElementById("ed-box-width").value = cWidth;
+        document.getElementById("ed-box-height").value = cHeight;
+
+        document.getElementById("previewText").innerText = (type === 'p') ? boards[currentBoardIdx].settings.price : (conf.text || "ตัวอย่าง");
+        
+        previewBoxDesign(); document.getElementById("boxDesignModal").style.display = "flex";
+    }
+
+    function previewBoxDesign() {
+        const p = document.getElementById("previewText");
+        p.style.fontFamily = document.getElementById("ed-box-font").value; p.style.color = document.getElementById("ed-box-color").value;
+        p.style.fontSize = (document.getElementById("ed-box-size").value / 10) + 'rem'; p.style.fontWeight = document.getElementById("ed-box-weight").value;
+        p.style.webkitTextStroke = (document.getElementById("ed-box-stroke-w").value / 10) + 'px ' + document.getElementById("ed-box-stroke").value;
+        
+        if(document.getElementById("ed-box-shadow2").checked) {
+             const c = document.getElementById("ed-box-shadow2-c").value;
+             p.style.textShadow = `2px 2px 0px ${c}, 4px 4px 5px rgba(0,0,0,0.3)`;
+        } else { p.style.textShadow = '2px 2px 4px rgba(0,0,0,0.1)'; }
+
+        const pElem = document.getElementById("previewElement");
+        const bg1 = document.getElementById("ed-box-bg").value;
+        const bg2 = document.getElementById("ed-box-bg2").value;
+        const op = document.getElementById("ed-box-opacity").value;
+        
+        if(bg1 && bg2 && bg1 !== bg2) {
+             pElem.style.background = `linear-gradient(to bottom, ${hexToRgba(bg1, op)}, ${hexToRgba(bg2, op)})`;
+        } else {
+             pElem.style.background = hexToRgba(bg1, op);
+        }
+        
+        if(document.getElementById("ed-box-hasBorder").checked) {
+            pElem.style.border = document.getElementById("ed-box-border-w").value + 'px solid ' + document.getElementById("ed-box-border").value;
+        } else { pElem.style.border = 'none'; }
+        
+        pElem.style.borderRadius = '10px';
+        pElem.style.minWidth = document.getElementById("ed-box-width").value + "px";
+        pElem.style.minHeight = document.getElementById("ed-box-height").value + "px";
+
+        if(currentEditType.startsWith('c-')) { p.innerText = document.getElementById("ed-box-text").value; }
+    }
+
+    function saveBoxDesign() {
+        const t = currentEditType; const d = boards[currentBoardIdx].design;
+        const vals = {
+            Font: document.getElementById("ed-box-font").value, Color: document.getElementById("ed-box-color").value,
+            Size: document.getElementById("ed-box-size").value / 10, Weight: document.getElementById("ed-box-weight").value,
+            Stroke: document.getElementById("ed-box-stroke").value, StrokeWidth: document.getElementById("ed-box-stroke-w").value / 10,
+            Bg: document.getElementById("ed-box-bg").value, Bg2: document.getElementById("ed-box-bg2").value,
+            Opacity: parseInt(document.getElementById("ed-box-opacity").value),
+            BorderOn: document.getElementById("ed-box-hasBorder").checked, Border: document.getElementById("ed-box-border").value, BorderW: document.getElementById("ed-box-border-w").value,
+            Shadow2: document.getElementById("ed-box-shadow2").checked, Shadow2C: document.getElementById("ed-box-shadow2-c").value,
+            Width: document.getElementById("ed-box-width").value, Height: document.getElementById("ed-box-height").value
+        };
+
+        if (t.startsWith('c-')) {
+            const idx = parseInt(t.split('-')[1]);
+            const box = d.customBoxes[idx];
+            // Fix Bug ความยาวกล่องข้อความ: บันทึกข้อมูลให้เป็น Capitalized ตรงตาม Object 
+            Object.assign(box, {
+                Font: vals.Font, Color: vals.Color, Size: vals.Size, Weight: vals.Weight, Stroke: vals.Stroke, StrokeWidth: vals.StrokeWidth,
+                Bg: vals.Bg, Bg2: vals.Bg2, Opacity: vals.Opacity,
+                BorderOn: vals.BorderOn, Border: vals.Border, BorderW: vals.BorderW,
+                Shadow2: vals.Shadow2, Shadow2C: vals.Shadow2C, 
+                Width: vals.Width, Height: vals.Height,
+                text: document.getElementById("ed-box-text").value
+            });
+        } else {
+            d[t+'Font']=vals.Font; d[t+'Color']=vals.Color; d[t+'Size']=vals.Size; d[t+'Weight']=vals.Weight; d[t+'Stroke']=vals.Stroke; d[t+'StrokeWidth']=vals.StrokeWidth;
+            d[t+'Bg']=vals.Bg; d[t+'Bg2']=vals.Bg2; d[t+'Opacity']=vals.Opacity;
+            d[t+'BorderOn']=vals.BorderOn; d[t+'Border']=vals.Border; d[t+'BorderW']=vals.BorderW;
+            d[t+'Shadow2']=vals.Shadow2; d[t+'Shadow2C']=vals.Shadow2C; 
+            d[t+'Width']=vals.Width; d[t+'Height']=vals.Height;
+        }
+        saveAll(); renderBoardUI(); closeModal('boxDesignModal');
+    }
+
+    // --- Grid Design (แก้ไขป้ายจอง) ---
+    function openGridDesignModal() {
+        const d = boards[currentBoardIdx].design;
+        document.getElementById("ed-bg1").value = d.bg1; document.getElementById("ed-bg2").value = d.bg2;
+        document.getElementById("ed-border").value = d.border; document.getElementById("ed-border-w").value = d.borderWidth;
+        document.getElementById("ed-shadow").value = d.shadow; document.getElementById("ed-shadow-dark").value = d.shadowDark; document.getElementById("ed-shadow-light").value = d.shadowLight;
+        document.getElementById("ed-grid-shape").value = d.gridShape;
+        
+        document.getElementById("ed-label-text-content").value = d.labelTextContent || "จองแล้ว";
+        document.getElementById("ed-label-bg").value = d.labelBg; document.getElementById("ed-label-text").value = d.labelText;
+        document.getElementById("ed-label-border").value = d.labelBorder; document.getElementById("ed-label-shape").value = d.labelShape;
+        document.getElementById("ed-label-scale").value = d.labelScale * 10;
+        document.getElementById("ed-grid-font").value = d.gridFont; document.getElementById("ed-grid-color").value = d.gridColor;
+        document.getElementById("ed-grid-size").value = d.gridSize * 10; document.getElementById("ed-grid-weight").value = d.gridWeight;
+        document.getElementById("ed-grid-stroke").value = d.gridStroke === "transparent" ? "#ffffff" : d.gridStroke;
+        document.getElementById("ed-grid-stroke-w").value = d.gridStrokeWidth * 10;
+        document.getElementById("gridDesignModal").style.display = "flex"; previewGridDesign();
+    }
+    function previewGridDesign() {
+        const cfg = { ...boards[currentBoardIdx].design };
+        cfg.bg1 = document.getElementById("ed-bg1").value; cfg.bg2 = document.getElementById("ed-bg2").value;
+        cfg.border = document.getElementById("ed-border").value; cfg.borderWidth = document.getElementById("ed-border-w").value;
+        cfg.shadow = document.getElementById("ed-shadow").value; cfg.shadowDark = document.getElementById("ed-shadow-dark").value; cfg.shadowLight = document.getElementById("ed-shadow-light").value;
+        cfg.gridShape = document.getElementById("ed-grid-shape").value;
+        
+        const textContent = document.getElementById("ed-label-text-content").value || "จองแล้ว";
+        document.getElementById("previewLabelText").innerText = textContent; 
+        
+        cfg.labelBg = document.getElementById("ed-label-bg").value; cfg.labelText = document.getElementById("ed-label-text").value;
+        cfg.labelBorder = document.getElementById("ed-label-border").value; cfg.labelShape = document.getElementById("ed-label-shape").value;
+        cfg.labelScale = document.getElementById("ed-label-scale").value / 10;
+        cfg.gridFont = document.getElementById("ed-grid-font").value; cfg.gridColor = document.getElementById("ed-grid-color").value;
+        cfg.gridSize = document.getElementById("ed-grid-size").value / 10; cfg.gridWeight = document.getElementById("ed-grid-weight").value;
+        cfg.gridStroke = document.getElementById("ed-grid-stroke").value; cfg.gridStrokeWidth = document.getElementById("ed-grid-stroke-w").value / 10;
+        applyDesign(cfg);
+    }
+    function saveGridDesign() {
+        const d = boards[currentBoardIdx].design;
+        d.bg1 = document.getElementById("ed-bg1").value; d.bg2 = document.getElementById("ed-bg2").value;
+        d.border = document.getElementById("ed-border").value; d.borderWidth = document.getElementById("ed-border-w").value;
+        d.shadow = document.getElementById("ed-shadow").value; d.shadowDark = document.getElementById("ed-shadow-dark").value; d.shadowLight = document.getElementById("ed-shadow-light").value;
+        d.gridShape = document.getElementById("ed-grid-shape").value;
+        
+        d.labelTextContent = document.getElementById("ed-label-text-content").value || "จองแล้ว"; 
+        
+        d.labelBg = document.getElementById("ed-label-bg").value; d.labelText = document.getElementById("ed-label-text").value;
+        d.labelBorder = document.getElementById("ed-label-border").value; d.labelShape = document.getElementById("ed-label-shape").value;
+        d.labelScale = document.getElementById("ed-label-scale").value / 10;
+        d.gridFont = document.getElementById("ed-grid-font").value; d.gridColor = document.getElementById("ed-grid-color").value;
+        d.gridSize = document.getElementById("ed-grid-size").value / 10; d.gridWeight = document.getElementById("ed-grid-weight").value;
+        d.gridStroke = document.getElementById("ed-grid-stroke").value; d.gridStrokeWidth = document.getElementById("ed-grid-stroke-w").value / 10;
+        saveAll(); renderGrid(); closeModal('gridDesignModal'); 
+    }
+
+    checkLoginStatus();
+    // เปิดหน้าต่างข้อมูลผู้ขาย
+function openSellerInfoModal() {
+    const board = boards[currentBoardIdx];
+    // ถ้ายังไม่มีชุดข้อมูลนี้ ให้สร้างค่าเริ่มต้น
+    if (!board.sellerInfo) {
+        board.sellerInfo = { text: "", color: "#333333", image: "" };
+    }
+    
+    const info = board.sellerInfo;
+    const txtArea = document.getElementById("sellerText");
+    txtArea.value = info.text || "";
+    txtArea.style.color = info.color || "#333333";
+    document.getElementById("sellerTextColor").value = info.color || "#333333";
+    
+    const preview = document.getElementById("sellerImgPreview");
+    const removeBtn = document.getElementById("btnRemoveSellerImg");
+    
+    if (info.image) {
+        preview.src = info.image;
+        preview.style.display = "block";
+        removeBtn.style.display = "block";
+    } else {
+        preview.src = "";
+        preview.style.display = "none";
+        removeBtn.style.display = "none";
+    }
+    
+    document.getElementById("sellerImgUpload").value = ""; 
+    document.getElementById("sellerModal").style.display = "flex";
+}
+
+// ปิดหน้าต่าง
+function closeSellerInfoModal() {
+    document.getElementById("sellerModal").style.display = "none";
+}
+
+// ฟังก์ชันแปลงรูปที่อัพโหลดขึ้นมาแสดงพรีวิว
+document.getElementById("sellerImgUpload").addEventListener("change", function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const preview = document.getElementById("sellerImgPreview");
+            preview.src = event.target.result;
+            preview.style.display = "block";
+            document.getElementById("btnRemoveSellerImg").style.display = "block";
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// กดลบรูปทิ้ง
+function removeSellerImg() {
+    document.getElementById("sellerImgPreview").src = "";
+    document.getElementById("sellerImgPreview").style.display = "none";
+    document.getElementById("btnRemoveSellerImg").style.display = "none";
+    document.getElementById("sellerImgUpload").value = "";
+}
+
+// ฟังก์ชันบันทึกข้อมูล (จะถูกดึงไปเก็บรวมกับการเซฟแผง)
+function saveSellerInfo() {
+    const board = boards[currentBoardIdx];
+    if (!board.sellerInfo) board.sellerInfo = {};
+    
+    board.sellerInfo.text = document.getElementById("sellerText").value;
+    board.sellerInfo.color = document.getElementById("sellerTextColor").value;
+    
+    const previewSrc = document.getElementById("sellerImgPreview").src;
+    if (previewSrc && previewSrc.startsWith("data:image")) {
+        board.sellerInfo.image = previewSrc;
+    } else {
+        board.sellerInfo.image = "";
+    }
+    
+    saveGameSettings(); // บันทึกข้อมูลลงในระบบ (ใช้ฟังก์ชันเดิมที่มีอยู่)
+    closeSellerInfoModal();
+}
+// =========================================================
+// เริ่มต้น JavaScript: ระบบ Card Slider สรุปลูกค้า
+// =========================================================
+let currentSlideIndex = 0;
+let summaryCustomers = [];
+
+function openCardSlider() {
+    // 1. เช็คก่อนว่าแผงปัจจุบันมีค่าไหม
+    if (typeof boards === 'undefined' || typeof currentBoardIdx === 'undefined') {
+        alert("ระบบหาตัวแปรแผงไม่เจอ (boards)");
+        return;
+    }
+
+    const board = boards[currentBoardIdx];
+    if (!board) {
+        alert("ไม่พบข้อมูลแผงปัจจุบัน");
+        return;
+    }
+
+    let customersData = {};
+    
+    // 2. ดักจับโครงสร้างข้อมูลของระบบคุณ (บางระบบใช้ data, บางระบบใช้ booked หรือ numbers)
+    let targetData = board.data || board.booked || board.numbers;
+
+    if (!targetData) {
+        alert("หาที่เก็บข้อมูลคนจองในระบบไม่เจอครับ (หา data, booked ไม่เจอ)");
+        return;
+    }
+
+    // 3. เริ่มดึงข้อมูล
+    for (let num in targetData) {
+        let bookingInfo = targetData[num];
+        
+        // ตรวจสอบว่าเบอร์นี้มีข้อมูลการจองและมีชื่อจริงไหม
+        if (bookingInfo && bookingInfo.name && bookingInfo.name.trim() !== "") {
+            let name = bookingInfo.name;
+            
+            if (!customersData[name]) {
+                customersData[name] = {
+                    name: name,
+                    numbers: [],
+                    image: bookingInfo.image || '', 
+                    totalPrice: 0
+                };
+            }
+            
+            customersData[name].numbers.push(num);
+            
+            // ดึงราคา (รองรับทั้งการดึงจากเบอร์, จากตั้งค่าแผง หรือราคาแผงรวม)
+            let price = parseInt(bookingInfo.price) || 0;
+            if (price === 0 && board.settings && board.settings.price) {
+                price = parseInt(board.settings.price);
+            } else if (price === 0 && board.price) {
+                price = parseInt(board.price);
+            }
+            
+            customersData[name].totalPrice += price;
+            
+            if (bookingInfo.image) {
+                customersData[name].image = bookingInfo.image;
+            }
+        }
+    }
+
+    summaryCustomers = Object.values(customersData);
+
+    // 4. เช็คว่าสรุปแล้วมีคนจองไหม
+    if (summaryCustomers.length === 0) {
+        alert("ยังไม่มีข้อมูลลูกค้าที่จองเบอร์ในแผงนี้ครับ (ระบบดึงชื่อไม่ได้)");
+        return;
+    }
+
+    // 5. เตรียมแสดงผลป๊อปอัป
+    let overlay = document.getElementById("cardSliderOverlay");
+    if (!overlay) {
+        alert("ไม่พบโค้ด HTML ของป๊อปอัป (cardSliderOverlay) กรุณาเช็คว่าวาง HTML ไว้ถูกที่ไหม");
+        return;
+    }
+
+    // ถ้าผ่านหมดทุกด่าน ให้แสดงป๊อปอัป
+    currentSlideIndex = 0;
+    renderSlider();
+    renderSellerInfo(board);
+    overlay.style.display = "flex";
+}
+function closeCardSlider() {
+    document.getElementById("cardSliderOverlay").style.display = "none";
+}
+
+function renderSlider() {
+    const track = document.getElementById("sliderTrack");
+    const dotsContainer = document.getElementById("sliderDots");
+    track.innerHTML = "";
+    dotsContainer.innerHTML = "";
+
+    summaryCustomers.forEach((cust, index) => {
+        // 1. สร้างการ์ดลูกค้า
+        const card = document.createElement("div");
+        card.className = "customer-card";
+        
+        // เช็คว่ามีรูปไหม ถ้าไม่มีให้ใส่ไอคอนคน
+        const imgDisplay = cust.image 
+            ? `<img src="${cust.image}" class="customer-img">` 
+            : `<div class="customer-img" style="display:flex; justify-content:center; align-items:center; font-size:3rem; color:#ccc;">👤</div>`;
+            
+        // วนลูปเบอร์ที่ซื้อมาทำเป็นป้ายสวยๆ
+        const numbersHtml = cust.numbers.map(n => `<span class="number-badge">${n}</span>`).join(" ");
+
+        card.innerHTML = `
+            ${imgDisplay}
+            <div class="customer-name">${cust.name}</div>
+            <div class="customer-numbers">
+                <div style="font-size:0.8rem; color:#666; margin-bottom:5px;">เบอร์ที่ซื้อ:</div>
+                ${numbersHtml}
+            </div>
+            <div class="customer-total">ยอดรวม: ฿${cust.totalPrice.toLocaleString()}</div>
+        `;
+        track.appendChild(card);
+
+        // 2. สร้างจุด (Dots) ด้านล่าง
+        const dot = document.createElement("div");
+        dot.className = `dot ${index === 0 ? 'active' : ''}`;
+        dot.onclick = () => goToSlide(index);
+        dotsContainer.appendChild(dot);
+    });
+
+    updateSliderPosition();
+}
+
+function renderSellerInfo(board) {
+    const sellerContainer = document.getElementById("sellerSectionDisplay");
+    
+    // ดึงข้อมูลผู้ขาย
+    let sellerImage = "";
+    let sellerName = "ไม่ระบุชื่อผู้ขาย";
+    let sellerColor = "#333";
+
+    if (board.sellerInfo) {
+        sellerImage = board.sellerInfo.image || "";
+        sellerName = board.sellerInfo.text || "ไม่ระบุชื่อผู้ขาย";
+        sellerColor = board.sellerInfo.color || "#333";
+    }
+
+    const imgDisplay = sellerImage 
+        ? `<img src="${sellerImage}" class="seller-img">` 
+        : `<div class="seller-img" style="display:flex; justify-content:center; align-items:center; font-size:2rem; color:#ccc; background:#eee;">🏪</div>`;
+
+    sellerContainer.innerHTML = `
+        ${imgDisplay}
+        <div class="seller-info">
+            <div class="seller-info-title">ข้อมูลผู้ขาย / ผู้รับเงิน</div>
+            <div class="seller-info-text" style="color: ${sellerColor}">${sellerName}</div>
+        </div>
+    `;
+}
+
+// ฟังก์ชันควบคุมการเลื่อนซ้าย-ขวา
+function moveSlider(direction) {
+    let newIndex = currentSlideIndex + direction;
+    if (newIndex < 0) newIndex = summaryCustomers.length - 1;
+    if (newIndex >= summaryCustomers.length) newIndex = 0;
+    goToSlide(newIndex);
+}
+
+function goToSlide(index) {
+    currentSlideIndex = index;
+    updateSliderPosition();
+}
+
+function updateSliderPosition() {
+    const track = document.getElementById("sliderTrack");
+    const dots = document.querySelectorAll(".dot");
+    
+    // ขยับ track ตาม index
+    track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+    
+    // อัปเดตสีจุด
+    dots.forEach((dot, idx) => {
+        dot.className = `dot ${idx === currentSlideIndex ? 'active' : ''}`;
+    });
+}
+
+// ระบบ Swipe (ใช้นิ้วปัดซ้ายขวาบนมือถือ) แบบปรับปรุงใหม่
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.addEventListener('touchstart', e => {
+    // เช็คว่านิ้วสัมผัสโดนบริเวณป๊อปอัปสไลด์หรือไม่
+    if (e.target.closest('#sliderWrapper')) {
+        touchStartX = e.changedTouches[0].screenX;
+    }
+});
+
+document.addEventListener('touchend', e => {
+    if (e.target.closest('#sliderWrapper')) {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }
+});
+
+function handleSwipe() {
+    if (touchEndX < touchStartX - 50) moveSlider(1); // ปัดซ้าย (ดูคนถัดไป)
+    if (touchEndX > touchStartX + 50) moveSlider(-1); // ปัดขวา (ดูคนก่อนหน้า)
+}
+
+function handleSwipe() {
+    if (touchEndX < touchStartX - 50) moveSlider(1); // ปัดซ้าย (ดูคนถัดไป)
+    if (touchEndX > touchStartX + 50) moveSlider(-1); // ปัดขวา (ดูคนก่อนหน้า)
+}
+// =========================================================
+// สิ้นสุด JavaScript: ระบบ Card Slider สรุปลูกค้า
+// =========================================================
+</script>
+<div id="cardSliderOverlay" class="card-slider-overlay">
+    <div class="card-slider-container">
+        <div class="card-header">
+            <h2>💕 สรุปลูกค้า 💕</h2>
+            <button class="close-slider-btn" onclick="closeCardSlider()">✖</button>
+        </div>
+        
+        <div class="slider-wrapper" id="sliderWrapper">
+            <button class="slider-arrow arrow-left" onclick="moveSlider(-1)">❮</button>
+            <button class="slider-arrow arrow-right" onclick="moveSlider(1)">❯</button>
+            
+            <div class="slider-track" id="sliderTrack">
+                </div>
+        </div>
+        
+        <div class="seller-section" id="sellerSectionDisplay">
+            </div>
+
+        <div class="slider-dots" id="sliderDots">
+            </div>
+    </div>
+</div>
+</body>
+</html>
