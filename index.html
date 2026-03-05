@@ -61,7 +61,7 @@
             position: absolute; z-index: 80; cursor: grab; 
             display: flex; justify-content: center; align-items: center; 
             box-sizing: border-box;
-            min-width: 10px; min-height: 10px; 
+            min-width: 60px; min-height: 40px; 
         }
         .floating-item:active { cursor: grabbing; }
         .floating-item input { 
@@ -550,7 +550,13 @@
 
 <div id="bookingModal" class="modal-overlay">
     <div class="modal-box">
-        <div style="font-size: 1.6rem; font-weight: 900; margin-bottom: 15px;">เบอร์ <span id="modalNum" style="color:#b84cff;"></span></div>
+        <div style="font-size: 1.6rem; font-weight: 900; margin-bottom: 15px;">จัดการซื้อ <span id="modalNum" style="color:#8400db;"></span></div>
+        <div style="text-align: center; margin-bottom: 15px;">
+    <span style="font-family: 'Kanit', sans-serif; font-size: 18px; color: #0f5596;">คุณกำลังเลือกซื้อหมายเลข</span>
+    <div id="displayNum" style="font-size: 40px; font-weight: 900; color: #e84118; text-shadow: 2px 2px #312a17;">
+        <span id="displaySelectedNumber">--</span>
+    </div>
+</div>
         <input type="text" id="inputName" class="modal-input" placeholder="ชื่อลูกค้า">
         <input type="text" id="inputPrice" class="modal-input" placeholder="ราคา">
         
@@ -1086,7 +1092,7 @@ function toggleDisplayMode() {
             Stroke: "transparent", StrokeWidth: 0,
             Bg: "#ffffff", Bg2: "#ffffff", Opacity: 100, BorderOn: false, Border: "#000000", BorderW: 2,
             Shadow2: false, Shadow2C: "#000000",
-            Width: 30, Height: 30
+            Width: 100, Height: 50 
         };
         boards[currentBoardIdx].design.customBoxes.push(newBox);
         saveAll(); renderCustomBoxes();
@@ -1215,7 +1221,7 @@ function renderGrid() {
             visibleCount++;
         }
 
-        // ระบบคลิก
+// ระบบคลิก
         d.onclick = () => {
             const wrapper = document.getElementById("gameWrapper");
             if(wrapper && wrapper.classList.contains("edit-mode")) return;
@@ -1246,7 +1252,14 @@ function renderGrid() {
                     };
                 }
 
-                if(modal) modal.style.display = "flex";
+                if(modal) {
+                    modal.style.display = "flex";
+                    // ✅ แสดงเบอร์ที่เลือกในหน้าต่าง
+                    const displayElement = document.getElementById("displaySelectedNumber");
+                    if (displayElement) {
+                        displayElement.innerText = n;
+                    }
+                }
             } else {
                 if(confirm("ยกเลิกเบอร์ " + n + "?")){ 
                     delete b.data[n]; 
@@ -1258,7 +1271,7 @@ function renderGrid() {
             }
         };
         g.appendChild(d);
-    }
+    } // สิ้นสุดการวนลูปสร้างเบอร์
 
     // --- จัดการขนาด Grid ---
     if (typeof isFiltered !== 'undefined' && isFiltered) {
@@ -1413,7 +1426,7 @@ function renderGrid() {
         });
 
         document.getElementById("detailedGrandTotal").innerText = grandTotal.toLocaleString();
-        document.getElementById("detailedSummaryModal").style.display = "flex";
+        document.getElementById("detailedSummaryModal").style.display = "flex";   
     }
 
     function resetBoard() { if(confirm("ล้างข้อมูลในแผงนี้ทั้งหมด?")) { boards[currentBoardIdx].data = {}; saveAll(); renderGrid(); updateAdminTable(); } }
@@ -1689,7 +1702,7 @@ function renderGrid() {
             c.appendChild(img);
         }
         document.getElementById("bgSelectModal").style.display = "flex";
-    }
+}
     
     let currentEditType = null;
     function openBoxDesignModal(type) {
