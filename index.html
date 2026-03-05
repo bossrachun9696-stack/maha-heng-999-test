@@ -1156,13 +1156,13 @@ function renderGrid() {
         // --- แยกการปรับขนาดตามโหมด ---
         if (b.displayMode === 1) {
             d.style.aspectRatio = "auto"; 
-            d.style.minHeight = "40px"; 
+            d.style.minHeight = "35px"; 
             d.style.padding = "10px"; 
             d.innerHTML = `<span class="val" style="font-size: clamp(22px, 6vw, 40px); font-weight: bold; white-space: nowrap;">${n}</span>
                            <span class="label" style="font-size: 0.85em; margin-top: 5px;">${customLabelText}</span>`;
         } else if (b.displayMode === 2) {
             d.style.aspectRatio = "auto"; 
-            d.style.minHeight = "20px"; // ลดความสูงลงให้โชว์หลายแถวได้สวยๆ
+            d.style.minHeight = "15px"; // ลดความสูงลงให้โชว์หลายแถวได้สวยๆ
             d.style.padding = "5px"; 
             d.innerHTML = `<span class="val" style="font-size: clamp(14px, 3.5vw, 20px); font-weight: bold; white-space: nowrap;">${n}</span>
                            <span class="label" style="font-size: 0.7em; margin-top: 2px;">${customLabelText}</span>`;
@@ -2151,3 +2151,4 @@ function handleSwipe() {
 </body>
 
 </html>
+
