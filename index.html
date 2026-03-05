@@ -849,7 +849,6 @@ function toggleDisplayMode() {
                     trialBtn.onclick = enterApp; 
                     trialBtn.classList.remove("btn-trial");
                     trialBtn.classList.add("btn-login"); 
-                    isTrialUser = true;
                 }
             } else {
                 trialBtn.disabled = false;
@@ -900,49 +899,7 @@ function toggleDisplayMode() {
         } catch (err) { alert("ลงทะเบียนไม่สำเร็จ"); trialBtn.disabled = false; }
     }
 
-    function enterApp() { 
-        loginScreen.style.display = "none"; 
-        mainContent.style.display = "flex"; 
-        initApp(); 
-        
-        // ถ้าเป็นคนใช้ทดลอง ให้เปิดระบบกันแคปหน้าจอ
-        if (isTrialUser) {
-            activateAntiCapture();
-        }
-    }
-
-    // ฟังก์ชันระบบดักจับและเบลอหน้าจอ
-    function activateAntiCapture() {
-        const warningScreen = document.getElementById("antiCaptureWarning");
-        const mainContentArea = document.getElementById("main-content");
-
-        // 1. ดักจับเมื่อสูญเสียโฟกัส (เช่น กำลังสลับแอป หรือเปิดโปรแกรม Snipping tool)
-        window.addEventListener('blur', () => {
-            if (warningScreen && mainContentArea) {
-                mainContentArea.style.filter = "blur(20px)"; // สั่งเบลอแผงหวย
-                warningScreen.style.display = "flex"; // แสดงหน้าจอดำคำเตือน
-            }
-        });
-
-        // 2. คืนสภาพเดิมเมื่อกลับมาเล่นตามปกติ
-        window.addEventListener('focus', () => {
-            if (warningScreen && mainContentArea) {
-                mainContentArea.style.filter = "none"; // เอาเบลอออก
-                warningScreen.style.display = "none"; // ปิดหน้าคำเตือน
-            }
-        });
-
-        // 3. ป้องกันการกดปุ่ม Print Screen (สำหรับคนเล่นในคอมพิวเตอร์)
-        document.addEventListener('keyup', (e) => {
-            if (e.key === 'PrintScreen') {
-                if (warningScreen) warningScreen.style.display = "flex";
-                // แทรกข้อความกวนๆ ลงในคลิปบอร์ดแทนการแคป
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText("ช่วงทดลองใช้งาน ไม่อนุญาตให้แคปหน้าจอ กรุณาซื้อ Token");
-                }
-            }
-        });
-    }
+    function enterApp() { loginScreen.style.display = "none"; mainContent.style.display = "flex"; initApp(); }
     function logoutApp() { if(confirm("ออกจากระบบ?")) { localStorage.removeItem("saved_lotto_token"); location.reload(); } }
 
     // --- Core Logic ---
@@ -950,7 +907,7 @@ function toggleDisplayMode() {
     let currentBoardIdx = 0;
     let tempBookingImage = null; // เก็บรูประหว่างจอง
     let currentNum = null;
-    let isTrialUser = false; // ตัวแปรสำหรับเช็คว่าเป็นผู้ใช้ทดลองหรือไม่
+
     const defaultDesign = { 
         bgImage: "bg.jpg", bgSize: "100% 100%", bg1: "#ffffff", bg2: "#f0f0f0", border: "#eeeeee", borderWidth: 1, gridShape: "12px", 
         shadow: 4, shadowDark: "#a3a3a3", shadowLight: "#ffffff", labelBg: "#ff4757", labelText: "#ffffff", labelBorder: "#ff4757", labelShape: "5px", labelScale: 1, 
@@ -2255,11 +2212,6 @@ function toggleDateBox() {
         <div class="slider-dots" id="sliderDots">
             </div>
     </div>
-</div>
-<div id="antiCaptureWarning" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 99999; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
-    <div style="font-size: 5rem; margin-bottom: 20px;">🔒</div>
-    <h1 style="color: #ff4757; font-size: 2.5rem; margin-bottom: 10px; font-family: 'Kanit', sans-serif;">ไม่อนุญาตให้บันทึกภาพ</h1>
-    <p style="font-size: 1.2rem; font-family: 'Kanit', sans-serif;">คุณกำลังใช้งานใน "รุ่นทดลองฟรี"<br>กรุณาติดต่อผู้พัฒนาเพื่อซื้อ Token สำหรับใช้งานจริง</p>
 </div>
 </body>
 </html>
