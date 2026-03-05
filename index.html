@@ -61,7 +61,7 @@
             position: absolute; z-index: 80; cursor: grab; 
             display: flex; justify-content: center; align-items: center; 
             box-sizing: border-box;
-            min-width: 60px; min-height: 40px; 
+            min-width: 10px; min-height: 10px; 
         }
         .floating-item:active { cursor: grabbing; }
         .floating-item input { 
@@ -88,8 +88,35 @@
         .edit-hint { display: none; position: absolute; top: 10px; left: 0; width: 100%; text-align: center; background: rgba(0,0,0,0.8); color: #fff; padding: 8px; font-size: 0.9rem; pointer-events: none; z-index: 100; }
         .wrapper.edit-mode .edit-hint { display: block; }
         
-        .add-box-btn { display: none; position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: #2ed573; color: white; padding: 10px 20px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 101; border: none; }
-        .wrapper.edit-mode .add-box-btn { display: block; }
+        /* Container สำหรับจัดกลุ่มปุ่มด้านล่างให้อยู่ติดกัน */
+.bottom-btn-group { 
+    display: none; 
+    position: absolute; 
+    bottom: 20px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    z-index: 101; 
+    gap: 10px; /* ระยะห่างระหว่างปุ่ม 10px */
+}
+.wrapper.edit-mode .bottom-btn-group { 
+    display: flex; 
+}
+
+/* สไตล์พื้นฐานของปุ่มทั้งสอง */
+.add-box-btn, .toggle-date-btn { 
+    color: white; 
+    padding: 10px 20px; 
+    border-radius: 50px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+    border: none; 
+    transition: 0.2s;
+    font-family: 'Kanit', sans-serif;
+}
+.add-box-btn { background: #2ed573; }
+.toggle-date-btn { background: #ff4757; }
+.add-box-btn:active, .toggle-date-btn:active { transform: scale(0.95); }
 
         /* Date Container Modifications */
         .date-container { 
@@ -461,7 +488,10 @@
     </div>
     <div class="wrapper" id="gameWrapper">
         <div class="edit-hint">👆 ลาก/ขยายด้วยสองนิ้ว | แตะเพื่อแก้ไข</div>
-        <button class="add-box-btn" onclick="addNewTextBox()">+ เพิ่มข้อความ</button>
+        <div class="bottom-btn-group">
+    <button class="toggle-date-btn" id="btnToggleDate" onclick="toggleDateBox()">📅 ปิดปฏิทิน</button>
+    <button class="add-box-btn" onclick="addNewTextBox()">+ เพิ่มข้อความ</button>
+</div>
         
         <div id="box-price" class="floating-item" data-type="p" style="top:15%; left:5%;">
             <input type="text" id="pricePerTicket" value="40" onchange="saveGameSettings()">
@@ -1056,7 +1086,7 @@ function toggleDisplayMode() {
             Stroke: "transparent", StrokeWidth: 0,
             Bg: "#ffffff", Bg2: "#ffffff", Opacity: 100, BorderOn: false, Border: "#000000", BorderW: 2,
             Shadow2: false, Shadow2C: "#000000",
-            Width: 100, Height: 50 
+            Width: 30, Height: 30
         };
         boards[currentBoardIdx].design.customBoxes.push(newBox);
         saveAll(); renderCustomBoxes();
@@ -2125,6 +2155,24 @@ function handleSwipe() {
 // =========================================================
 // สิ้นสุด JavaScript: ระบบ Card Slider สรุปลูกค้า
 // =========================================================
+// =========================================================
+// ฟังก์ชัน เปิด/ปิด การแสดงผลปฏิทิน (Date Box)
+// =========================================================
+function toggleDateBox() {
+    const dateBox = document.getElementById("dateBox");
+    const btnToggle = document.getElementById("btnToggleDate");
+    
+    // ตรวจสอบสถานะว่าถูกซ่อนอยู่หรือไม่
+    if (dateBox.style.display === "none") {
+        dateBox.style.display = "flex"; // สั่งให้แสดงผล
+        btnToggle.innerHTML = "📅 ปิดปฏิทิน";
+        btnToggle.style.background = "#ff4757"; // กลับมาใช้ปุ่มสีแดง
+    } else {
+        dateBox.style.display = "none"; // สั่งให้ซ่อน
+        btnToggle.innerHTML = "📅 เปิดปฏิทิน";
+        btnToggle.style.background = "#3742fa"; // เปลี่ยนปุ่มเป็นสีน้ำเงินเพื่อให้รู้ว่าต้องกดเพื่อเปิด
+    }
+}
 </script>
 <div id="cardSliderOverlay" class="card-slider-overlay">
     <div class="card-slider-container">
@@ -2149,8 +2197,4 @@ function handleSwipe() {
     </div>
 </div>
 </body>
-
 </html>
-
-
-
