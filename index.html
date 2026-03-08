@@ -517,6 +517,10 @@
         <button onclick="openSellerInfoModal()" style="background: #4D96FF; color: white; border: none; border-radius: 10px; padding: 0 15px; font-family: 'Kanit'; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
             👤 User
         </button>
+        
+        <div id="userStatusDisplay" style="font-size: 0.85rem; padding: 0 10px; border-radius: 10px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); white-space: nowrap; display: flex; align-items: center; justify-content: center;">
+            ⏳ ตรวจสอบสถานะ...
+        </div>
     </div>
     <div class="wrapper" id="gameWrapper">
         <div class="edit-hint">👆 ลาก/ขยายด้วยสองนิ้ว | แตะเพื่อแก้ไข</div>
@@ -576,6 +580,7 @@
             <button class="admin-btn" id="btnToggleEdit" style="background: linear-gradient(45deg, #FF9F43, #FF6B6B); color:white;" onclick="toggleEditMode()">🔧 จัดวาง</button>
             <button id="btnFilterNum" class="admin-btn" style="background: #3498db; color: white;" onclick="toggleFilterBooked()">🔍 ซ่อนเลขจองแล้ว</button>
             <button id="btnToggleMode" class="admin-btn" style="background: #2ecc71; color: white;" onclick="toggleDisplayMode()">🔠 เปลี่ยนเป็นโหมด (10-19)</button>
+           <button class="nav-btn" onclick="openSummaryModal()" style="background: #ff9f43; width: auto; padding: 0 15px; border-radius: 20px; font-size: 1rem; margin-left: 10px; font-family: 'Kanit';">📊 สรุปยอด</button> 
         </div>
     </div>
 </div>
@@ -877,6 +882,7 @@ function toggleDisplayMode() {
                     trialBtn.onclick = enterApp; 
                     trialBtn.classList.remove("btn-trial");
                     trialBtn.classList.add("btn-login"); 
+                    localStorage.setItem("trial_days_left", daysLeft);
                 }
             } else {
                 trialBtn.disabled = false;
@@ -2287,6 +2293,223 @@ function checkMidnightTokenStatus() {
 // สั่งให้ระบบตรวจสอบเวลาทุกๆ 1 นาที (60,000 มิลลิวินาที)
 // การทำแบบนี้ถึงลูกค้าจะพับหน้าจอไป พอกลับมาเปิดใหม่ ระบบก็จะเช็คและรู้ว่าข้ามวันแล้ว
 setInterval(checkMidnightTokenStatus, 60000);
+// ฟังก์ชันเปิด Popup สรุปยอด
+function openSummaryModal() {
+    const bookings = boards[currentBoardIdx].data; 
+    let totalNumbers = document.querySelectorAll('.grid .num').length; // นับจำนวนเลขจากหน้าแผงจริงอัตโนมัติ
+    let soldCount = 0;
+    
+    let totalBaht = 0;
+    let paidBaht = 0;
+    let paidCount = 0;
+    let unpaidBaht = 0;
+    let unpaidCount = 0;
+
+    let unpaidDetails = [];
+    let allSalesDetails = [];
+
+    // ดึงข้อมูลการจอง (ใช้ object `bookings` ที่ระบบคุณมีอยู่แล้ว)
+    for (let num in bookings) {
+        let b = bookings[num];
+        if (b && b.name) {
+            soldCount++;
+            let price = parseFloat(b.price) || 0; // ราคา
+            totalBaht += price;
+
+            // ตรวจสอบสถานะการจ่าย (ปรับให้รองรับโครงสร้างเดิมของคุณ)
+            let isPaid = b.isPaid === true || b.payStatus === "true" || b.payStatus === "paid";
+
+            let itemData = {
+                num: num,
+                name: b.name,
+                img: b.img || b.image || '', // รูปภาพลูกค้า
+                price: price,
+                isPaid: isPaid
+            };
+
+            if (isPaid) {
+                paidBaht += price;
+                paidCount++;
+            } else {
+                unpaidBaht += price;
+                unpaidCount++;
+                unpaidDetails.push(itemData);
+            }
+            allSalesDetails.push(itemData);
+        }
+    }
+
+    // อัปเดตตัวเลขแสดงผลส่วนบน
+    document.getElementById('sumSold').innerText = soldCount;
+    document.getElementById('sumLeft').innerText = (totalNumbers - soldCount);
+    
+    document.getElementById('sumTotalBaht').innerText = totalBaht.toLocaleString();
+    document.getElementById('sumPaidBaht').innerText = paidBaht.toLocaleString();
+    document.getElementById('sumPaidCount').innerText = paidCount;
+    document.getElementById('sumUnpaidBaht').innerText = unpaidBaht.toLocaleString();
+    document.getElementById('sumUnpaidCount').innerText = unpaidCount;
+
+    // --- เรนเดอร์รายการที่ยังค้างจ่าย ---
+    let unpaidHtml = '';
+    if (unpaidDetails.length === 0) {
+        unpaidHtml = '<p style="color: #2ed573; margin:0;">ไม่มีรายการค้างจ่าย 🎉</p>';
+    } else {
+        // จัดกลุ่มค้างจ่ายตามชื่อลูกค้า
+        let groupedUnpaid = {};
+        unpaidDetails.forEach(item => {
+            if(!groupedUnpaid[item.name]) groupedUnpaid[item.name] = [];
+            groupedUnpaid[item.name].push(item.num);
+        });
+
+        for (let name in groupedUnpaid) {
+            unpaidHtml += `<div style="padding: 5px 0; border-bottom: 1px dashed #ddd;">
+                <strong>👤 ${name}:</strong> ค้างจ่ายเลข <span style="color:#e74c3c; font-weight:bold;">${groupedUnpaid[name].join(', ')}</span>
+            </div>`;
+        }
+    }
+    document.getElementById('unpaidListContainer').innerHTML = unpaidHtml;
+
+    // --- เรนเดอร์รายละเอียดทั้งหมดแบบโชว์รูปลูกค้า ---
+    let allSalesHtml = '';
+    if (allSalesDetails.length === 0) {
+        allSalesHtml = '<p style="text-align:center; color:#999;">ยังไม่มีการขาย</p>';
+    } else {
+let groupedAll = {};
+        allSalesDetails.forEach(item => {
+            // 1. ถ้าเพิ่งเจอชื่อนี้ครั้งแรก ให้สร้างกลุ่มใหม่
+            if(!groupedAll[item.name]) {
+                groupedAll[item.name] = { img: item.img, numbers: [], totalP: 0, allPaid: true };
+            } else {
+                // 2. ถ้าชื่อนี้มีอยู่แล้ว แต่ก่อนหน้านี้ไม่มีรูป แล้วเลขนี้มีรูป! ให้อัปเดตเอารูปนี้ไปใช้
+                if ((!groupedAll[item.name].img || groupedAll[item.name].img === '') && item.img && item.img !== '') {
+                    groupedAll[item.name].img = item.img;
+                }
+            }
+            
+            groupedAll[item.name].numbers.push({ num: item.num, isPaid: item.isPaid, price: item.price });
+            groupedAll[item.name].totalP += item.price;
+            if(!item.isPaid) groupedAll[item.name].allPaid = false; 
+        });
+
+        for (let name in groupedAll) {
+            let customer = groupedAll[name];
+            // สร้าง Badge เลขที่ซื้อพร้อมบอกสถานะ จ่าย/ค้าง
+            let numTags = customer.numbers.map(n => 
+                `<span style="display:inline-block; padding:2px 8px; border-radius:10px; margin:2px; font-size:0.8rem; font-weight:bold; background:${n.isPaid ? '#d1f2eb' : '#fadbd8'}; color:${n.isPaid ? '#117a65' : '#c0392b'};">
+                    ${n.num} ${n.isPaid ? '(✅จ่ายแล้ว)' : '(❌ค้าง)'}
+                </span>`
+            ).join('');
+
+            // ใช้รูป Default หากไม่ได้ใส่รูปไว้
+            let imgSrc = customer.img && customer.img !== '' ? customer.img : 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+
+            allSalesHtml += `
+            <div style="display: flex; align-items: center; background: #fff; padding: 12px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid ${customer.allPaid ? '#2ed573' : '#ff4757'};">
+                <img src="${imgSrc}" style="width: 60px; height: 60px; border-radius: 12px; object-fit: cover; margin-right: 15px; border: 2px solid #eee;">
+                <div style="flex: 1;">
+                    <h5 style="margin: 0 0 5px 0; font-size: 1.1rem; color: #333;">${name}</h5>
+                    <div style="margin-bottom: 5px;">${numTags}</div>
+                    <div style="font-size: 0.9rem; color: #555; margin-top:5px;">
+                        ยอดรวม: <strong>${customer.totalP.toLocaleString()}</strong> บาท 
+                        ${customer.allPaid ? '<span style="color:#2ed573; font-weight:bold;">(จ่ายครบ)</span>' : '<span style="color:#ff4757; font-weight:bold;">(มีค้างจ่าย)</span>'}
+                    </div>
+                </div>
+            </div>`;
+        }
+    }
+    document.getElementById('allSalesContainer').innerHTML = allSalesHtml;
+
+    // แสดง Modal
+    document.getElementById('summaryModal').style.display = 'flex';
+}
+
+// ฟังก์ชันปิด Popup
+function closeSummaryModal() {
+    document.getElementById('summaryModal').style.display = 'none';
+}
+// =======================================================
+// --- ระบบดึงสถานะ Token หรือ วันทดลองใช้ มาแสดงบนแผง ---
+// =======================================================
+// =======================================================
+// --- ระบบดึงสถานะ Token หรือ วันทดลองใช้ มาแสดงบนแผง ---
+// =======================================================
+async function showUserStatusOnBoard() {
+    const token = localStorage.getItem("saved_lotto_token");
+    const statusBox = document.getElementById("userStatusDisplay");
+    
+    if (!statusBox) return;
+
+    if (!token) {
+        // กรณี: ทดลองใช้งาน
+        let trialDays = localStorage.getItem("trial_days_left") || "?"; 
+        statusBox.innerHTML = `<span style="color: #ff9f43; font-weight: bold;">ทดลองใช้ ${trialDays} วัน</span>`;
+        statusBox.style.background = "#fff";
+        statusBox.style.border = "1px solid #ff9f43";
+        statusBox.style.boxShadow = "0 2px 5px rgba(0,0,0,0.1)";
+        statusBox.style.transform = "none";
+        
+    } else {
+        const checkApiUrl = "https://script.google.com/macros/s/AKfycby0Jvl6tEERMOQOl478A_k8222Inz2afMraoTK1Pf0Lv_rO9B2YuPypqvbsCpLC6_NYgQ/exec"; 
+        
+        try {
+            const response = await fetch(checkApiUrl + "?token=" + token);
+            const data = await response.json();
+            
+            if (data.status === "success") {
+                let textMsg = String(data.remainingDays).trim();
+                let textLower = textMsg.toLowerCase();
+                
+                // --- เพิ่มส่วนนี้: สกัดเอาเฉพาะ "ตัวเลข" ออกมาจากข้อความ ---
+                let numMatch = textMsg.match(/\d+/); // ดึงตัวเลขจากข้อความ เช่น "(30 วัน)" จะได้ "30"
+                let daysCount = numMatch ? parseInt(numMatch[0], 10) : 999; 
+                
+                // กรณี 1: เป็น VIP
+                if (textLower.includes("vip ถาวร")) {
+                    statusBox.innerHTML = `<span style="color: #fff; font-weight: bold;">${textMsg}</span>`;
+                    statusBox.style.background = "#2ed573"; 
+                    statusBox.style.border = "1px solid #26de81";
+                    statusBox.style.boxShadow = "0 4px 0 #20bf6b, 0 4px 10px rgba(0,0,0,0.2)";
+                    statusBox.style.transform = "translateY(-2px)";
+                
+                // กรณี 2: ถ้านับตัวเลขแล้วน้อยกว่าหรือเท่ากับ 3 (1, 2, 3 หรือ 0) ให้เป็นสีแดงเตือน
+                } else if (daysCount <= 3) {
+                    statusBox.innerHTML = `<span style="color: #fff; font-weight: bold;">${textMsg}</span>`;
+                    statusBox.style.background = "#ff4757"; 
+                    statusBox.style.border = "1px solid #ff4757";
+                    statusBox.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
+                    statusBox.style.transform = "none";
+                
+                // กรณี 3: วันใช้งานปกติ (เช่น 30 วัน, 15 วัน, 13 วัน)
+                } else {
+                    statusBox.innerHTML = `<span style="color: #000; font-weight: bold;">${textMsg}</span>`;
+                    statusBox.style.background = "#fff"; 
+                    statusBox.style.border = "1px solid #2ed573"; 
+                    statusBox.style.boxShadow = "0 2px 5px rgba(0,0,0,0.1)";
+                    statusBox.style.transform = "none";
+                }
+
+            } else {
+                statusBox.innerHTML = `<span style="color: #fff; font-weight: bold;">❌ Token ไม่ถูกต้อง</span>`;
+                statusBox.style.background = "#ff4757";
+                statusBox.style.border = "1px solid #ff4757";
+                statusBox.style.boxShadow = "none";
+                statusBox.style.transform = "none";
+            }
+        } catch (error) {
+            statusBox.innerHTML = `<span style="color: #747d8c; font-weight: bold;">ออฟไลน์ / ตรวจสอบไม่ได้</span>`;
+            statusBox.style.background = "#f1f2f6";
+            statusBox.style.border = "1px solid #ccc";
+            statusBox.style.boxShadow = "none";
+            statusBox.style.transform = "none";
+        }
+    }
+}
+
+// สั่งให้โค้ดทำงานหน่วงเวลา 1 วินาทีหลังจากโหลดเข้าหน้าแผงแล้ว
+setTimeout(showUserStatusOnBoard, 1000);
+
+// สั่งให้ฟังก์ชันทำงานหลังจากเข้าหน้าแผง (หน่วงเวลา 1.5 วินาทีให้แผงโหลดเสร็จก่อน)
+setTimeout(showUserStatusOnBoard, 1500);
 </script>
 <div id="cardSliderOverlay" class="card-slider-overlay">
     <div class="card-slider-container">
@@ -2310,5 +2533,57 @@ setInterval(checkMidnightTokenStatus, 60000);
             </div>
     </div>
 </div>
+<div id="cardSliderOverlay" class="card-slider-overlay">
+            <div class="card-slider-container">
+                <div class="card-header">
+                    <h2>💕 สรุปลูกค้า 💕</h2>
+                    <button class="close-slider-btn" onclick="closeCardSlider()">✖</button>
+                </div>
+                </div>
+        </div>
+        <div id="summaryModal" class="modal-overlay">
+            <div class="modal-box" style="max-width: 500px; width: 95%; padding: 0; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh;">
+                
+                <div style="background: linear-gradient(135deg, #FF6B6B, #4D96FF); padding: 15px; color: white; position: relative; text-align: center;">
+                    <h2 style="margin: 0; font-family: 'Kanit';">📊 สรุปยอดการขาย</h2>
+                    <button onclick="closeSummaryModal()" style="position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.3); border: none; color: white; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-weight: bold;">✖</button>
+                </div>
+
+                <div style="padding: 20px; overflow-y: auto; text-align: left; font-family: 'Kanit'; background: #f8f9fa;">
+                    
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <div style="flex: 1; background: #fff; padding: 15px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 2px solid #2ed573;">
+                            <p style="margin: 0; color: #555; font-size: 0.9rem;">ขายแล้ว</p>
+                            <h3 style="margin: 5px 0 0 0; color: #2ed573; font-size: 1.5rem;"><span id="sumSold">0</span> เลข</h3>
+                        </div>
+                        <div style="flex: 1; background: #fff; padding: 15px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 2px solid #ff4757;">
+                            <p style="margin: 0; color: #555; font-size: 0.9rem;">เหลือว่าง</p>
+                            <h3 style="margin: 5px 0 0 0; color: #ff4757; font-size: 1.5rem;"><span id="sumLeft">100</span> เลข</h3>
+                        </div>
+                    </div>
+
+                    <div style="background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                        <h4 style="margin: 0 0 10px 0; border-bottom: 1px solid #eee; padding-bottom: 5px;">💰 สรุปการเงิน</h4>
+                        <p style="margin: 5px 0; font-size: 1.1rem;"><strong>ยอดขายรวม:</strong> <span id="sumTotalBaht" style="color:#4D96FF;">0</span> บาท</p>
+                        <p style="margin: 5px 0;"><strong>✅ จ่ายแล้ว:</strong> <span id="sumPaidBaht" style="color:#2ed573;">0</span> บาท (<span id="sumPaidCount">0</span> เลข)</p>
+                        <p style="margin: 5px 0;"><strong>❌ ค้างจ่าย:</strong> <span id="sumUnpaidBaht" style="color:#ff4757;">0</span> บาท (<span id="sumUnpaidCount">0</span> เลข)</p>
+                    </div>
+
+                    <div style="background: #fffef0; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px dashed #ffc048;">
+                        <h4 style="margin: 0 0 10px 0; color: #d35400;">⚠️ รายการค้างจ่าย</h4>
+                        <div id="unpaidListContainer" style="font-size: 0.9rem; max-height: 120px; overflow-y: auto;">
+                            </div>
+                    </div>
+
+                    <h4 style="margin: 10px 0;">📋 รายละเอียดผู้ซื้อทั้งหมด</h4>
+                    <div id="allSalesContainer" style="display: flex; flex-direction: column; gap: 10px;">
+                        </div>
+
+                </div>
+            </div>
+        </div>
+        
+    </body>
+</html>
 </body>
 </html>
