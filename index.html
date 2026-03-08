@@ -760,8 +760,20 @@
 </div>
 <div id="sellerModal" class="modal-overlay">
     <div class="modal-box">
-        <h3 style="margin-top: 0; color: #4D96FF;">👤 User / รับเงิน</h3>
-        
+<h3 style="margin-top: 0; color: #4D96FF; display: flex; justify-content: space-between; align-items: center;">
+    <span>👤 User / รับเงิน</span>
+    <div style="display: flex; align-items: center; gap: 5px;">
+        <span id="tokenDisplay" style="font-size: 0.85rem; color: #666; font-weight: normal; background: #f1f2f6; padding: 4px 10px; border-radius: 20px 0 0 20px; border: 1px solid #ddd; border-right: none;">
+            Token: -
+        </span>
+        <span onclick="copyToken()" 
+              style="font-size: 0.75rem; color: #f74f4f; /* เปลี่ยนจาก #fff เป็น #000 */ background: #4D96FF; padding: 5px 10px; border-radius: 0 20px 20px 0; border: 1px solid #4D96FF; cursor: pointer; font-weight: bold; transition: 0.2s;"
+              onmouseover="this.style.background='#2e7dff'" 
+              onmouseout="this.style.background='#4D96FF'">
+            คัดลอก
+        </span>
+    </div>
+</h3>
         <div style="text-align: left; margin-bottom: 10px;">
             <label style="font-size: 0.9rem; font-weight: bold;">ข้อความ (ชื่อบัญชี / คำขอบคุณ)</label>
             <textarea id="sellerText" class="modal-input" rows="3" placeholder="เช่น น.ส.ใจดี รักเรียน ธ.กสิกร 123-4-56789-0"></textarea>
@@ -2510,6 +2522,50 @@ setTimeout(showUserStatusOnBoard, 1000);
 
 // สั่งให้ฟังก์ชันทำงานหลังจากเข้าหน้าแผง (หน่วงเวลา 1.5 วินาทีให้แผงโหลดเสร็จก่อน)
 setTimeout(showUserStatusOnBoard, 1500);
+// ฟังก์ชันสำหรับดึง Token มาแสดงผล
+window.addEventListener('DOMContentLoaded', () => {
+    // ระบบส่วนใหญ่มักจะเก็บ Token ไว้ใน localStorage ชื่อ 'token' หรือ 'userToken'
+    let myToken = localStorage.getItem('saved_lotto_token');
+
+    // ถ้าหาใน localStorage ไม่เจอ ให้ลองดึงจาก URL (ถ้าเว็บคุณส่ง Token ผ่านลิงก์)
+    if (!myToken) {
+        const urlParams = new URLSearchParams(window.location.search);
+        myToken = urlParams.get('token'); 
+    }
+
+    // ถ้าระบบมีค่า Token ให้นำไปแสดงตรงแท็ก span ที่เราสร้างไว้
+    if (myToken) {
+        document.getElementById('tokenDisplay').innerText = "Token: " + myToken;
+        document.getElementById('tokenDisplay').style.color = "#2ed573"; // เปลี่ยนสีตัวหนังสือเป็นสีเขียวเมื่อมี Token
+    }
+});
+function copyToken() {
+    // ดึงข้อความจากส่วนแสดงผล Token
+    let fullText = document.getElementById('tokenDisplay').innerText;
+    // ตัดคำว่า "Token: " ออกเพื่อเอาเฉพาะรหัส
+    let tokenOnly = fullText.replace("Token: ", "").trim();
+
+    if (tokenOnly && tokenOnly !== "-") {
+        navigator.clipboard.writeText(tokenOnly).then(() => {
+            // หาปุ่มที่คลิก (ตัวที่ 2 ใน div) เพื่อเปลี่ยนข้อความชั่วคราว
+            const copyBtn = document.querySelector('span[onclick="copyToken()"]');
+            const originalText = copyBtn.innerText;
+            
+            copyBtn.innerText = "สำเร็จ! ✅";
+            copyBtn.style.background = "#2ed573";
+            copyBtn.style.borderColor = "#2ed573";
+            
+            // กลับเป็นเหมือนเดิมหลังจาก 1.5 วินาที
+            setTimeout(() => {
+                copyBtn.innerText = originalText;
+                copyBtn.style.background = "#4D96FF";
+                copyBtn.style.borderColor = "#4D96FF";
+            }, 1500);
+        }).catch(err => {
+            console.error('ไม่สามารถคัดลอกได้:', err);
+        });
+    }
+}
 </script>
 <div id="cardSliderOverlay" class="card-slider-overlay">
     <div class="card-slider-container">
