@@ -558,7 +558,7 @@
         <div class="table-container">
             <table>
                 <thead>
-                    <tr><th>เบอร์</th><th>ชื่อ</th><th>รูป</th><th>ราคา</th><th>สถานะจ่าย</th><th>วัน/เวลา</th></tr>
+                    <tr><th>เบอร์</th><th>ชื่อ</th><th>ที่อยู่/ลิ้งค์</th><th>รูป</th><th>ราคา</th><th>สถานะจ่าย</th><th>วัน/เวลา</th></tr>
                 </thead>
                 <tbody id="adminTableBody"></tbody>
                 <tfoot>
@@ -596,8 +596,9 @@
 </div>
         <input type="text" id="inputName" class="modal-input" placeholder="ชื่อลูกค้า">
         <input type="text" id="inputPrice" class="modal-input" placeholder="ราคา">
+       <input type="text" id="inputUrl" class="modal-input" placeholder="📍 ใส่ที่อยู่ หรือ ลิ้ง URL (ถ้ามี)">
         
-        <label for="bookingImage" style="display: block; background: #e3f2fd; color: #1565c0; padding: 12px; border-radius: 10px; cursor: pointer; text-align: center; font-weight: bold; margin-top: 10px; border: 1px dashed #90caf9;">
+       <label for="bookingImage" style="display: block; background: #e3f2fd; color: #1565c0; padding: 12px; border-radius: 10px; cursor: pointer; text-align: center; font-weight: bold; margin-top: 10px; border: 1px dashed #90caf9;">
             📷 แนบรูป (สลิป/ลูกค้า)
         </label>
         <input type="file" id="bookingImage" accept="image/*" style="display:none;" onchange="handleBookingImage(event)">
@@ -1361,19 +1362,35 @@ function renderGrid() {
         }
     }
 }
-        function confirmBooking() {
-        const name = document.getElementById("inputName").value.trim() || "ไม่ระบุ";
-        const price = document.getElementById("inputPrice").value.trim();
-        const now = new Date();
-        const dateStr = `${now.getDate().toString().padStart(2,'0')}/${(now.getMonth()+1).toString().padStart(2,'0')}/${(now.getFullYear()+543).toString().slice(-2)}`;
-        const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-        
-        boards[currentBoardIdx].data[currentNum] = { 
-            name, price, datetime: `${dateStr} ${timeStr}`, image: tempBookingImage, isPaid: false 
-        };
-        
-        saveAll(); renderGrid(); updateAdminTable(); closeModal('bookingModal');
+function confirmBooking() {
+    const name = document.getElementById("inputName").value.trim() || "ไม่ระบุ";
+    const price = document.getElementById("inputPrice").value.trim();
+    
+    // ดึงข้อมูล URL จากช่องกรอก
+    const inputUrl = document.getElementById("inputUrl") ? document.getElementById("inputUrl").value.trim() : ""; 
+
+    const now = new Date();
+    const dateStr = `${now.getDate().toString().padStart(2,'0')}/${(now.getMonth()+1).toString().padStart(2,'0')}/${(now.getFullYear()+543).toString().slice(-2)}`;
+    const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+    
+    // บันทึกลงระบบ (มีลิ้งก์ก็เซฟลิ้งก์ ไม่มีก็เว้นว่าง)
+    boards[currentBoardIdx].data[currentNum] = { 
+        name, 
+        price, 
+        url: inputUrl,  
+        datetime: `${dateStr} ${timeStr}`, 
+        image: tempBookingImage, 
+        isPaid: false 
+    };
+    
+    // 🟢 โค้ดส่วนนี้คือพระเอก: สั่งให้ล้างช่องลิ้งก์ให้ "ว่างเปล่า" ทันทีหลังกดบันทึก
+    // เพื่อให้การกดซื้อเบอร์ถัดไป ช่องนี้จะโล่งเสมอ (ใส่ครั้งต่อครั้งของจริง)
+    if (document.getElementById("inputUrl")) {
+        document.getElementById("inputUrl").value = "";
     }
+    
+    saveAll(); renderGrid(); updateAdminTable(); closeModal('bookingModal'); 
+}
 
     function viewImage(src) {
         document.getElementById('fullImageViewer').src = src;
@@ -1389,43 +1406,50 @@ function renderGrid() {
         }
     }
 
-    function updateAdminTable() {
-        const body = document.getElementById("adminTableBody"); body.innerHTML = "";
-        let total = 0;
-        const data = boards[currentBoardIdx].data;
-        const key = document.getElementById("filterInput").value.toLowerCase();
-        const payFilter = document.getElementById("payFilterStatus").value;
+  function updateAdminTable() {
+    const body = document.getElementById("adminTableBody"); 
+    body.innerHTML = "";
+    let total = 0;
+    const data = boards[currentBoardIdx].data;
+    const key = document.getElementById("filterInput").value.toLowerCase();
+    const payFilter = document.getElementById("payFilterStatus").value;
 
-        Object.keys(data).sort().forEach(n => {
-            const item = data[n];
-            const isPaid = item.isPaid || false;
+    Object.keys(data).sort().forEach(n => {
+        const item = data[n];
+        const isPaid = item.isPaid || false;
+        
+        if (payFilter === "paid" && !isPaid) return;
+        if (payFilter === "unpaid" && isPaid) return;
+
+        if(n.includes(key) || item.name.toLowerCase().includes(key)){
+            total += parseFloat(item.price.replace(/,/g,'')) || 0;
             
-            if (payFilter === "paid" && !isPaid) return;
-            if (payFilter === "unpaid" && isPaid) return;
+            const imgHtml = item.image 
+                ? `<img src="${item.image}" style="width:35px; height:35px; object-fit:cover; border-radius:5px; cursor:pointer; border:1px solid #ddd;" onclick="viewImage('${item.image}')">` 
+                : '<span style="color:#ccc;">-</span>';
+            
+            const checkedStr = isPaid ? "checked" : "";
 
-            if(n.includes(key) || item.name.toLowerCase().includes(key)){
-                total += parseFloat(item.price.replace(/,/g,'')) || 0;
-                
-                const imgHtml = item.image 
-                    ? `<img src="${item.image}" style="width:35px; height:35px; object-fit:cover; border-radius:5px; cursor:pointer; border:1px solid #ddd;" onclick="viewImage('${item.image}')">` 
-                    : '<span style="color:#ccc;">-</span>';
-                
-                const checkedStr = isPaid ? "checked" : "";
+            // --- ส่วนที่เพิ่มเข้ามาใหม่: สร้างปุ่มลิงก์ URL ---
+            const urlLinkBtn = item.url && item.url.trim() !== "" 
+                ? `<a href="${item.url}" target="_blank" style="display:inline-block; background: #4D96FF; color: white; padding: 4px 8px; border-radius: 5px; text-decoration: none; font-size: 0.8rem; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">📍 ที่อยู่</a>` 
+                : '<span style="color:#ccc;">-</span>';
+            // ------------------------------------------
 
-                body.innerHTML += `<tr>
-                    <td>${n}</td>
-                    <td>${item.name}</td>
-                    <td>${imgHtml}</td>
-                    <td>${item.price}</td>
-                    <td><input type="checkbox" class="pay-checkbox" ${checkedStr} onchange="togglePayStatus('${n}')"></td>
-                    <td>${item.datetime}</td>
-                </tr>`;
-            }
-        });
-        document.getElementById("totalSum").innerText = total.toLocaleString();
-        renderBoardSelector(); 
-    }
-
+            // แทรก ${urlLinkBtn} ต่อจากชื่อลูกค้า
+            body.innerHTML += `<tr>
+                <td>${n}</td>
+                <td>${item.name}</td>
+                <td>${urlLinkBtn}</td> <td>${imgHtml}</td>
+                <td>${item.price}</td>
+                <td><input type="checkbox" class="pay-checkbox" ${checkedStr} onchange="togglePayStatus('${n}')"></td>
+                <td>${item.datetime}</td>
+            </tr>`;
+        }
+    });
+    document.getElementById("totalSum").innerText = total.toLocaleString();
+    renderBoardSelector(); 
+}
     function openDetailedSummary() {
         const data = boards[currentBoardIdx].data;
         const summary = {};
@@ -2043,12 +2067,14 @@ function openCardSlider() {
         if (bookingInfo && bookingInfo.name && bookingInfo.name.trim() !== "") {
             let name = bookingInfo.name;
             
+            // --- เพิ่ม url: '' เข้าไปในโครงสร้างเริ่มต้น ---
             if (!customersData[name]) {
                 customersData[name] = {
                     name: name,
                     numbers: [],
                     image: bookingInfo.image || '', 
-                    totalPrice: 0
+                    totalPrice: 0,
+                    url: '' // เพิ่มบรรทัดนี้เพื่อเตรียมเก็บที่อยู่ URL
                 };
             }
             
@@ -2066,6 +2092,11 @@ function openCardSlider() {
             
             if (bookingInfo.image) {
                 customersData[name].image = bookingInfo.image;
+            }
+
+            // --- เพิ่มเงื่อนไขดึงข้อมูล URL ของลูกค้ามาเก็บไว้ ---
+            if (bookingInfo.url && bookingInfo.url.trim() !== "") {
+                customersData[name].url = bookingInfo.url;
             }
         }
     }
@@ -2111,13 +2142,38 @@ function renderSlider() {
             ? `<img src="${cust.image}" class="customer-img">` 
             : `<div class="customer-img" style="display:flex; justify-content:center; align-items:center; font-size:3rem; color:#ccc;">👤</div>`;
             
+        // --- 🟢 ปรับโค้ดส่วนนี้: สร้างปุ่ม URL แบบวางซ้อน (Absolute) บนรูป ---
+        const urlLinkBtn = cust.url && cust.url.trim() !== "" 
+            ? `<a href="${cust.url}" target="_blank" style="
+                position: absolute; 
+                top: 5px; 
+                right: 1px; 
+                background: #ff4757; 
+                color: white; 
+                padding: 4px 10px; 
+                border-radius: 20px; 
+                text-decoration: none; 
+                font-size: 0.8rem; 
+                font-weight: bold; 
+                box-shadow: 0 2px 5px rgba(0,0,0,0.3); 
+                z-index: 5;
+                transition: transform 0.2s;
+            " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">📍 โหลดที่อยู่ </a>` 
+            : '';
+        // --------------------------------------------------
+
         // วนลูปเบอร์ที่ซื้อมาทำเป็นป้ายสวยๆ
         const numbersHtml = cust.numbers.map(n => `<span class="number-badge">${n}</span>`).join(" ");
 
+        // --- 🟢 ปรับโครงสร้าง HTML เพื่อให้ปุ่ม URL ซ้อนบนรูป ---
+        // 1. หุ้มส่วนรูปและปุ่มด้วย <div> ที่มี style="position:relative;"
+        // 2. ลบปุ่ม URL ออกจากส่วนชื่อ (ให้เหลือแค่ ${cust.name})
         card.innerHTML = `
-            ${imgDisplay}
-            <div class="customer-name">${cust.name}</div>
-            <div class="customer-numbers">
+            <div style="position: relative; display: inline-block; width: 100%; text-align: center;">
+                ${imgDisplay}
+                ${urlLinkBtn}  </div>
+            
+            <div class="customer-name">${cust.name}</div> <div class="customer-numbers">
                 <div style="font-size:0.8rem; color:#666; margin-bottom:5px;">เบอร์ที่ซื้อ:</div>
                 ${numbersHtml}
             </div>
