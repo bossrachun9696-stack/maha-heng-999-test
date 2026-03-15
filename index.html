@@ -462,6 +462,7 @@
     font-family: 'Kanit', sans-serif;
     user-select: none; /* ป้องกันไม่ให้คลุมดำข้อความลายน้ำได้ */
 }
+
     </style>
 </head>
 <body>
@@ -571,20 +572,128 @@
             </table>
         </div>
         <div class="btn-group">
-            <button class="admin-btn" style="background:#f1f2f6; color:#333;" onclick="logoutApp()">ออกจากระบบ / เปลี่ยน Token</button>
-            <button class="admin-btn" style="background:#ff4757; color:white;" onclick="resetBoard()">ล้างแผงนี้</button>
-            <button class="admin-btn" style="background:#2f3542; color:white;" onclick="window.print()">พิมพ์</button>
-            <button class="admin-btn" style="background: linear-gradient(45deg, #1abc9c, #2ed573); color:white;" onclick="openCardSlider()">💕 สรุปลูกค้า</button>
-            <button class="admin-btn" style="background: linear-gradient(45deg, #FF6B6B, #4D96FF); color:white;" onclick="openBgSelector()">🖼️ พื้นหลัง</button>
-            <button class="admin-btn" style="background: linear-gradient(45deg, #4D96FF, #6BCB77); color:white;" onclick="openGridDesignModal()">🎨 ธีมตาราง</button>
-            <button class="admin-btn" id="btnToggleEdit" style="background: linear-gradient(45deg, #FF9F43, #FF6B6B); color:white;" onclick="toggleEditMode()">🔧 จัดวาง</button>
-            <button id="btnFilterNum" class="admin-btn" style="background: #3498db; color: white;" onclick="toggleFilterBooked()">🔍 ซ่อนเลขจองแล้ว</button>
-            <button id="btnToggleMode" class="admin-btn" style="background: #2ecc71; color: white;" onclick="toggleDisplayMode()">🔠 เปลี่ยนเป็นโหมด (10-19)</button>
-           <button class="nav-btn" onclick="openSummaryModal()" style="background: #ff9f43; width: auto; padding: 0 15px; border-radius: 20px; font-size: 1rem; margin-left: 10px; font-family: 'Kanit';">📊 สรุปยอด</button> 
+    <style>
+    /* ตั้งค่ากล่องคลุมปุ่มให้เรียงตัวสวยงาม */
+    .admin-tools-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 15px;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        margin-bottom: 20px;
+    }
+
+    /* สไตล์ปุ่มแบบยุคใหม่ (Modern UI) */
+    .modern-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 10px 18px;
+        border: none;
+        border-radius: 12px; /* ขอบโค้งมน */
+        font-size: 0.95rem;
+        font-family: 'Prompt', 'Kanit', sans-serif;
+        font-weight: 500;
+        cursor: pointer;
+        color: white;
+        white-space: nowrap;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    /* เอฟเฟกต์ตอนนำเมาส์ไปชี้ */
+    .modern-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        filter: brightness(1.08);
+    }
+
+    /* เอฟเฟกต์ตอนกดคลิก */
+    .modern-btn:active {
+        transform: translateY(1px);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    /* ปุ่มเฉพาะแบบต่างๆ (คุมสี) */
+    .btn-logout { background: #f1f2f6; color: #ff4757; box-shadow: none; border: 1px solid #dfe4ea; }
+    .btn-logout:hover { background: #ff4757; color: white; }
+    .btn-backup { background: linear-gradient(135deg, #f39c12, #e67e22); }
+    .btn-clear { background: linear-gradient(135deg, #ff4757, #ff6b81); }
+    .btn-print { background: linear-gradient(135deg, #2f3542, #57606f); }
+    .btn-customer { background: linear-gradient(135deg, #1abc9c, #2ed573); }
+    .btn-bg { background: linear-gradient(135deg, #6c5ce7, #a29bfe); }
+    .btn-theme { background: linear-gradient(135deg, #0984e3, #74b9ff); }
+    .btn-layout { background: linear-gradient(135deg, #e15f41, #f19066); }
+    .btn-filter { background: linear-gradient(135deg, #3498db, #2980b9); }
+    .btn-mode { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+    .btn-summary { background: linear-gradient(135deg, #fbc531, #e1b12c); color: #333; }
+</style>
+
+<div class="admin-tools-container">
+    
+    <button class="modern-btn btn-logout" onclick="logoutApp()">🚪 ออกจากระบบ</button>
+    <button class="modern-btn btn-backup" onclick="openBackupModal()">💾 สำรองข้อมูล</button>
+    <button class="modern-btn btn-clear" onclick="resetBoard()">🗑️ ล้างแผงนี้</button>
+    <button class="modern-btn btn-print" onclick="window.print()">🖨️ พิมพ์</button>
+    <button class="modern-btn btn-customer" onclick="openCardSlider()">💕 สรุปลูกค้า</button>
+    <button class="modern-btn btn-bg" onclick="openBgSelector()">🖼️ พื้นหลัง</button>
+    <button class="modern-btn btn-theme" onclick="openGridDesignModal()">🎨 ธีมตาราง</button>
+    <button id="btnToggleEdit" class="modern-btn btn-layout" onclick="toggleEditMode()">🔧 จัดวาง</button>
+    <button id="btnFilterNum" class="modern-btn btn-filter" onclick="toggleFilterBooked()">🔍 ซ่อนเลขจอง</button>
+    <button id="btnToggleMode" class="modern-btn btn-mode" onclick="toggleDisplayMode()">🔠 โหมด (10-19)</button>
+    <button class="modern-btn btn-summary" onclick="openSummaryModal()">📊 สรุปยอด</button> 
+
+</div>
+
+<input type="file" id="importBackupFile" accept=".json" style="display: none;" onchange="importBackupData(event)">
+
+<div id="backupModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+    
+    <div style="background: white; padding: 25px 25px; border-radius: 20px; text-align: center; width: 85%; max-width: 340px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); font-family: 'Prompt', sans-serif; animation: fadeIn 0.3s ease;">
+        
+        <div style="font-size: 2.5rem; margin-bottom: 5px;">💾</div>
+        <h3 style="margin: 0 0 15px 0; color: #2f3542; font-weight: 600;">จัดการข้อมูลแผง</h3>
+        
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px dashed #ced6e0;">
+            <p style="margin: 0 0 10px 0; font-size: 0.85rem; color: #7f8fa6; font-weight: 600;">📋 คัดลอกไปแผงอื่น (ไม่ต้องโหลดไฟล์)</p>
+            
+            <button class="modern-btn" onclick="copyBoardData()" style="width: 100%; margin-bottom: 10px; background: linear-gradient(135deg, #9b59b6, #8e44ad); font-size: 1rem; padding: 10px;">
+                📑 คัดลอกจัดวาง (Copy)
+            </button>
+            
+            <button class="modern-btn" onclick="pasteBoardData()" style="width: 100%; background: linear-gradient(135deg, #e67e22, #d35400); font-size: 1rem; padding: 10px;">
+                📝 วางข้อมูล (Paste)
+            </button>
         </div>
+
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px dashed #ced6e0;">
+            <p style="margin: 0 0 10px 0; font-size: 0.85rem; color: #7f8fa6; font-weight: 600;">📁 สำรองเป็นไฟล์ (.json)</p>
+            
+            <button class="modern-btn" onclick="exportBackupData(); closeBackupModal();" style="width: 100%; margin-bottom: 10px; background: #3498db; font-size: 1rem; padding: 10px;">
+                📤 บันทึกไฟล์ (Backup)
+            </button>
+            
+            <button class="modern-btn" onclick="document.getElementById('importBackupFile').click(); closeBackupModal();" style="width: 100%; background: #2ecc71; font-size: 1rem; padding: 10px;">
+                📥 โหลดไฟล์ (Restore)
+            </button>
+        </div>
+        
+        <button class="modern-btn" onclick="closeBackupModal()" style="width: 100%; background: #f1f2f6; color: #ff4757; box-shadow: none;">
+            ❌ ปิดหน้าต่าง
+        </button>
+        
     </div>
 </div>
 
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px) scale(0.95); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+</style>
 <div id="bookingModal" class="modal-overlay">
     <div class="modal-box">
         <div style="font-size: 1.6rem; font-weight: 900; margin-bottom: 15px;">จัดการซื้อ <span id="modalNum" style="color:#8400db;"></span></div>
@@ -2620,6 +2729,211 @@ function copyToken() {
         }).catch(err => {
             console.error('ไม่สามารถคัดลอกได้:', err);
         });
+    }
+}
+// ฟังก์ชันสำหรับ "สำรองข้อมูล" (Export)
+function exportBackupData() {
+    // 1. ดึงข้อมูลทั้งหมดที่มีใน LocalStorage
+    let dataToBackup = {};
+    for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
+        dataToBackup[key] = localStorage.getItem(key);
+    }
+
+    // ตรวจสอบว่ามีข้อมูลหรือไม่
+    if(Object.keys(dataToBackup).length === 0) {
+        alert("ยังไม่มีข้อมูลให้สำรองครับ!");
+        return;
+    }
+
+    // 2. แปลงข้อมูลเป็นรูปแบบ JSON String
+    let dataStr = JSON.stringify(dataToBackup);
+    let dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+    // 3. สร้างชื่อไฟล์อัตโนมัติ (ใส่วันที่)
+    let date = new Date();
+    let dateString = date.toISOString().split('T')[0]; // ได้ฟอร์แมต YYYY-MM-DD
+    let fileName = 'Lotto_Backup_' + dateString + '.json';
+
+    // 4. สั่งให้เว็บบราวเซอร์ดาวน์โหลดไฟล์
+    let linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', fileName);
+    document.body.appendChild(linkElement);
+    linkElement.click();
+    document.body.removeChild(linkElement);
+}
+
+// ฟังก์ชันสำหรับ "กู้คืนข้อมูล" (Import)
+function importBackupData(event) {
+    let file = event.target.files[0];
+    if (!file) return;
+
+    let reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            // 1. อ่านไฟล์ JSON ที่อัปโหลดเข้ามา
+            let importedData = JSON.parse(e.target.result);
+            
+            // 2. ถามเพื่อความแน่ใจก่อนเขียนทับข้อมูลเดิม
+            if(confirm("⚠️ คำเตือน: การกู้คืนจะ 'ลบข้อมูลปัจจุบัน' และแทนที่ด้วยข้อมูลจากไฟล์นี้\n\nคุณแน่ใจหรือไม่ที่จะดำเนินการต่อ?")) {
+                
+                // ล้างข้อมูลเก่าออกก่อน (ถ้าต้องการให้คลีนจริงๆ)
+                // localStorage.clear(); 
+
+                // 3. นำข้อมูลจากไฟล์ไปเซฟลง LocalStorage ใหม่
+                for (let key in importedData) {
+                    localStorage.setItem(key, importedData[key]);
+                }
+                
+                alert("✅ กู้คืนข้อมูลสำเร็จ! ระบบกำลังรีเฟรชหน้าเว็บ...");
+                
+                // 4. รีเฟรชหน้าเว็บเพื่อให้ดึงข้อมูลใหม่มาแสดง
+                location.reload(); 
+            }
+        } catch (error) {
+            alert("❌ ไฟล์ไม่ถูกต้อง หรือ ข้อมูลเสียหาย!");
+        }
+        
+        // ล้างค่า input เพื่อให้สามารถกดเลือกไฟล์เดิมซ้ำได้ในอนาคต
+        document.getElementById('importBackupFile').value = '';
+    };
+    
+    // สั่งให้อ่านไฟล์เป็นข้อความ
+    reader.readAsText(file);
+}
+// ฟังก์ชันเปิด Pop-up
+function openBackupModal() {
+    document.getElementById("backupModal").style.display = "flex";
+}
+
+// ฟังก์ชันปิด Pop-up
+function closeBackupModal() {
+    document.getElementById("backupModal").style.display = "none";
+}
+
+// ถ้าผู้ใช้คลิกพื้นที่สีดำรอบนอก ให้ปิดป็อบอัพ
+window.onclick = function(event) {
+    var modal = document.getElementById("backupModal");
+    if (event.target == modal) {
+        closeBackupModal();
+    }
+}
+// ==========================================
+// ระบบคัดลอกและวางแผง (Copy & Paste Board)
+// ==========================================
+
+// ==========================================
+// ระบบคัดลอกและวางแผง (แก้ไขให้รองรับการเปิดไฟล์ในเครื่อง file://)
+// ==========================================
+
+// ==========================================
+// ระบบคัดลอกและวาง (อัปเดต: ป้องกัน Token หลุด/เด้งออก)
+// ==========================================
+// 1. ฟังก์ชัน "คัดลอกจัดวาง" (ก๊อปปี้ทุกอย่างในแผง รวมถึงข้อมูลลูกค้า/ยอดเงิน)
+async function copyBoardData() {
+    let currentBoard = boards[currentBoardIdx];
+
+    // คัดลอกข้อมูล "ทั้งหมด" ที่มีในแผงนี้
+    let dataToCopy = JSON.parse(JSON.stringify(currentBoard));
+    
+    // ลบ ID และ ชื่อแผง ออกจากตัวคัดลอก (เพื่อไม่ให้ไปทับชื่อแผงของเป้าหมายตอนวาง)
+    delete dataToCopy.id;
+    delete dataToCopy.name;
+
+    let dataStr = JSON.stringify(dataToCopy);
+
+    // วิธีที่ 1: ลองใช้ Clipboard API สมัยใหม่ก่อน
+    if (navigator.clipboard && window.isSecureContext) {
+        try {
+            await navigator.clipboard.writeText(dataStr);
+            alert(`✅ คัดลอกข้อมูล "${currentBoard.name}" (รวมข้อมูลลูกค้าและยอดเงิน) เรียบร้อยแล้ว!\n\nเลื่อนไปเปิดแผงอื่น แล้วกดปุ่ม 'วางข้อมูล (Paste)' ได้เลยครับ`);
+            closeBackupModal();
+            return;
+        } catch (err) {
+            console.warn("Clipboard API ถูกบล็อก กำลังใช้โหมดสำรอง...");
+        }
+    }
+
+    // วิธีที่ 2: โหมดสำรอง (Fallback)
+    try {
+        let textArea = document.createElement("textarea");
+        textArea.value = dataStr;
+        textArea.style.position = "fixed"; 
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        
+        let successful = document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        if (successful) {
+            alert(`✅ คัดลอกข้อมูล "${currentBoard.name}" (รวมข้อมูลลูกค้าและยอดเงิน) เรียบร้อยแล้ว!\n\nเลื่อนไปเปิดแผงอื่น แล้วกดปุ่ม 'วางข้อมูล (Paste)' ได้เลยครับ`);
+            closeBackupModal();
+        } else {
+            throw new Error("คำสั่ง Copy ทำงานไม่สำเร็จ");
+        }
+    } catch (err) {
+        alert("❌ เบราว์เซอร์บล็อกการคัดลอก กรุณาใช้ฟังก์ชัน 'เซฟไฟล์' แทนครับ");
+    }
+}
+
+// 2. ฟังก์ชัน "วางข้อมูล" (เอาข้อมูลทุกอย่างมาทับแผงนี้)
+async function pasteBoardData() {
+    let clipboardText = "";
+
+    // วิธีที่ 1: ลองให้อ่านคลิปบอร์ดอัตโนมัติก่อน
+    if (navigator.clipboard && navigator.clipboard.readText) {
+        try {
+            clipboardText = await navigator.clipboard.readText();
+        } catch (err) {
+            console.warn("ไม่สามารถอ่านคลิปบอร์ดอัตโนมัติได้", err);
+        }
+    }
+
+    // วิธีที่ 2: ถ้าบราวเซอร์บล็อก ให้เด้งหน้าต่างให้ผู้ใช้วางเอง
+    if (!clipboardText) {
+        clipboardText = prompt("⚠️ บราวเซอร์ไม่อนุญาตให้อ่านข้อมูลอัตโนมัติ\n\nกรุณากด 'วาง' (Ctrl+V หรือแตะค้าง -> Paste) ในช่องว่างด้านล่างนี้ แล้วกด OK:");
+    }
+
+    if (!clipboardText || clipboardText.trim() === "") {
+        return; 
+    }
+
+    let importedData;
+    try {
+        importedData = JSON.parse(clipboardText);
+        
+        // เช็คความถูกต้องเบื้องต้น
+        if (!importedData.data || !importedData.settings) {
+            throw new Error("ข้อมูลไม่ใช่รูปแบบแผงที่ถูกต้อง");
+        }
+    } catch (e) {
+        alert("❌ ข้อมูลที่คุณวางมา ไม่ใช่รูปแบบแผงที่ถูกต้องครับ!");
+        return;
+    }
+
+    let targetBoardName = boards[currentBoardIdx].name;
+    let targetBoardId = boards[currentBoardIdx].id; // เก็บ ID ของแผงเป้าหมายเอาไว้
+
+    if(confirm(`⚠️ คำเตือน: ข้อมูลทั้งหมด (การตกแต่ง, รายการเลข, ลูกค้า, ยอดเงินรับมา) ในแผง "${targetBoardName}" จะถูกเขียนทับ\n\nต้องการดำเนินการต่อหรือไม่?`)) {
+        
+        // เอาข้อมูลทุกอย่างที่คัดลอกมา ทับลงไปในแผงนี้ทั้งหมด!
+        boards[currentBoardIdx] = JSON.parse(JSON.stringify(importedData));
+        
+        // คืนค่า ชื่อแผง และ ID เดิมให้กับแผงนี้ (เพื่อไม่ให้ชื่อแผงมันเปลี่ยนตามอันที่ก๊อปมา)
+        boards[currentBoardIdx].name = targetBoardName;
+        boards[currentBoardIdx].id = targetBoardId;
+        
+        // บันทึกและรีเฟรชหน้าจอทันที
+        if(typeof saveAll === 'function') saveAll();
+        if(typeof renderBoardUI === 'function') renderBoardUI();
+        if(typeof renderGrid === 'function') renderGrid();
+        if(typeof updateAdminTable === 'function') updateAdminTable();
+        
+        alert(`✅ วางข้อมูลลงใน "${targetBoardName}" สำเร็จ!`);
+        if(typeof closeBackupModal === 'function') closeBackupModal();
     }
 }
 </script>
