@@ -500,15 +500,20 @@
 </div>
 <div id="main-content">
     <div id="watermark-overlay" class="watermark-overlay"></div>
-    <div class="board-nav">
+   <div class="board-nav">
         <button class="nav-btn" onclick="prevBoard()">❮</button>
         <div style="display:flex; align-items:center;">
             <span id="boardNameDisplay" class="nav-info" onclick="renameBoard()">แผงที่ 1</span>
             <button class="nav-btn nav-del" onclick="deleteCurrentBoard()" id="btnDeleteBoard">🗑️</button>
         </div>
-        <div style="display:flex; gap:5px;">
+        <div style="display:flex; gap:5px; align-items:center;">
             <button class="nav-btn nav-add" onclick="addNewBoard()">+</button>
             <button class="nav-btn" onclick="nextBoard()">❯</button>
+            
+            <button class="nav-btn notif-btn" style="background: #f1c40f; border: 1px solid #e1b12c; border-radius: 8px; position: relative; cursor: pointer; padding: 5px 10px; display: flex; align-items: center; justify-content: center;" onclick="toggleNotifModal()">
+                🔔
+                <span id="notifBadge" style="position: absolute; top: -5px; right: -5px; background: #ff4757; color: white; font-size: 11px; font-weight: bold; border-radius: 50%; padding: 2px 6px; display: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">0</span>
+            </button>
         </div>
     </div>
     
@@ -637,7 +642,6 @@
     <button class="modern-btn btn-logout" onclick="logoutApp()">🚪 ออกจากระบบ</button>
     <button class="modern-btn btn-backup" onclick="openBackupModal()">💾 สำรองข้อมูล</button>
     <button class="modern-btn btn-clear" onclick="resetBoard()">🗑️ ล้างแผงนี้</button>
-    <button class="modern-btn btn-print" onclick="window.print()">🖨️ พิมพ์</button>
     <button class="modern-btn btn-customer" onclick="openCardSlider()">💕 สรุปลูกค้า</button>
     <button class="modern-btn btn-bg" onclick="openBgSelector()">🖼️ พื้นหลัง</button>
     <button class="modern-btn btn-theme" onclick="openGridDesignModal()">🎨 ธีมตาราง</button>
@@ -2936,6 +2940,89 @@ async function pasteBoardData() {
         if(typeof closeBackupModal === 'function') closeBackupModal();
     }
 }
+// ==========================================
+// ระบบการแจ้งเตือน & เชื่อม Google Sheets
+// ==========================================
+
+// 1. นำ URL ของ Web App จาก Google Apps Script มาวางที่นี่
+const NOTIFY_SHEET_URL = "วาง_URL_WEB_APP_ที่ได้จาก_GOOGLE_SHEET_ตรงนี้"; 
+
+function toggleNotifModal() {
+    document.getElementById('notifModal').style.display = 'flex';
+    // ซ่อนตัวเลขสีแดงเมื่อกดเปิดอ่าน
+    document.getElementById('notifBadge').style.display = 'none';
+}
+
+function switchNotifTab(tab) {
+    const tabAdminBtn = document.getElementById('tab-admin');
+    const tabPrivateBtn = document.getElementById('tab-private');
+    const contentAdmin = document.getElementById('notif-admin-content');
+    const contentPrivate = document.getElementById('notif-private-content');
+
+    if (tab === 'admin') {
+        tabAdminBtn.style.background = '#4D96FF'; tabAdminBtn.style.color = 'white';
+        tabPrivateBtn.style.background = '#f1f2f6'; tabPrivateBtn.style.color = '#333';
+        contentAdmin.style.display = 'block';
+        contentPrivate.style.display = 'none';
+    } else {
+        tabPrivateBtn.style.background = '#4D96FF'; tabPrivateBtn.style.color = 'white';
+        tabAdminBtn.style.background = '#f1f2f6'; tabAdminBtn.style.color = '#333';
+        contentPrivate.style.display = 'block';
+        contentAdmin.style.display = 'none';
+    }
+}
+
+async function fetchNotifications() {
+    if(!NOTIFY_SHEET_URL || NOTIFY_SHEET_URL.includes("วาง_URL")) return;
+    
+    try {
+        let response = await fetch(NOTIFY_SHEET_URL);
+        let data = await response.json();
+        
+        let adminHtml = '';
+        let privateHtml = '';
+        let notifCount = 0;
+        
+        // ตรงนี้ให้กำหนดชื่อของผู้ใช้แอปนี้ เพื่อดึงเฉพาะข้อความของคนนี้ (เช่น "User1")
+        // หากมีระบบล็อกอิน สามารถเปลี่ยนเป็นตัวแปรชื่อผู้ใช้ได้
+        let currentUser = "User1"; 
+
+        data.forEach(msg => {
+            if(msg.type === 'admin') {
+                adminHtml += `<div style="padding:10px; background:#e3f2fd; border-radius:8px; margin-bottom:8px; border-left:4px solid #4D96FF; font-size:0.9rem;">
+                    <div style="font-size: 0.75rem; color: #888; margin-bottom: 3px;">${msg.date}</div>
+                    <b>[ประกาศ]</b> ${msg.text}
+                </div>`;
+                notifCount++;
+            } else if (msg.type === 'private' && msg.target === currentUser) {
+                privateHtml += `<div style="padding:10px; background:#fff0f0; border-radius:8px; margin-bottom:8px; border-left:4px solid #ff4757; font-size:0.9rem;">
+                    <div style="font-size: 0.75rem; color: #888; margin-bottom: 3px;">${msg.date}</div>
+                    <b>[ส่วนตัว]</b> ${msg.text}
+                </div>`;
+                notifCount++;
+            }
+        });
+
+        document.getElementById('notif-admin-content').innerHTML = adminHtml || `<div style="text-align:center; color:#999; padding: 20px;">ไม่มีประกาศจากแอดมิน</div>`;
+        document.getElementById('notif-private-content').innerHTML = privateHtml || `<div style="text-align:center; color:#999; padding: 20px;">ไม่มีข้อความส่วนตัว</div>`;
+        
+        // อัปเดตตัวเลขแจ้งเตือนที่กระดิ่ง
+        if(notifCount > 0) {
+            let badge = document.getElementById('notifBadge');
+            badge.innerText = notifCount;
+            badge.style.display = 'block';
+        }
+    } catch (error) {
+        console.error("ดึงข้อมูลแจ้งเตือนไม่สำเร็จ:", error);
+    }
+}
+
+// สั่งให้ดึงข้อมูลอัตโนมัติเมื่อเปิดหน้าเว็บ
+window.addEventListener('DOMContentLoaded', () => {
+    fetchNotifications();
+    // ดึงข้อมูลใหม่ทุกๆ 1 นาที (60000 มิลลิวินาที)
+    setInterval(fetchNotifications, 60000); 
+});
 </script>
 <div id="cardSliderOverlay" class="card-slider-overlay">
     <div class="card-slider-container">
@@ -3008,7 +3095,30 @@ async function pasteBoardData() {
                 </div>
             </div>
         </div>
+    <div class="modal-overlay" id="notifModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 5000; justify-content: center; align-items: center;">
+    <div class="modal-box" style="background: white; width: 90%; max-width: 400px; border-radius: 15px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+        <h3 style="margin-top: 0; font-family: 'Kanit', sans-serif; color: #333; display: flex; align-items: center; gap: 10px;">🔔 การแจ้งเตือน</h3>
         
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <button id="tab-admin" style="flex: 1; padding: 10px; border-radius: 10px; border: none; background: #4D96FF; color: white; font-weight: bold; font-family: 'Kanit', sans-serif; cursor: pointer;" onclick="switchNotifTab('admin')">ประกาศแอดมิน</button>
+            <button id="tab-private" style="flex: 1; padding: 10px; border-radius: 10px; border: none; background: #f1f2f6; color: #333; font-weight: bold; font-family: 'Kanit', sans-serif; cursor: pointer;" onclick="switchNotifTab('private')">ข้อความส่วนตัว</button>
+        </div>
+        
+        <div id="notif-admin-content" style="text-align: left; max-height: 300px; overflow-y: auto; font-family: 'Prompt', sans-serif;">
+            <div style="padding: 10px; background: #e3f2fd; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid #4D96FF; font-size: 0.9rem; text-align: center; color: #666;">
+                กำลังโหลดข้อมูล...
+            </div>
+        </div>
+        
+        <div id="notif-private-content" style="text-align: left; max-height: 300px; overflow-y: auto; display: none; font-family: 'Prompt', sans-serif;">
+            <div style="padding: 10px; background: #fff0f0; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid #ff4757; font-size: 0.9rem; text-align: center; color: #666;">
+                กำลังโหลดข้อมูล...
+            </div>
+        </div>
+        
+        <button style="margin-top: 20px; width: 100%; padding: 12px; background: #ff4757; color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 1rem; font-family: 'Kanit', sans-serif; cursor: pointer;" onclick="document.getElementById('notifModal').style.display='none'">ปิดหน้าต่าง</button>
+    </div>
+</div>    
     </body>
 </html>
 </body>
