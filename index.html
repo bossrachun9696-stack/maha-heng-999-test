@@ -677,86 +677,87 @@
 </style>
 
 <style>
-    /* คลุมทั้งหมด - ปรับให้กว้าง 100% ไร้ขอบส่วนเกิน */
+    /* คลุมทั้งหมด - ขยายเต็ม 100% ไม่เหลือขอบข้าง */
     .center-wrapper {
         display: block !important;
-        width: 110% !important;
+        width: 100% !important;
         margin: 10px 0 !important;
         padding: 0 !important;
         box-sizing: border-box !important;
     }
 
-    /* กล่องหลัก - จัด 2 คอลัมน์แบบสมดุล */
+    /* กล่องหลัก - ปรับให้กว้าง 100% ของหน้าจอ */
     .admin-dashboard {
         display: grid;
         grid-template-columns: repeat(2, 1fr); 
         gap: 8px; 
-        width: 98% !important;
-        max-width: 800px !important; 
-        margin: 0 auto !important;
+        width: 100% !important; /* กว้างสุดขอบจอ */
+        max-width: 100% !important; /* ปลดล็อกความกว้างสูงสุด */
+        margin: 0 !important;
+        padding: 0 4px; /* เว้นช่องว่างจากขอบโทรศัพท์แค่เล็กน้อย */
         font-family: 'Kanit', sans-serif;
+        box-sizing: border-box;
     }
 
-    /* กล่องหมวดหมู่ - เน้นความเรียบง่ายแต่ดูแพง */
+    /* กล่องหมวดหมู่ - ขยายพื้นที่ข้างใน */
     .menu-section {
         background: #ffffff;
-        border-radius: 12px;
-        padding: 10px 5px; 
+        border-radius: 10px;
+        padding: 12px 8px; /* เพิ่มพื้นที่แนวตั้งในกล่อง */
         box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         border: 1px solid #f0f0f0;
         display: flex;
         flex-direction: column;
     }
 
-    /* กล่องระบบด้านล่าง - ปรับให้เข้ากับโทนสีหลัก */
+    /* กล่องระบบด้านล่าง */
     .section-system {
         grid-column: span 2; 
         background: #fdfdfd !important;
-        padding: 8px !important;
-        border: 1px dashed #ddd !important;
+        padding: 10px !important;
     }
 
-    /* หัวข้อหมวดหมู่ - เล็ก คมชัด และชิดซ้าย */
+    /* หัวข้อหมวดหมู่ - เด่นขึ้น */
     .section-title {
-        font-size: 0.85rem;
-        color: #888;
+        font-size: 0.9rem;
+        color: #555;
         margin-bottom: 10px;
-        font-weight: 600;
+        font-weight: 700;
         text-align: left;
-        padding-left: 5px;
-        border-left: 3px solid #4D96FF;
+        padding-left: 6px;
+        border-left: 4px solid #4D96FF;
     }
 
-    /* การจัดวางปุ่มภายใน */
+    /* การจัดวางปุ่ม */
     .btn-stack {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 8px;
     }
 
     .btn-grid-mini {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 6px;
+        gap: 8px;
     }
 
-    /* สไตล์ปุ่ม - "เล็กแต่กว้าง" (สูง 40px กำลังสวย) */
+    /* สไตล์ปุ่ม - ขยายความสูง (Height) และขนาดตัวหนังสือ */
     .modern-btn {
         box-sizing: border-box;
-        height: 40px; /* บังคับความสูงให้เท่ากันเพื่อความสวยงาม */
-        padding: 0 5px;
+        height: 48px; /* เพิ่มความสูงจาก 40px เป็น 48px ให้ใหญ่ขึ้น */
+        padding: 0 4px;
         border: none;
         border-radius: 8px;
         font-family: 'Kanit', sans-serif;
-        font-size: 0.9rem;
-        font-weight: 500;
+        font-size: 1rem; /* เพิ่มขนาดตัวหนังสือเป็น 1rem */
+        font-weight: 600;
         cursor: pointer;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 5px;
-        transition: all 0.15s;
+        gap: 6px;
+        transition: all 0.1s;
         width: 100%;
         color: white;
     }
@@ -766,13 +767,12 @@
         filter: brightness(0.9);
     }
 
-    /* ปุ่มสรุปยอด - ปรับให้โดดเด่นแต่ไม่บวม */
+    /* ปุ่มสรุปยอด - ใหญ่และเด่นที่สุด */
     .btn-summary {
         background: #ff9f43 !important;
-        font-weight: 600 !important;
-        height: 45px !important; /* ใหญ่กว่าปุ่มอื่นนิดเดียว */
-        border-radius: 20px !important;
-        font-size: 1rem !important;
+        height: 52px !important; /* ใหญ่พิเศษ */
+        font-size: 1.1rem !important;
+        border-radius: 12px !important;
     }
 </style>
 
