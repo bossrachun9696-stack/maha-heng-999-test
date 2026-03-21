@@ -2631,7 +2631,6 @@ function renderSlider() {
 function renderSellerInfo(board) {
     const sellerContainer = document.getElementById("sellerSectionDisplay");
     
-    // ดึงข้อมูลผู้ขาย
     let sellerImage = "";
     let sellerName = "ไม่ระบุชื่อผู้ขาย";
     let sellerColor = "#333";
@@ -2640,6 +2639,20 @@ function renderSellerInfo(board) {
         sellerImage = board.sellerInfo.image || "";
         sellerName = board.sellerInfo.text || "ไม่ระบุชื่อผู้ขาย";
         sellerColor = board.sellerInfo.color || "#333";
+    }
+
+    // ⭐ เพิ่มตรงนี้ (สำคัญมาก)
+    if (!sellerImage) {
+        const oldImg = localStorage.getItem("seller_image_" + currentBoardIdx);
+        if (oldImg) {
+            sellerImage = oldImg;
+
+            // 🔁 ย้ายเข้า board อัตโนมัติ
+            if (!board.sellerInfo) board.sellerInfo = {};
+            board.sellerInfo.image = oldImg;
+
+            saveBoards();
+        }
     }
 
     const imgDisplay = sellerImage 
