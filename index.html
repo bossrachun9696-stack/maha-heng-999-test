@@ -677,98 +677,102 @@
 </style>
 
 <style>
-    /* คลุมทั้งหมด - กว้างเต็มพิกัด */
+    /* คลุมทั้งหมด - ขยายเต็มหน้าจอ 100% */
     .center-wrapper {
         display: block !important;
         width: 100% !important;
-        margin: 10px 0 !important;
+        margin: 15px 0 !important;
         padding: 0 !important;
         box-sizing: border-box !important;
     }
 
-    /* กล่องหลัก - ขยายกว้างขึ้นและเพิ่มระยะห่าง */
+    /* กล่องหลัก - ขยายกว้างพิเศษและเพิ่มระยะห่างระหว่างกลุ่ม */
     .admin-dashboard {
         display: grid;
         grid-template-columns: repeat(2, 1fr); 
-        gap: 10px; 
-        width: 98% !important; /* กว้างเกือบชิดขอบจอ */
-        max-width: 900px !important; 
+        gap: 12px; 
+        width: 98% !important; /* กว้างเกือบชนขอบจอ */
+        max-width: 1000px !important; 
         margin: 0 auto !important;
         font-family: 'Kanit', sans-serif;
     }
 
-    /* กล่องหมวดหมู่ - เพิ่มความนูนและขนาด */
+    /* กล่องหมวดหมู่ - เน้นความนูนและพื้นที่ภายในที่กว้างขึ้น */
     .menu-section {
-        background: rgba(255, 255, 255, 0.98);
-        border-radius: 12px;
-        padding: 15px; /* เพิ่มพื้นที่ภายในกล่อง */
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        border: 1px solid rgba(0,0,0,0.08);
+        background: #ffffff;
+        border-radius: 15px;
+        padding: 20px 15px; /* เพิ่มพื้นที่แนวตั้งภายในกล่อง */
+        box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+        border: 1px solid rgba(0,0,0,0.1);
         display: flex;
         flex-direction: column;
     }
 
-    /* กล่องระบบด้านล่าง */
+    /* กล่องระบบด้านล่าง - ใหญ่และเด่น */
     .section-system {
         grid-column: span 2; 
-        background: #fffafa !important;
-        padding: 12px 15px !important;
+        background: #fff5f5 !important; /* สีอมแดงอ่อนๆ ให้รู้ว่าเป็นส่วนระบบ */
+        padding: 15px !important;
+        border: 1px solid #ffcccc !important;
     }
 
-    /* หัวข้อหมวดหมู่ - ใหญ่และชัดเจน */
+    /* หัวข้อหมวดหมู่ - ใหญ่สะใจ */
     .section-title {
-        font-size: 1rem; /* ขนาดใหญ่ขึ้น */
-        color: #333;
-        margin-bottom: 12px;
-        font-weight: 700;
-        text-align: left;
-        padding-left: 8px;
-        border-left: 4px solid #4D96FF;
+        font-size: 1.2rem; /* ใหญ่ขึ้นกว่าเดิม */
+        color: #1a1a1a;
+        margin-bottom: 15px;
+        font-weight: 800;
+        text-align: center; /* จัดกลางหัวข้อเพื่อให้ดูสมดุลกับความใหญ่ */
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 8px;
     }
 
     /* การจัดวางปุ่ม */
     .btn-stack {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 10px;
     }
 
     .btn-grid-mini {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
+        gap: 10px;
     }
 
-    /* สไตล์ปุ่ม - เน้น "ใหญ่" และ "กดง่าย" */
+    /* สไตล์ปุ่ม - "ใหญ่พิเศษ" กดง่ายที่สุด */
     .modern-btn {
         box-sizing: border-box;
-        padding: 14px 5px; /* เพิ่มความสูงปุ่มให้ใหญ่ขึ้น */
+        padding: 18px 5px; /* เพิ่มความสูงปุ่มให้หนาสะใจ กดไม่พลาดแน่นอน */
         border: none;
-        border-radius: 8px;
+        border-radius: 12px;
         font-family: 'Kanit', sans-serif;
-        font-size: 1rem; /* ตัวหนังสือใหญ่ขึ้นชัดเจน */
-        font-weight: 600;
+        font-size: 1.1rem; /* ตัวหนังสือใหญ่และหนา */
+        font-weight: 700;
         cursor: pointer;
-        box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 6px;
-        transition: all 0.15s;
+        gap: 8px;
+        transition: all 0.2s;
         width: 100%;
         color: white;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
     }
 
     .modern-btn:active {
-        transform: scale(0.96);
-        filter: brightness(0.9);
+        transform: scale(0.95);
+        filter: brightness(0.8);
     }
 
-    /* ปุ่มสรุปยอด - เน้นพิเศษ */
+    /* ปุ่มสรุปยอด - ใหญ่และเด่นที่สุดในแผง */
     .btn-summary {
-        background: #ff9f43 !important;
-        font-size: 1.1rem !important;
-        border-radius: 25px !important;
+        background: linear-gradient(135deg, #ff9f43, #f39c12) !important;
+        font-size: 1.3rem !important; /* ใหญ่พิเศษ */
+        padding: 22px 5px !important;
+        border-radius: 50px !important; /* ทรงแคปซูลยาว */
+        box-shadow: 0 5px 15px rgba(255, 159, 67, 0.4) !important;
     }
 </style>
 
@@ -776,7 +780,7 @@
     <div class="admin-dashboard">
 
         <div class="menu-section">
-            <div class="section-title">📊 สรุปข้อมูล</div>
+            <div class="section-title">📊 รายงานยอด</div>
             <div class="btn-stack">
                 <button class="modern-btn btn-summary" onclick="openSummaryModal()">📊 สรุปยอด</button>
                 <button class="modern-btn" style="background: linear-gradient(45deg, #1abc9c, #2ed573);" onclick="openCardSlider()">💕 ลูกค้า</button>
@@ -801,8 +805,8 @@
 
         <div class="menu-section section-system">
             <div class="btn-grid-mini">
-                <button class="modern-btn" style="background:#ff4757;" onclick="resetBoard()">🗑️ ล้างแผงนี้</button>
-                <button class="modern-btn" style="background:#f1f2f6; color:#333;" onclick="logoutApp()">🚪 ออกจากระบบ</button>
+                <button class="modern-btn" style="background:#ff4757;" onclick="resetBoard()">🗑️ ล้างแผงทั้งหมด</button>
+                <button class="modern-btn" style="background:#f1f2f6; color:#333; box-shadow: 0 4px 0 #ccc;" onclick="logoutApp()">🚪 ออกจากระบบ</button>
             </div>
         </div>
 
