@@ -3067,7 +3067,50 @@ window.addEventListener('DOMContentLoaded', () => {
         
         <button style="margin-top: 20px; width: 100%; padding: 12px; background: #ff4757; color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 1rem; font-family: 'Kanit', sans-serif; cursor: pointer;" onclick="document.getElementById('notifModal').style.display='none'">ปิดหน้าต่าง</button>
     </div>
-</div>    
+</div> 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ใส่ ID ที่เราหามาได้
+    const INPUT_ID = 'sellerImgUpload';     // ID ของช่องอัปโหลดที่คุณส่งมา
+    const IMAGE_ID = 'sellerImgPreview';    // ID ของรูปภาพที่ใช้แสดงผล (แก้ให้ตรงกับของคุณ)
+    const STORAGE_KEY = 'savedSellerImage'; // ชื่อไฟล์จำลองที่ใช้เซฟในเครื่อง
+
+    const inputElement = document.getElementById(INPUT_ID);
+    const imgElement = document.getElementById(IMAGE_ID);
+
+    // 1. ดึงรูปเก่ามาแสดงตอนเปิดแอป
+    if (imgElement) {
+        const savedImage = localStorage.getItem(STORAGE_KEY);
+        if (savedImage) {
+            imgElement.src = savedImage;
+            imgElement.style.display = 'block';
+        }
+    }
+
+    // 2. เซฟรูปลงเครื่องตอนที่กดอัปโหลดใหม่
+    if (inputElement && imgElement) {
+        inputElement.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(event) {
+                    const base64String = event.target.result;
+                    
+                    // แสดงรูปทันที
+                    imgElement.src = base64String;
+                    imgElement.style.display = 'block';
+                    
+                    // บันทึกรูปไม่ให้หายตอนปิดแอป
+                    localStorage.setItem(STORAGE_KEY, base64String);
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+});
+</script>   
     </body>
 </html>
 </body>
