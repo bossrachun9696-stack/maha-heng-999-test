@@ -501,6 +501,18 @@
 .btn-group .full-width {
     grid-column: span 2;
 }
+/* --- ส่วนที่เพิ่มใหม่: ทำให้ปุ่ม "จัดวาง/บันทึก" มีเอฟเฟกต์ยุบตัว --- */
+#btnToggleEdit {
+        transition: all 0.2s ease !important;
+        position: relative !important;
+        top: 0;
+}
+
+    /* เมื่อเอามือไปแตะหรือกด (Active) ให้ปุ่มยุบลง 3px */
+#btnToggleEdit:active {
+        top: 3px !important;
+        filter: brightness(1.1);
+}
 
     </style>
 </head>
@@ -677,7 +689,7 @@
 </style>
 
 <style>
-    /* คลุมทั้งหมด - ขยายเต็ม 100% ไม่เหลือขอบข้าง */
+    /* คลุมทั้งหมด - ลด Margin ลงเพื่อให้กระชับ */
     .center-wrapper {
         display: block !important;
         width: 100% !important;
@@ -686,7 +698,7 @@
         box-sizing: border-box !important;
     }
 
-    /* กล่องหลัก - ปรับให้กว้าง 100% ของหน้าจอ */
+   /* กล่องหลัก - ปรับให้กว้าง 100% ของหน้าจอ */
     .admin-dashboard {
         display: grid;
         grid-template-columns: repeat(2, 1fr); 
@@ -699,36 +711,37 @@
         box-sizing: border-box;
     }
 
-    /* กล่องหมวดหมู่ - ขยายพื้นที่ข้างใน */
+    /* กล่องหมวดหมู่ - ลด Padding ลงให้ดูเพรียว */
     .menu-section {
-        background: #ffffff;
+        background: rgba(15, 20, 30, 0.95); 
         border-radius: 10px;
-        padding: 12px 8px; /* เพิ่มพื้นที่แนวตั้งในกล่อง */
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        border: 1px solid #f0f0f0;
+        padding: 12px 8px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5); 
+        border: 1px solid rgba(0, 210, 255, 0.15); 
         display: flex;
         flex-direction: column;
+        backdrop-filter: blur(8px);
     }
 
-    /* กล่องระบบด้านล่าง */
     .section-system {
         grid-column: span 2; 
-        background: #fdfdfd !important;
-        padding: 10px !important;
+        background: rgba(30, 15, 15, 0.9) !important; 
+        border: 1px solid rgba(255, 71, 87, 0.3) !important;
+        padding: 8px !important;
     }
 
-    /* หัวข้อหมวดหมู่ - เด่นขึ้น */
+    /* หัวข้อหมวดหมู่ - ขนาดเล็กลง */
     .section-title {
         font-size: 0.9rem;
-        color: #555;
+        color: #00d2ff; 
         margin-bottom: 10px;
         font-weight: 700;
         text-align: left;
         padding-left: 6px;
-        border-left: 4px solid #4D96FF;
+        border-left: 4px solid #00d2ff;
+        text-shadow: 0 0 8px rgba(0, 210, 255, 0.4);
     }
 
-    /* การจัดวางปุ่ม */
     .btn-stack {
         display: flex;
         flex-direction: column;
@@ -741,39 +754,60 @@
         gap: 8px;
     }
 
-    /* สไตล์ปุ่ม - ขยายความสูง (Height) และขนาดตัวหนังสือ */
+    /* สไตล์ปุ่ม - ปรับความสูงลงจาก 52px เหลือ 42px */
     .modern-btn {
         box-sizing: border-box;
-        height: 48px; /* เพิ่มความสูงจาก 40px เป็น 48px ให้ใหญ่ขึ้น */
-        padding: 0 4px;
-        border: none;
+        height: 42px; 
+        padding: 0 5px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 8px;
         font-family: 'Kanit', sans-serif;
-        font-size: 1rem; /* เพิ่มขนาดตัวหนังสือเป็น 1rem */
+        font-size: 0.85rem;
         font-weight: 600;
         cursor: pointer;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 6px;
-        transition: all 0.1s;
+        gap: 5px;
+        transition: all 0.2s ease;
         width: 100%;
-        color: white;
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.05);
     }
 
     .modern-btn:active {
         transform: scale(0.97);
-        filter: brightness(0.9);
     }
 
-    /* ปุ่มสรุปยอด - ใหญ่และเด่นที่สุด */
-    .btn-summary {
-        background: #ff9f43 !important;
-        height: 52px !important; /* ใหญ่พิเศษ */
-        font-size: 1.1rem !important;
-        border-radius: 12px !important;
+    /* ปุ่มสำรองข้อมูล - ปรับความสูงลงและลดเงานูนให้พอดีกับขนาดใหม่ */
+    .btn-save-neon {
+        background: linear-gradient(180deg, #2ed573 0%, #26af5a 100%) !important;
+        border: none !important;
+        box-shadow: 0 3px 0 #1e8449, 0 4px 12px rgba(46, 213, 115, 0.3) !important;
+        color: #fff !important;
+        height: 44px !important;
+        position: relative;
+        top: 0;
     }
+
+    .btn-save-neon:active {
+        top: 2px !important;
+        box-shadow: 0 1px 0 #1e8449, 0 2px 6px rgba(46, 213, 115, 0.2) !important;
+    }
+
+    /* ปุ่มสรุปยอด - ปรับขนาดลงให้สมดุล */
+    .btn-summary {
+        background: linear-gradient(135deg, #ff9f43, #ff6b6b) !important;
+        box-shadow: 0 3px 10px rgba(255, 159, 67, 0.3) !important;
+        border: none !important;
+        font-size: 0.95rem !important;
+        height: 46px !important;
+    }
+
+    .btn-blue { background: linear-gradient(135deg, #4D96FF, #00d2ff) !important; border: none !important; }
+    .btn-red { background: linear-gradient(135deg, #ff4757, #ff6b6b) !important; border: none !important; }
+    .btn-dark { background: rgba(255, 255, 255, 0.1) !important; color: #ced4da !important; }
+
 </style>
 
 <div class="center-wrapper">
@@ -783,35 +817,37 @@
             <div class="section-title">📊 สรุปข้อมูล</div>
             <div class="btn-stack">
                 <button class="modern-btn btn-summary" onclick="openSummaryModal()">📊 สรุปยอด</button>
-                <button class="modern-btn" style="background: linear-gradient(45deg, #1abc9c, #2ed573);" onclick="openCardSlider()">💕 ลูกค้า</button>
-                <button class="modern-btn" style="background:#3498db;" onclick="openBackupModal()">💾 สำรองข้อมูล</button>
+                <button class="modern-btn btn-blue" onclick="openCardSlider()">👤 ลูกค้า</button>
+                <button class="modern-btn btn-save-neon" onclick="openBackupModal()">💾 สำรองข้อมูล</button>
             </div>
         </div>
 
         <div class="menu-section">
-            <div class="section-title">🎨 ตั้งค่าแผง</div>
+            <div class="section-title">🎨 ปรับแต่งแผง</div>
             <div class="btn-stack">
                 <div class="btn-grid-mini">
-                    <button class="modern-btn" style="background: linear-gradient(45deg, #FF6B6B, #4D96FF);" onclick="openBgSelector()">🖼️ พื้นหลัง</button>
-                    <button class="modern-btn" style="background: linear-gradient(45deg, #4D96FF, #6BCB77);" onclick="openGridDesignModal()">🎨 ธีม</button>
+                    <button class="modern-btn btn-dark" style="border: 1px solid #FF6B6B;" onclick="openBgSelector()">🖼️ พื้นหลัง</button>
+                    <button class="modern-btn btn-dark" style="border: 1px solid #4D96FF;" onclick="openGridDesignModal()">🎨 ธีม</button>
                 </div>
                 <div class="btn-grid-mini">
-                    <button id="btnToggleEdit" class="modern-btn" style="background: linear-gradient(45deg, #FF9F43, #FF6B6B);" onclick="toggleEditMode()">🔧 จัดวาง</button>
-                    <button id="btnFilterNum" class="modern-btn" style="background: #3498db;" onclick="toggleFilterBooked()">🔍 ซ่อนจอง</button>
+                    <button id="btnToggleEdit" class="modern-btn btn-dark" style="border: 1px solid #FF9F43;" onclick="toggleEditMode()">🔧 จัดวาง</button>
+                    <button id="btnFilterNum" class="modern-btn btn-dark" style="border: 1px solid #3498db;" onclick="toggleFilterBooked()">🔍 ซ่อนหมายเลข</button>
                 </div>
-                <button id="btnToggleMode" class="modern-btn" style="background: #2ecc71;" onclick="toggleDisplayMode()">🔠 โหมด 10-19</button>
+                <button id="btnToggleMode" class="modern-btn btn-blue" onclick="toggleDisplayMode()">🔠 โหมด 10-19</button>
             </div>
         </div>
 
         <div class="menu-section section-system">
             <div class="btn-grid-mini">
-                <button class="modern-btn" style="background:#ff4757;" onclick="resetBoard()">🗑️ ล้างแผง</button>
-                <button class="modern-btn" style="background:#f1f2f6; color:#333;" onclick="logoutApp()">🚪 ออกระบบ</button>
+                <button class="modern-btn btn-red" onclick="resetBoard()">🗑️ ล้างแผง</button>
+                <button class="modern-btn" style="background: #1e272e;" onclick="logoutApp()">🚪 ออกระบบ</button>
             </div>
         </div>
 
     </div>
 </div>
+
+</script>
 <input type="file" id="importBackupFile" accept=".json" style="display: none;" onchange="importBackupData(event)">
 
 <div id="backupModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
@@ -1825,23 +1861,7 @@ function confirmBooking() {
     let initialDist = 0; 
     let initialWidth = 0, initialHeight = 0; 
 
-    function toggleEditMode() {
-        isEditMode = !isEditMode;
-        const wrapper = document.getElementById("gameWrapper");
-        const btn = document.getElementById("btnToggleEdit");
-        const addBtn = document.querySelector(".add-box-btn");
-        
-        if (isEditMode) { 
-            wrapper.classList.add("edit-mode"); 
-            btn.innerHTML = "💾 บันทึก"; btn.style.background = "#2ed573"; 
-            addBtn.style.display = "block";
-        } else { 
-            wrapper.classList.remove("edit-mode"); 
-            btn.innerHTML = "🔧 จัดวาง"; btn.style.background = "linear-gradient(45deg, #FF9F43, #FF6B6B)"; 
-            addBtn.style.display = "none";
-            savePositions(); 
-        }
-    }
+    
     
     function savePositions() {
         const d = boards[currentBoardIdx].design;
@@ -3276,6 +3296,49 @@ window.addEventListener('DOMContentLoaded', () => {
     // ดึงข้อมูลใหม่ทุกๆ 1 นาที (60000 มิลลิวินาที)
     setInterval(fetchNotifications, 60000); 
 });
+function toggleEditMode() {
+    // 1. สลับสถานะโหมดแก้ไข
+    isEditMode = !isEditMode;
+    
+    // 2. อ้างอิง Element ต่างๆ
+    const wrapper = document.getElementById("gameWrapper"); // เช็คว่า id ตรงกับที่ครอบแผงหรือไม่
+    const btn = document.getElementById("btnToggleEdit");
+    const addBtn = document.querySelector(".add-box-btn");
+    
+    if (isEditMode) { 
+        // --- เมื่ออยู่ในโหมด: จัดวาง (ปุ่มกลายเป็นสีเขียว บันทึก) ---
+        if(wrapper) wrapper.classList.add("edit-mode"); 
+        
+        btn.innerHTML = "💾 บันทึก"; 
+        
+        // ใช้ .style เพื่อบังคับเปลี่ยนสี (ชนะ CSS !important)
+        btn.style.setProperty('background', 'linear-gradient(180deg, #2ed573 0%, #26af5a 100%)', 'important');
+        btn.style.setProperty('border', 'none', 'important');
+        btn.style.setProperty('box-shadow', '0 4px 0 #1e8449, 0 6px 20px rgba(46, 213, 115, 0.4)', 'important');
+        btn.style.color = "#ffffff";
+        
+        if(addBtn) addBtn.style.display = "block";
+
+    } else { 
+        // --- เมื่อกด: บันทึก (กลับเป็นสีมืดปกติ) ---
+        if(wrapper) wrapper.classList.remove("edit-mode"); 
+        
+        btn.innerHTML = "🔧 จัดวาง"; 
+        
+        // คืนค่าสีเดิมตามสไตล์ btn-dark ของคุณ
+        btn.style.setProperty('background', 'rgba(47, 53, 66, 0.8)', 'important');
+        btn.style.setProperty('border', '1px solid #FF9F43', 'important');
+        btn.style.setProperty('box-shadow', 'none', 'important');
+        btn.style.color = "#ced4da";
+        
+        if(addBtn) addBtn.style.display = "none";
+        
+        // เรียกฟังก์ชันบันทึกข้อมูล (ถ้ามี)
+        if (typeof savePositions === "function") {
+            savePositions(); 
+        }
+    }
+}
 </script>
 <div id="cardSliderOverlay" class="card-slider-overlay">
     <div class="card-slider-container">
