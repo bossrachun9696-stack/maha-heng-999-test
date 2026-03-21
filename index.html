@@ -2834,110 +2834,59 @@ window.onclick = function(event) {
 // ==========================================
 // ระบบคัดลอกและวาง (อัปเดต: ป้องกัน Token หลุด/เด้งออก)
 // ==========================================
-// 1. ฟังก์ชัน "คัดลอกจัดวาง" (ก๊อปปี้ทุกอย่างในแผง รวมถึงข้อมูลลูกค้า/ยอดเงิน)
+// ฟังก์ชัน "คัดลอกแผง" (เฉพาะการตกแต่ง จัดวาง และผู้รับเงิน)
 async function copyBoardData() {
     let currentBoard = boards[currentBoardIdx];
-
-    // คัดลอกข้อมูล "ทั้งหมด" ที่มีในแผงนี้
-    let dataToCopy = JSON.parse(JSON.stringify(currentBoard));
     
-    // ลบ ID และ ชื่อแผง ออกจากตัวคัดลอก (เพื่อไม่ให้ไปทับชื่อแผงของเป้าหมายตอนวาง)
-    delete dataToCopy.id;
-    delete dataToCopy.name;
+    // คัดลอกเฉพาะการตกแต่ง (ไม่เอาข้อมูลลูกค้า)
+    let dataToCopy = {
+        design: currentBoard.design ? JSON.parse(JSON.stringify(currentBoard.design)) : {},
+        settings: currentBoard.settings ? JSON.parse(JSON.stringify(currentBoard.settings)) : {},
+        customBoxes: currentBoard.customBoxes ? JSON.parse(JSON.stringify(currentBoard.customBoxes)) : [],
+        sellerInfo: currentBoard.sellerInfo ? JSON.parse(JSON.stringify(currentBoard.sellerInfo)) : {}
+    };
 
-    let dataStr = JSON.stringify(dataToCopy);
+    let copyString = JSON.stringify(dataToCopy);
 
-    // วิธีที่ 1: ลองใช้ Clipboard API สมัยใหม่ก่อน
-    if (navigator.clipboard && window.isSecureContext) {
-        try {
-            await navigator.clipboard.writeText(dataStr);
-            alert(`✅ คัดลอกข้อมูล "${currentBoard.name}" (รวมข้อมูลลูกค้าและยอดเงิน) เรียบร้อยแล้ว!\n\nเลื่อนไปเปิดแผงอื่น แล้วกดปุ่ม 'วางข้อมูล (Paste)' ได้เลยครับ`);
-            closeBackupModal();
-            return;
-        } catch (err) {
-            console.warn("Clipboard API ถูกบล็อก กำลังใช้โหมดสำรอง...");
-        }
-    }
-
-    // วิธีที่ 2: โหมดสำรอง (Fallback)
     try {
-        let textArea = document.createElement("textarea");
-        textArea.value = dataStr;
-        textArea.style.position = "fixed"; 
-        textArea.style.opacity = "0";
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        
-        let successful = document.execCommand('copy');
-        document.body.removeChild(textArea);
-        
-        if (successful) {
-            alert(`✅ คัดลอกข้อมูล "${currentBoard.name}" (รวมข้อมูลลูกค้าและยอดเงิน) เรียบร้อยแล้ว!\n\nเลื่อนไปเปิดแผงอื่น แล้วกดปุ่ม 'วางข้อมูล (Paste)' ได้เลยครับ`);
-            closeBackupModal();
-        } else {
-            throw new Error("คำสั่ง Copy ทำงานไม่สำเร็จ");
-        }
+        // สั่งให้คัดลอกลงระบบของมือถือ/คอมพิวเตอร์
+        await navigator.clipboard.writeText(copyString);
+        alert("✅ คัดลอกรูปแบบแผงและการตั้งค่าเรียบร้อยแล้ว!\n(นำไปวางในแผงอื่นได้เลย)");
     } catch (err) {
-        alert("❌ เบราว์เซอร์บล็อกการคัดลอก กรุณาใช้ฟังก์ชัน 'เซฟไฟล์' แทนครับ");
+        // 💡 แก้ปัญหา: ถ้ามือถือบล็อกการก๊อปปี้อัตโนมัติ จะมีกล่องขึ้นมาให้ก๊อปปี้เอง
+        prompt("⚠️ มือถือไม่สามารถคัดลอกอัตโนมัติได้\nกรุณากดคัดลอก (Copy) โค้ดด้านล่างนี้ด้วยตัวเอง:", copyString);
     }
 }
 
-// 2. ฟังก์ชัน "วางข้อมูล" (เอาข้อมูลทุกอย่างมาทับแผงนี้)
+// ฟังก์ชัน "วางแผง" (เฉพาะการตกแต่ง)
 async function pasteBoardData() {
-    let clipboardText = "";
-
-    // วิธีที่ 1: ลองให้อ่านคลิปบอร์ดอัตโนมัติก่อน
-    if (navigator.clipboard && navigator.clipboard.readText) {
-        try {
-            clipboardText = await navigator.clipboard.readText();
-        } catch (err) {
-            console.warn("ไม่สามารถอ่านคลิปบอร์ดอัตโนมัติได้", err);
-        }
-    }
-
-    // วิธีที่ 2: ถ้าบราวเซอร์บล็อก ให้เด้งหน้าต่างให้ผู้ใช้วางเอง
-    if (!clipboardText) {
-        clipboardText = prompt("⚠️ บราวเซอร์ไม่อนุญาตให้อ่านข้อมูลอัตโนมัติ\n\nกรุณากด 'วาง' (Ctrl+V หรือแตะค้าง -> Paste) ในช่องว่างด้านล่างนี้ แล้วกด OK:");
-    }
-
-    if (!clipboardText || clipboardText.trim() === "") {
+    // 💡 แก้ปัญหา: บังคับให้ขึ้น "กล่องข้อความ" เสมอ เพื่อให้ใช้ในมือถือได้ 100%
+    let copiedStr = prompt("📥 กรุณาวาง (Paste) โค้ดรูปแบบแผงที่คัดลอกมา ลงในช่องด้านล่างนี้:");
+    
+    // ถ้าผู้ใช้กดยกเลิก หรือไม่ได้วางอะไร ให้หยุดการทำงาน
+    if (!copiedStr || copiedStr.trim() === "") {
         return; 
     }
 
-    let importedData;
     try {
-        importedData = JSON.parse(clipboardText);
-        
-        // เช็คความถูกต้องเบื้องต้น
-        if (!importedData.data || !importedData.settings) {
-            throw new Error("ข้อมูลไม่ใช่รูปแบบแผงที่ถูกต้อง");
-        }
-    } catch (e) {
-        alert("❌ ข้อมูลที่คุณวางมา ไม่ใช่รูปแบบแผงที่ถูกต้องครับ!");
-        return;
-    }
+        let parsedData = JSON.parse(copiedStr);
+        let currentBoard = boards[currentBoardIdx];
 
-    let targetBoardName = boards[currentBoardIdx].name;
-    let targetBoardId = boards[currentBoardIdx].id; // เก็บ ID ของแผงเป้าหมายเอาไว้
+        // นำเฉพาะส่วนตกแต่งและการตั้งค่ามาเขียนทับแผงปัจจุบัน (ไม่ทับข้อมูลลูกค้า)
+        if (parsedData.design) currentBoard.design = parsedData.design;
+        if (parsedData.settings) currentBoard.settings = parsedData.settings;
+        if (parsedData.customBoxes) currentBoard.customBoxes = parsedData.customBoxes;
+        if (parsedData.sellerInfo) currentBoard.sellerInfo = parsedData.sellerInfo;
 
-    if(confirm(`⚠️ คำเตือน: ข้อมูลทั้งหมด (การตกแต่ง, รายการเลข, ลูกค้า, ยอดเงินรับมา) ในแผง "${targetBoardName}" จะถูกเขียนทับ\n\nต้องการดำเนินการต่อหรือไม่?`)) {
+        // บันทึกและรีเฟรชหน้าจอ
+        if (typeof saveAll === "function") saveAll();
+        if (typeof renderBoardUI === "function") renderBoardUI();
+        if (typeof renderGrid === "function") renderGrid();
+        if (typeof renderCustomBoxes === "function") renderCustomBoxes();
         
-        // เอาข้อมูลทุกอย่างที่คัดลอกมา ทับลงไปในแผงนี้ทั้งหมด!
-        boards[currentBoardIdx] = JSON.parse(JSON.stringify(importedData));
-        
-        // คืนค่า ชื่อแผง และ ID เดิมให้กับแผงนี้ (เพื่อไม่ให้ชื่อแผงมันเปลี่ยนตามอันที่ก๊อปมา)
-        boards[currentBoardIdx].name = targetBoardName;
-        boards[currentBoardIdx].id = targetBoardId;
-        
-        // บันทึกและรีเฟรชหน้าจอทันที
-        if(typeof saveAll === 'function') saveAll();
-        if(typeof renderBoardUI === 'function') renderBoardUI();
-        if(typeof renderGrid === 'function') renderGrid();
-        if(typeof updateAdminTable === 'function') updateAdminTable();
-        
-        alert(`✅ วางข้อมูลลงใน "${targetBoardName}" สำเร็จ!`);
-        if(typeof closeBackupModal === 'function') closeBackupModal();
+        alert("✅ วางรูปแบบการตกแต่งแผงสำเร็จ!");
+    } catch (error) {
+        alert("❌ ข้อมูลที่วางไม่ถูกต้อง หรือคัดลอกมาไม่ครบ กรุณาลองใหม่!");
     }
 }
 // ==========================================
