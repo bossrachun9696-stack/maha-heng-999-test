@@ -462,6 +462,45 @@
     font-family: 'Kanit', sans-serif;
     user-select: none; /* ป้องกันไม่ให้คลุมดำข้อความลายน้ำได้ */
 }
+/* --- ส่วนจัดการกลุ่มปุ่มด้านล่าง (แก้ไขให้เป็นตาราง Grid 2 คอลัมน์) --- */
+.btn-group { 
+    display: grid !important; 
+    grid-template-columns: repeat(2, 1fr); /* แบ่งเป็น 2 ช่องเท่าๆ กัน */
+    gap: 12px !important; /* ระยะห่างระหว่างปุ่ม */
+    margin-top: 25px; 
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* --- สไตล์ของปุ่มให้ดูทันสมัยและขนาดเท่ากัน --- */
+.admin-btn { 
+    width: 100%;
+    padding: 15px 10px; 
+    border: none; 
+    border-radius: 15px; /* ปรับให้เป็นทรงกล่องมนๆ ดูน่ากด */
+    font-family: 'Kanit', sans-serif; 
+    font-weight: 700; 
+    font-size: 1rem;
+    cursor: pointer; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08); 
+    transition: transform 0.2s ease, box-shadow 0.2s ease; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.admin-btn:active { 
+    transform: scale(0.95); 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+}
+
+/* --- ตัวเลือกเสริม: หากต้องการให้ปุ่มไหนยาวเต็มบรรทัด (เช่น ออกจากระบบ) --- */
+/* ให้เพิ่ม class="full-width" เข้าไปที่ปุ่มนั้นใน HTML */
+.btn-group .full-width {
+    grid-column: span 2;
+}
 
     </style>
 </head>
@@ -2069,22 +2108,30 @@ function confirmBooking() {
     // เปิดหน้าต่างข้อมูลผู้ขาย
 function openSellerInfoModal() {
     const board = boards[currentBoardIdx];
-    // ถ้ายังไม่มีชุดข้อมูลนี้ ให้สร้างค่าเริ่มต้น
+
+    // ถ้ายังไม่มี ให้สร้างค่าเริ่มต้น
     if (!board.sellerInfo) {
-        board.sellerInfo = { text: "", color: "#333333", image: "" };
+        board.sellerInfo = { text: "", color: "#333333", hasImage: false };
     }
-    
+
     const info = board.sellerInfo;
+
+    // ===== ข้อความ =====
     const txtArea = document.getElementById("sellerText");
     txtArea.value = info.text || "";
     txtArea.style.color = info.color || "#333333";
+
     document.getElementById("sellerTextColor").value = info.color || "#333333";
-    
+
+    // ===== รูป =====
     const preview = document.getElementById("sellerImgPreview");
     const removeBtn = document.getElementById("btnRemoveSellerImg");
-    
-    if (info.image) {
-        preview.src = info.image;
+
+    // ⭐ ดึงรูปจาก localStorage แทน
+    const imgData = localStorage.getItem("seller_image_" + currentBoardIdx);
+
+    if (imgData) {
+        preview.src = imgData;
         preview.style.display = "block";
         removeBtn.style.display = "block";
     } else {
@@ -2092,30 +2139,156 @@ function openSellerInfoModal() {
         preview.style.display = "none";
         removeBtn.style.display = "none";
     }
-    
-    document.getElementById("sellerImgUpload").value = ""; 
+
+    // เคลียร์ input file (ปกติ)
+    document.getElementById("sellerImgUpload").value = "";
+
+    // เปิด modal
     document.getElementById("sellerModal").style.display = "flex";
 }
 
+// ===============================
 // ปิดหน้าต่าง
+// ===============================
 function closeSellerInfoModal() {
     document.getElementById("sellerModal").style.display = "none";
 }
 
-// ฟังก์ชันแปลงรูปที่อัพโหลดขึ้นมาแสดงพรีวิว
+// ===============================
+// อัปโหลด + บีบรูป
+// ===============================
 document.getElementById("sellerImgUpload").addEventListener("change", function(e) {
     const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+        const img = new Image();
+
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            // ⭐ ลดขนาดให้เล็กลง (ช่วยไม่ให้เต็ม)
+            const MAX_WIDTH = 300;
+            const MAX_HEIGHT = 300;
+
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+            } else {
+                if (height > MAX_HEIGHT) {
+                    width *= MAX_HEIGHT / height;
+                    height = MAX_HEIGHT;
+                }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // ⭐ บีบคุณภาพ (ลดลงอีกกันเต็ม)
+            const compressed = canvas.toDataURL('image/jpeg', 0.5);
+
             const preview = document.getElementById("sellerImgPreview");
-            preview.src = event.target.result;
+            preview.src = compressed;
             preview.style.display = "block";
+
             document.getElementById("btnRemoveSellerImg").style.display = "block";
         };
-        reader.readAsDataURL(file);
-    }
+
+        img.src = event.target.result;
+    };
+
+    reader.readAsDataURL(file);
 });
+
+// ===============================
+// ลบรูป
+// ===============================
+function removeSellerImg() {
+    const preview = document.getElementById("sellerImgPreview");
+
+    preview.src = "";
+    preview.style.display = "none";
+
+    document.getElementById("btnRemoveSellerImg").style.display = "none";
+    document.getElementById("sellerImgUpload").value = "";
+
+    // ⭐ ลบออกจาก localStorage ด้วย (สำคัญ)
+    localStorage.removeItem("seller_image_" + currentBoardIdx);
+
+    // อัปเดตสถานะ
+    if (boards[currentBoardIdx].sellerInfo) {
+        boards[currentBoardIdx].sellerInfo.hasImage = false;
+    }
+
+    localStorage.setItem("boards", JSON.stringify(boards));
+}
+
+// ===============================
+// บันทึกข้อมูล
+// ===============================
+function saveSellerInfo() {
+    const board = boards[currentBoardIdx];
+    if (!board.sellerInfo) board.sellerInfo = {};
+    
+    // ข้อความ + สี
+    board.sellerInfo.text = document.getElementById("sellerText").value;
+    board.sellerInfo.color = document.getElementById("sellerTextColor").value;
+
+    const previewSrc = document.getElementById("sellerImgPreview").src;
+
+    if (previewSrc && previewSrc.startsWith("data:image")) {
+        try {
+            // ⭐ เช็คขนาด (กันมือถือพัง)
+            const sizeKB = Math.round((previewSrc.length * 3) / 4 / 1024);
+
+            if (sizeKB > 300) {
+                alert("รูปใหญ่เกินไป (" + sizeKB + "KB)\nกรุณาเลือกรูปเล็กลง");
+                return;
+            }
+
+            // ⭐ เก็บรูปแยก
+            localStorage.setItem("seller_image_" + currentBoardIdx, previewSrc);
+
+            board.sellerInfo.hasImage = true;
+
+        } catch (e) {
+            alert("บันทึกรูปไม่สำเร็จ (ข้อมูลอาจเต็ม)");
+            console.error(e);
+            return;
+        }
+    } else {
+        localStorage.removeItem("seller_image_" + currentBoardIdx);
+        board.sellerInfo.hasImage = false;
+    }
+
+    // ⭐ เซฟ boards (ไม่มีรูป → เบา)
+    try {
+        localStorage.setItem("boards", JSON.stringify(boards));
+    } catch (e) {
+        alert("บันทึกไม่สำเร็จ (ข้อมูลใหญ่เกินไป)");
+        console.error(e);
+        return;
+    }
+
+    // ใช้ระบบเดิม
+    if (typeof saveGameSettings === "function") {
+        saveGameSettings();
+    }
+
+    closeSellerInfoModal();
+
+    console.log("บันทึกสำเร็จ");
+}
 
 // กดลบรูปทิ้ง
 function removeSellerImg() {
@@ -2125,23 +2298,33 @@ function removeSellerImg() {
     document.getElementById("sellerImgUpload").value = "";
 }
 
-// ฟังก์ชันบันทึกข้อมูล (จะถูกดึงไปเก็บรวมกับการเซฟแผง)
 function saveSellerInfo() {
     const board = boards[currentBoardIdx];
     if (!board.sellerInfo) board.sellerInfo = {};
     
+    // ข้อความ + สี
     board.sellerInfo.text = document.getElementById("sellerText").value;
     board.sellerInfo.color = document.getElementById("sellerTextColor").value;
-    
+
     const previewSrc = document.getElementById("sellerImgPreview").src;
+
     if (previewSrc && previewSrc.startsWith("data:image")) {
-        board.sellerInfo.image = previewSrc;
+        // ⭐ แยกเก็บรูป (ไม่เก็บใน boards แล้ว)
+        localStorage.setItem("seller_image_" + currentBoardIdx, previewSrc);
+
+        board.sellerInfo.hasImage = true;
     } else {
-        board.sellerInfo.image = "";
+        localStorage.removeItem("seller_image_" + currentBoardIdx);
+        board.sellerInfo.hasImage = false;
     }
-    
-    saveGameSettings(); // บันทึกข้อมูลลงในระบบ (ใช้ฟังก์ชันเดิมที่มีอยู่)
+
+    // ⭐ เซฟ boards (ไม่มีรูปแล้ว → ไม่เต็ม)
+    localStorage.setItem("boards", JSON.stringify(boards));
+
+    saveGameSettings();
     closeSellerInfoModal();
+
+    console.log("บันทึกสำเร็จ");
 }
 // =========================================================
 // เริ่มต้น JavaScript: ระบบ Card Slider สรุปลูกค้า
