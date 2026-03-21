@@ -677,102 +677,102 @@
 </style>
 
 <style>
-    /* คลุมทั้งหมด - ขยายเต็มหน้าจอ 100% */
+    /* คลุมทั้งหมด - ปรับให้กว้าง 100% ไร้ขอบส่วนเกิน */
     .center-wrapper {
         display: block !important;
         width: 100% !important;
-        margin: 15px 0 !important;
+        margin: 10px 0 !important;
         padding: 0 !important;
         box-sizing: border-box !important;
     }
 
-    /* กล่องหลัก - ขยายกว้างพิเศษและเพิ่มระยะห่างระหว่างกลุ่ม */
+    /* กล่องหลัก - จัด 2 คอลัมน์แบบสมดุล */
     .admin-dashboard {
         display: grid;
         grid-template-columns: repeat(2, 1fr); 
-        gap: 12px; 
-        width: 98% !important; /* กว้างเกือบชนขอบจอ */
-        max-width: 1000px !important; 
+        gap: 8px; 
+        width: 96% !important;
+        max-width: 800px !important; 
         margin: 0 auto !important;
         font-family: 'Kanit', sans-serif;
     }
 
-    /* กล่องหมวดหมู่ - เน้นความนูนและพื้นที่ภายในที่กว้างขึ้น */
+    /* กล่องหมวดหมู่ - เน้นความเรียบง่ายแต่ดูแพง */
     .menu-section {
         background: #ffffff;
-        border-radius: 15px;
-        padding: 20px 15px; /* เพิ่มพื้นที่แนวตั้งภายในกล่อง */
-        box-shadow: 0 6px 15px rgba(0,0,0,0.12);
-        border: 1px solid rgba(0,0,0,0.1);
+        border-radius: 12px;
+        padding: 12px 10px; 
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        border: 1px solid #f0f0f0;
         display: flex;
         flex-direction: column;
     }
 
-    /* กล่องระบบด้านล่าง - ใหญ่และเด่น */
+    /* กล่องระบบด้านล่าง - ปรับให้เข้ากับโทนสีหลัก */
     .section-system {
         grid-column: span 2; 
-        background: #fff5f5 !important; /* สีอมแดงอ่อนๆ ให้รู้ว่าเป็นส่วนระบบ */
-        padding: 15px !important;
-        border: 1px solid #ffcccc !important;
+        background: #fdfdfd !important;
+        padding: 8px !important;
+        border: 1px dashed #ddd !important;
     }
 
-    /* หัวข้อหมวดหมู่ - ใหญ่สะใจ */
+    /* หัวข้อหมวดหมู่ - เล็ก คมชัด และชิดซ้าย */
     .section-title {
-        font-size: 1.2rem; /* ใหญ่ขึ้นกว่าเดิม */
-        color: #1a1a1a;
-        margin-bottom: 15px;
-        font-weight: 800;
-        text-align: center; /* จัดกลางหัวข้อเพื่อให้ดูสมดุลกับความใหญ่ */
-        border-bottom: 2px solid #f0f0f0;
-        padding-bottom: 8px;
+        font-size: 0.85rem;
+        color: #888;
+        margin-bottom: 10px;
+        font-weight: 600;
+        text-align: left;
+        padding-left: 5px;
+        border-left: 3px solid #4D96FF;
     }
 
-    /* การจัดวางปุ่ม */
+    /* การจัดวางปุ่มภายใน */
     .btn-stack {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 6px;
     }
 
     .btn-grid-mini {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+        gap: 6px;
     }
 
-    /* สไตล์ปุ่ม - "ใหญ่พิเศษ" กดง่ายที่สุด */
+    /* สไตล์ปุ่ม - "เล็กแต่กว้าง" (สูง 40px กำลังสวย) */
     .modern-btn {
         box-sizing: border-box;
-        padding: 18px 5px; /* เพิ่มความสูงปุ่มให้หนาสะใจ กดไม่พลาดแน่นอน */
+        height: 40px; /* บังคับความสูงให้เท่ากันเพื่อความสวยงาม */
+        padding: 0 5px;
         border: none;
-        border-radius: 12px;
+        border-radius: 8px;
         font-family: 'Kanit', sans-serif;
-        font-size: 1.1rem; /* ตัวหนังสือใหญ่และหนา */
-        font-weight: 700;
+        font-size: 0.9rem;
+        font-weight: 500;
         cursor: pointer;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
-        transition: all 0.2s;
+        gap: 5px;
+        transition: all 0.15s;
         width: 100%;
         color: white;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
     }
 
     .modern-btn:active {
-        transform: scale(0.95);
-        filter: brightness(0.8);
+        transform: scale(0.97);
+        filter: brightness(0.9);
     }
 
-    /* ปุ่มสรุปยอด - ใหญ่และเด่นที่สุดในแผง */
+    /* ปุ่มสรุปยอด - ปรับให้โดดเด่นแต่ไม่บวม */
     .btn-summary {
-        background: linear-gradient(135deg, #ff9f43, #f39c12) !important;
-        font-size: 1.3rem !important; /* ใหญ่พิเศษ */
-        padding: 22px 5px !important;
-        border-radius: 50px !important; /* ทรงแคปซูลยาว */
-        box-shadow: 0 5px 15px rgba(255, 159, 67, 0.4) !important;
+        background: #ff9f43 !important;
+        font-weight: 600 !important;
+        height: 45px !important; /* ใหญ่กว่าปุ่มอื่นนิดเดียว */
+        border-radius: 20px !important;
+        font-size: 1rem !important;
     }
 </style>
 
@@ -780,7 +780,7 @@
     <div class="admin-dashboard">
 
         <div class="menu-section">
-            <div class="section-title">สรุปข้อมูล</div>
+            <div class="section-title">📊 สรุปข้อมูล</div>
             <div class="btn-stack">
                 <button class="modern-btn btn-summary" onclick="openSummaryModal()">📊 สรุปยอด</button>
                 <button class="modern-btn" style="background: linear-gradient(45deg, #1abc9c, #2ed573);" onclick="openCardSlider()">💕 ลูกค้า</button>
@@ -805,14 +805,13 @@
 
         <div class="menu-section section-system">
             <div class="btn-grid-mini">
-                <button class="modern-btn" style="background:#ff4757;" onclick="resetBoard()">🗑️ ล้างแผงทั้งหมด</button>
-                <button class="modern-btn" style="background:#f1f2f6; color:#333; box-shadow: 0 4px 0 #ccc;" onclick="logoutApp()">🚪 ออกจากระบบ</button>
+                <button class="modern-btn" style="background:#ff4757;" onclick="resetBoard()">🗑️ ล้างแผง</button>
+                <button class="modern-btn" style="background:#f1f2f6; color:#333;" onclick="logoutApp()">🚪 ออกระบบ</button>
             </div>
         </div>
 
     </div>
 </div>
-
 <input type="file" id="importBackupFile" accept=".json" style="display: none;" onchange="importBackupData(event)">
 
 <div id="backupModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
