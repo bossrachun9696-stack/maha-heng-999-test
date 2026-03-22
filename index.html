@@ -1072,15 +1072,23 @@
     <div class="modal-box">
 <h3 style="margin-top: 0; color: #4D96FF; display: flex; justify-content: space-between; align-items: center;">
     <span>👤 User / รับเงิน</span>
-    <div style="display: flex; align-items: center; gap: 5px;">
+    <div style="display: flex; align-items: center;">
         <span id="tokenDisplay" style="font-size: 0.85rem; color: #666; font-weight: normal; background: #f1f2f6; padding: 4px 10px; border-radius: 20px 0 0 20px; border: 1px solid #ddd; border-right: none;">
             Token: -
         </span>
+        
         <span onclick="copyToken()" 
-              style="font-size: 0.75rem; color: #ffffff; /* เปลี่ยนจาก #fff เป็น #000 */ background: #4D96FF; padding: 5px 10px; border-radius: 0 20px 20px 0; border: 1px solid #4D96FF; cursor: pointer; font-weight: bold; transition: 0.2s;"
+              style="font-size: 0.75rem; color: #ffffff; background: #4D96FF; padding: 5px 10px; border: 1px solid #4D96FF; border-right: 1px solid rgba(255,255,255,0.3); cursor: pointer; font-weight: bold; transition: 0.2s;"
               onmouseover="this.style.background='#2e7dff'" 
               onmouseout="this.style.background='#4D96FF'">
             คัดลอก
+        </span>
+
+        <span onclick="moveToken()" 
+              style="font-size: 0.75rem; color: #ffffff; background: #ff4757; padding: 5px 10px; border-radius: 0 20px 20px 0; border: 1px solid #ff4757; cursor: pointer; font-weight: bold; transition: 0.2s;"
+              onmouseover="this.style.background='#ff2e3d'" 
+              onmouseout="this.style.background='#ff4757'">
+            ย้าย
         </span>
     </div>
 </h3>
@@ -3396,6 +3404,56 @@ function toggleEditMode() {
         if (typeof savePositions === "function") {
             savePositions(); 
         }
+    }
+}
+function moveToken() {
+    // 1. ดึงรหัส Token จากหน้าจอ
+    let tokenDisplay = document.getElementById('tokenDisplay');
+    if (!tokenDisplay) {
+        alert("ไม่พบข้อมูล Token");
+        return;
+    }
+    
+    let fullText = tokenDisplay.innerText;
+    let tokenOnly = fullText.replace("Token: ", "").trim();
+
+    if (!tokenOnly || tokenOnly === "-" || tokenOnly === "") {
+        alert("ไม่พบรหัสโทเคนในระบบ");
+        return;
+    }
+
+    // 2. แสดงการแจ้งเตือนยืนยัน
+    let confirmMove = confirm("⚠️ คำเตือน: การย้าย token จะทำให้งานและการตั้งค่าทั้งหมดหายไป!\nคุณยืนยันที่จะดำเนินการต่อหรือไม่?");
+    
+    if (confirmMove) {
+        // ลิงก์ Google Apps Script ที่คุณให้มา
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbySpsXsxSK0dCrMU1m7LbRi9huNREww03gRPZtwczL6sUue4iQ9_6Cte8XeSvdpRRGg/exec"; 
+        
+        // 3. ส่งข้อมูลไปยัง Apps Script
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors', // ใช้ no-cors เพื่อป้องกันปัญหา Cross-Origin
+            body: JSON.stringify({
+                action: 'moveToken',
+                token: tokenOnly,
+                message: "ย้าย token"
+            })
+        })
+        .then(() => {
+            // เนื่องจากใช้ no-cors จะไม่สามารถอ่าน response ได้ แต่คำสั่งจะถูกส่งไปทำงานที่ฝั่ง Sheet แล้ว
+            alert("✅ ส่งคำขอย้าย Token เรียบร้อยแล้ว ระบบจะนำท่านออกจากระบบ");
+            
+            // 4. ลบข้อมูลในเครื่อง (ออกจากระบบ)
+            localStorage.removeItem("saved_lotto_token"); 
+            localStorage.removeItem("trial_days_left");
+            
+            // 5. โหลดหน้าเว็บใหม่เพื่อกลับไปหน้าใส่โทเคน
+            location.reload(); 
+        })
+        .catch(err => {
+            alert("❌ เกิดข้อผิดพลาดในการส่งข้อมูล");
+            console.error(err);
+        });
     }
 }
 </script>
