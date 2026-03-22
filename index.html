@@ -2046,58 +2046,62 @@ function confirmBooking() {
     }
 
     function uploadCustomBg(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-        
-        const btnLabel = document.querySelector('label[for="customBgUpload"]');
-        const oldText = btnLabel.innerHTML;
-        btnLabel.innerHTML = "⏳ กำลังประมวลผล...";
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const btnLabel = document.querySelector('label[for="customBgUpload"]');
+    const oldText = btnLabel.innerHTML;
+    btnLabel.innerHTML = "⏳ กำลังประมวลผล...";
 
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const img = new Image();
-            img.onload = function() {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // 🟢 [ส่วนที่แก้ไข] ลดขนาดภาพพื้นหลังลง เพื่อประหยัดพื้นที่ความจำ
+            const MAX_WIDTH = 800;  // เดิม 1200
+            const MAX_HEIGHT = 1000; // เดิม 1600
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+                if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+            } else {
+                if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            try {
+                // 🟢 [ส่วนที่แก้ไข] ลดคุณภาพลงเหลือ 0.5 (50%) ภาพพื้นหลังไม่จำเป็นต้องชัดเป๊ะก็สวยได้ครับ
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.5); 
                 
-                const MAX_WIDTH = 1200;
-                const MAX_HEIGHT = 1600;
-                let width = img.width;
-                let height = img.height;
-
-                if (width > height) {
-                    if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
-                } else {
-                    if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
-                }
-
-                canvas.width = width;
-                canvas.height = height;
-                ctx.drawImage(img, 0, 0, width, height);
-                
-                try {
-                    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-                    boards[currentBoardIdx].design.bgImage = dataUrl;
-                    saveAll(); 
-                    renderBoardUI();
-                    btnLabel.innerHTML = "✅ อัพโหลดสำเร็จ!";
-                    setTimeout(() => btnLabel.innerHTML = oldText, 2000);
-                } catch(err) {
-                    alert("รูปภาพอาจมีขนาดใหญ่เกินไป ทำให้ไม่สามารถบันทึกได้");
-                    btnLabel.innerHTML = oldText;
-                }
-            };
-            img.src = e.target.result;
+                boards[currentBoardIdx].design.bgImage = dataUrl;
+                saveAll(); 
+                renderBoardUI();
+                btnLabel.innerHTML = "✅ อัพโหลดสำเร็จ!";
+                setTimeout(() => btnLabel.innerHTML = oldText, 2000);
+            } catch(err) {
+                // 🟢 [ส่วนที่แก้ไข] แจ้งเตือนให้ชัดเจนขึ้นเมื่อความจำเต็มจริงๆ
+                alert("❌ ขนาดภาพใหญ่เกินไป หรือความจำระบบเต็ม!\nกรุณาล้างรูปสลิปแผงเก่าๆ ทิ้งก่อนครับ");
+                btnLabel.innerHTML = oldText;
+            }
         };
-        reader.readAsDataURL(file);
-    }
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
 
-    function changeBgSize() {
-        const size = document.getElementById("ed-bg-size").value;
-        boards[currentBoardIdx].design.bgSize = size;
-        saveAll();
-        renderBoardUI();
-    }
+function changeBgSize() {
+    const size = document.getElementById("ed-bg-size").value;
+    boards[currentBoardIdx].design.bgSize = size;
+    saveAll();
+    renderBoardUI();
+}
 
     function openBgSelector() {
         document.getElementById("ed-bg-size").value = boards[currentBoardIdx].design.bgSize || "100% 100%";
