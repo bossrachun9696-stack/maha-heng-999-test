@@ -1479,13 +1479,15 @@ function toggleDisplayMode() {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             
-            // 🟢 ปรับลดขนาดลงอีกนิด เพื่อให้ LocalStorage เซฟได้หลายเบอร์โดยไม่เต็ม
-            const MAX_WIDTH = 400;  // เดิม 600
-            const MAX_HEIGHT = 400; // เดิม 600
+            // 🟢 ปรับขนาดให้กว้างขึ้นเป็น 600px (รูปแคปหน้าจอจะอ่านง่าย ชัดเจน)
+            // 🟢 ปรับความสูงเป็น 800px เพื่อรองรับสลิปที่เป็นแนวยาว
+            const MAX_WIDTH = 600;  
+            const MAX_HEIGHT = 800; 
             
             let width = img.width;
             let height = img.height;
 
+            // คำนวณรักษาสัดส่วนรูปภาพ
             if (width > height) {
                 if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
             } else {
@@ -1496,10 +1498,10 @@ function toggleDisplayMode() {
             canvas.height = height;
             ctx.drawImage(img, 0, 0, width, height);
             
-            // 🟢 ลดคุณภาพเป็น 0.6 (60%) รูปยังชัด แต่ไฟล์จะเล็กจิ๋วลงมาก ป้องกันเซฟไม่ผ่าน
+            // 🟢 คงคุณภาพไว้ที่ 0.6 (60%) เพื่อให้ไฟล์ยังเล็กและเซฟลงความจำเครื่องได้เยอะๆ
             tempBookingImage = canvas.toDataURL('image/jpeg', 0.6); 
             
-            // แสดงผลรูป (ใช้ ID ตามที่คุณระบุมา)
+            // แสดงผลรูป
             document.getElementById("bImgSrc").src = tempBookingImage;
             document.getElementById("bookingImagePreview").style.display = "block";
         };
