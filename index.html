@@ -3554,68 +3554,53 @@ function moveToken() {
         <div class="slider-wrapper" id="sliderWrapper">
             <button class="slider-arrow arrow-left" onclick="moveSlider(-1)">❮</button>
             <button class="slider-arrow arrow-right" onclick="moveSlider(1)">❯</button>
-            
-            <div class="slider-track" id="sliderTrack">
-                </div>
+            <div class="slider-track" id="sliderTrack"></div>
         </div>
         
-        <div class="seller-section" id="sellerSectionDisplay">
-            </div>
-
-        <div class="slider-dots" id="sliderDots">
-            </div>
+        <div class="seller-section" id="sellerSectionDisplay"></div>
+        <div class="slider-dots" id="sliderDots"></div>
     </div>
 </div>
-<div id="cardSliderOverlay" class="card-slider-overlay">
-            <div class="card-slider-container">
-                <div class="card-header">
-                    <h2>💕 สรุปลูกค้า 💕</h2>
-                    <button class="close-slider-btn" onclick="closeCardSlider()">✖</button>
-                </div>
-                </div>
+
+<div id="summaryModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 500px; width: 95%; padding: 0; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh;">
+        
+        <div style="background: linear-gradient(135deg, #FF6B6B, #4D96FF); padding: 15px; color: white; position: relative; text-align: center;">
+            <h2 style="margin: 0; font-family: 'Kanit';">📊 สรุปยอดการขาย</h2>
+            <button onclick="closeSummaryModal()" style="position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.3); border: none; color: white; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-weight: bold;">✖</button>
         </div>
-        <div id="summaryModal" class="modal-overlay">
-            <div class="modal-box" style="max-width: 500px; width: 95%; padding: 0; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh;">
-                
-                <div style="background: linear-gradient(135deg, #FF6B6B, #4D96FF); padding: 15px; color: white; position: relative; text-align: center;">
-                    <h2 style="margin: 0; font-family: 'Kanit';">📊 สรุปยอดการขาย</h2>
-                    <button onclick="closeSummaryModal()" style="position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.3); border: none; color: white; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-weight: bold;">✖</button>
+
+        <div style="padding: 20px; overflow-y: auto; text-align: left; font-family: 'Kanit'; background: #f8f9fa;">
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <div style="flex: 1; background: #fff; padding: 15px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 2px solid #2ed573;">
+                    <p style="margin: 0; color: #555; font-size: 0.9rem;">ขายแล้ว</p>
+                    <h3 style="margin: 5px 0 0 0; color: #2ed573; font-size: 1.5rem;"><span id="sumSold">0</span> เลข</h3>
                 </div>
-
-                <div style="padding: 20px; overflow-y: auto; text-align: left; font-family: 'Kanit'; background: #f8f9fa;">
-                    
-                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                        <div style="flex: 1; background: #fff; padding: 15px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 2px solid #2ed573;">
-                            <p style="margin: 0; color: #555; font-size: 0.9rem;">ขายแล้ว</p>
-                            <h3 style="margin: 5px 0 0 0; color: #2ed573; font-size: 1.5rem;"><span id="sumSold">0</span> เลข</h3>
-                        </div>
-                        <div style="flex: 1; background: #fff; padding: 15px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 2px solid #ff4757;">
-                            <p style="margin: 0; color: #555; font-size: 0.9rem;">เหลือว่าง</p>
-                            <h3 style="margin: 5px 0 0 0; color: #ff4757; font-size: 1.5rem;"><span id="sumLeft">100</span> เลข</h3>
-                        </div>
-                    </div>
-
-                    <div style="background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                        <h4 style="margin: 0 0 10px 0; border-bottom: 1px solid #eee; padding-bottom: 5px;">💰 สรุปการเงิน</h4>
-                        <p style="margin: 5px 0; font-size: 1.1rem;"><strong>ยอดขายรวม:</strong> <span id="sumTotalBaht" style="color:#4D96FF;">0</span> บาท</p>
-                        <p style="margin: 5px 0;"><strong>✅ จ่ายแล้ว:</strong> <span id="sumPaidBaht" style="color:#2ed573;">0</span> บาท (<span id="sumPaidCount">0</span> เลข)</p>
-                        <p style="margin: 5px 0;"><strong>❌ ค้างจ่าย:</strong> <span id="sumUnpaidBaht" style="color:#ff4757;">0</span> บาท (<span id="sumUnpaidCount">0</span> เลข)</p>
-                    </div>
-
-                    <div style="background: #fffef0; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px dashed #ffc048;">
-                        <h4 style="margin: 0 0 10px 0; color: #d35400;">⚠️ รายการค้างจ่าย</h4>
-                        <div id="unpaidListContainer" style="font-size: 0.9rem; max-height: 120px; overflow-y: auto;">
-                            </div>
-                    </div>
-
-                    <h4 style="margin: 10px 0;">📋 รายละเอียดผู้ซื้อทั้งหมด</h4>
-                    <div id="allSalesContainer" style="display: flex; flex-direction: column; gap: 10px;">
-                        </div>
-
+                <div style="flex: 1; background: #fff; padding: 15px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 2px solid #ff4757;">
+                    <p style="margin: 0; color: #555; font-size: 0.9rem;">เหลือว่าง</p>
+                    <h3 style="margin: 5px 0 0 0; color: #ff4757; font-size: 1.5rem;"><span id="sumLeft">100</span> เลข</h3>
                 </div>
             </div>
+
+            <div style="background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                <h4 style="margin: 0 0 10px 0; border-bottom: 1px solid #eee; padding-bottom: 5px;">💰 สรุปการเงิน</h4>
+                <p style="margin: 5px 0; font-size: 1.1rem;"><strong>ยอดขายรวม:</strong> <span id="sumTotalBaht" style="color:#4D96FF;">0</span> บาท</p>
+                <p style="margin: 5px 0;"><strong>✅ จ่ายแล้ว:</strong> <span id="sumPaidBaht" style="color:#2ed573;">0</span> บาท (<span id="sumPaidCount">0</span> เลข)</p>
+                <p style="margin: 5px 0;"><strong>❌ ค้างจ่าย:</strong> <span id="sumUnpaidBaht" style="color:#ff4757;">0</span> บาท (<span id="sumUnpaidCount">0</span> เลข)</p>
+            </div>
+
+            <div style="background: #fffef0; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px dashed #ffc048;">
+                <h4 style="margin: 0 0 10px 0; color: #d35400;">⚠️ รายการค้างจ่าย</h4>
+                <div id="unpaidListContainer" style="font-size: 0.9rem; max-height: 120px; overflow-y: auto;"></div>
+            </div>
+
+            <h4 style="margin: 10px 0;">📋 รายละเอียดผู้ซื้อทั้งหมด</h4>
+            <div id="allSalesContainer" style="display: flex; flex-direction: column; gap: 10px;"></div>
         </div>
-    <div class="modal-overlay" id="notifModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 4500; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+    </div>
+</div>
+
+<div class="modal-overlay" id="notifModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 4500; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
     <div class="modal-box" style="background: white; width: 90%; max-width: 400px; border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
         <h3 style="margin-top: 0; font-family: 'Kanit'; color: #333;">🔔 การแจ้งเตือน</h3>
         <div style="display: flex; gap: 10px; margin-bottom: 20px;">
@@ -3623,11 +3608,19 @@ function moveToken() {
                 📢 ประกาศแอดมิน
                 <span id="adminMenuBadge" class="notif-badge-style">0</span>
             </button>
-            <button id="tab-private" style="flex: 1; padding: 12px; border-radius: 12px; border: none; background: #27fa5c; color: #333; font-weight: bold; cursor: pointer; font-family: 'Kanit';" onclick="switchNotifTab('private')">
+            <button id="tab-private" style="flex: 1; padding: 12px; border-radius: 12px; border: none; background: #27fa5c; color: #333; font-weight: bold; cursor: pointer; font-family: 'Kanit'; position: relative;" onclick="switchNotifTab('private')">
                 📩ข้อความส่วนตัว
+                <span id="chatMenuBadge" class="notif-badge-style">0</span>
             </button>
         </div>
-        <div id="notif-private-content" style="text-align: center; color: #999; padding: 20px; display: none; font-family: 'Prompt';">ไม่มีข้อความส่วนตัว</div>
+        
+        <div id="notif-private-content" style="text-align: center; padding: 20px; display: none; font-family: 'Prompt';">
+            <div style="margin-bottom: 15px; color: #555; font-size: 14px;">สอบถามรายละเอียด หรือ แจ้งปัญหาการใช้งานได้ที่นี่ครับ</div>
+            <button onclick="openChatModal()" style="background: linear-gradient(135deg, #d4af37, #aa7700); color: #000; border: none; padding: 12px 25px; border-radius: 30px; font-family: 'Prompt', sans-serif; font-weight: 600; font-size: 16px; cursor: pointer; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); width: 100%;">
+                💬 เปิดช่องแชทส่วนตัว
+            </button>
+        </div>
+
         <button style="margin-top: 10px; width: 100%; padding: 12px; background: #ff4757; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-family: 'Kanit';" onclick="document.getElementById('notifModal').style.display='none'">ปิดหน้าต่าง</button>
     </div>
 </div>
@@ -3656,17 +3649,59 @@ function moveToken() {
     </div>
 </div>
 
+<div id="chatModalOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+    <div class="chat-box" style="width: 90%; max-width: 400px; background: #1a1a24; border-radius: 20px; display: flex; flex-direction: column; height: 75vh; box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); border: 1px solid #d4af37; animation: slideUpChat 0.3s ease-out;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: linear-gradient(135deg, #d4af37, #8e6300); border-radius: 19px 19px 0 0; color: #000;">
+            <h3 style="margin: 0; font-family: 'Prompt', sans-serif; font-size: 18px; font-weight: 600;">💬 ศูนย์ช่วยเหลือ (แอดมิน)</h3>
+            <span onclick="closeChatModal()" style="font-size: 28px; cursor: pointer; font-weight: bold; line-height: 1;">&times;</span>
+        </div>
+
+        <div id="chatMessagesArea" style="flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #121212;">
+            </div>
+
+        <div style="display: flex; padding: 12px; background: #1a1a24; border-radius: 0 0 20px 20px; border-top: 1px solid #333;">
+            <input type="text" id="chatInputMsg" placeholder="พิมพ์ข้อความที่นี่..." style="flex: 1; padding: 12px 15px; border-radius: 25px; border: 1px solid #444; background: #2a2a35; color: #fff; font-family: 'Prompt', sans-serif; outline: none; font-size: 14px;">
+            <button onclick="sendChatMessage()" style="background: #d4af37; color: #000; border: none; padding: 0 20px; border-radius: 25px; margin-left: 10px; cursor: pointer; font-family: 'Prompt', sans-serif; font-weight: bold; font-size: 14px;">ส่ง</button>
+        </div>
+    </div>
+</div>
+
 <script>
 const SCRIPT_URL_ANNOUNCE = 'https://script.google.com/macros/s/AKfycbxz6qKBDudsQbjHPyauaPeyG1tmzD0k_uauEazUigyypq0B9edNk6wou-5wiMv1Aa8D_A/exec';
-let announcementsData = [];
+const CHAT_API_URL = "https://script.google.com/macros/s/AKfycbyrbGznVJRcO-5Ai-I4zYzQSSJ5kw6Mp_C5MaOak1KYxQet0oe5_G98YezUfR2vkKnaDg/exec"; 
 
+let announcementsData = [];
+let unreadAnnounceCount = 0;
+let unreadChatCount = 0;
+
+// กำหนด Token สำหรับแชท
+let USER_TOKEN = localStorage.getItem('userChatToken');
+if (!USER_TOKEN) {
+    USER_TOKEN = 'USER_' + Math.random().toString(36).substr(2, 9).toUpperCase();
+    localStorage.setItem('userChatToken', USER_TOKEN);
+}
+
+// อัปเดตแจ้งเตือนกระดิ่งรวมหน้าหลัก
+function updateMainBadge() {
+    const mainBadge = document.getElementById('notifBadge'); // อิงจากปุ่มกระดิ่งเดิมของเว็บคุณ
+    if (mainBadge) {
+        const totalUnread = unreadAnnounceCount + unreadChatCount;
+        mainBadge.innerText = totalUnread;
+        mainBadge.style.display = totalUnread > 0 ? 'flex' : 'none';
+    }
+}
+
+// ------------------------------------
+// ระบบแจ้งเตือน (ประกาศ)
+// ------------------------------------
 function switchNotifTab(tab) {
     if (tab === 'admin') {
-        document.getElementById('notifModal').style.display = 'none'; // ปิดหน้าต่างเลือกทันที
+        document.getElementById('notifModal').style.display = 'none'; 
         openAnnounceList(); 
     } else {
-        document.getElementById('tab-private').style.background = '#4D96FF';
-        document.getElementById('tab-private').style.color = 'white';
+        document.getElementById('tab-private').style.background = '#27fa5c';
+        document.getElementById('tab-private').style.color = '#333';
         document.getElementById('tab-admin').style.background = '#f1f2f6';
         document.getElementById('tab-admin').style.color = '#333';
         document.getElementById('notif-private-content').style.display = 'block';
@@ -3684,8 +3719,7 @@ async function fetchAnnouncements() {
 }
 
 function renderAnnouncements() {
-    const mainBadge = document.getElementById('notifBadge');      // กระดิ่งหน้าหลัก
-    const menuBadge = document.getElementById('adminMenuBadge');  // ปุ่มในเมนู
+    const menuBadge = document.getElementById('adminMenuBadge');
     const newContainer = document.getElementById('newAnnounceList');
     const oldContainer = document.getElementById('oldAnnounceList');
     
@@ -3693,7 +3727,7 @@ function renderAnnouncements() {
     newContainer.innerHTML = ''; oldContainer.innerHTML = '';
 
     let readItems = JSON.parse(localStorage.getItem('readAnnouncements')) || [];
-    let unreadCount = 0;
+    let count = 0;
 
     announcementsData.forEach(item => {
         let isRead = readItems.includes(item.id);
@@ -3702,7 +3736,7 @@ function renderAnnouncements() {
         
         if (item.status === 'new') {
             itemHtml.innerHTML = `<span style="font-family:'Prompt';">${item.title}</span> ${isRead ? '' : '<span style="color:#ff4757; font-size:10px; font-weight:bold;">🆕 ใหม่</span>'}`;
-            if (!isRead) unreadCount++;
+            if (!isRead) count++;
             newContainer.appendChild(itemHtml);
         } else {
             itemHtml.innerHTML = `<span style="color:#777; font-family:'Prompt';">${item.title}</span>`;
@@ -3711,13 +3745,12 @@ function renderAnnouncements() {
         itemHtml.onclick = () => openDetail(item);
     });
 
-    // อัปเดต Badge ทั้ง 2 จุด
-    [mainBadge, menuBadge].forEach(b => {
-        if (b) {
-            b.innerText = unreadCount;
-            b.style.display = unreadCount > 0 ? 'flex' : 'none';
-        }
-    });
+    unreadAnnounceCount = count;
+    if (menuBadge) {
+        menuBadge.innerText = unreadAnnounceCount;
+        menuBadge.style.display = unreadAnnounceCount > 0 ? 'flex' : 'none';
+    }
+    updateMainBadge(); // อัปเดตกระดิ่งรวมหน้าหลัก
 }
 
 function openAnnounceList() {
@@ -3747,7 +3780,143 @@ function openDetail(item) {
     document.getElementById('announceDetailModal').style.display = 'flex';
 }
 
-window.addEventListener('DOMContentLoaded', fetchAnnouncements);
+// ------------------------------------
+// ระบบแชทส่วนตัว (อัปเกรด Real-time)
+// ------------------------------------
+let currentMessageCount = 0;
+let lastSeenMessageCount = parseInt(localStorage.getItem('lastSeenMsgCount')) || 0;
+let isChatOpen = false;
+
+function updateChatBadge() {
+    const badge = document.getElementById('chatMenuBadge');
+    unreadChatCount = currentMessageCount - lastSeenMessageCount;
+    if (unreadChatCount < 0) unreadChatCount = 0;
+    
+    if (badge) {
+        badge.innerText = unreadChatCount;
+        badge.style.display = unreadChatCount > 0 ? 'flex' : 'none';
+    }
+    updateMainBadge(); // อัปเดตกระดิ่งรวมหน้าหลัก
+}
+
+function renderMessage(text, sender) {
+    const chatArea = document.getElementById('chatMessagesArea');
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('msg-bubble');
+    
+    if (sender === 'user') {
+        msgDiv.classList.add('msg-user');
+    } else {
+        msgDiv.classList.add('msg-admin');
+    }
+    
+    msgDiv.innerText = text;
+    chatArea.appendChild(msgDiv);
+}
+
+function fetchChatData(isBackground = false) {
+    const chatArea = document.getElementById('chatMessagesArea');
+    if (!isBackground && currentMessageCount === 0) {
+        chatArea.innerHTML = '<div style="color: #888; text-align: center; font-size: 12px; margin-top: 20px;">กำลังโหลดข้อความ...</div>';
+    }
+
+    fetch(CHAT_API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: "getMessages", token: USER_TOKEN })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "success") {
+            if (data.messages.length > currentMessageCount) {
+                if (currentMessageCount === 0) chatArea.innerHTML = ''; // ล้างข้อความโหลด
+                
+                // วาดเฉพาะข้อความใหม่ที่ยังไม่ได้แสดง
+                for (let i = currentMessageCount; i < data.messages.length; i++) {
+                    renderMessage(data.messages[i].text, data.messages[i].sender);
+                }
+                
+                currentMessageCount = data.messages.length;
+
+                // เลื่อนแชทลงล่างสุดถ้าเปิดจออยู่
+                if (isChatOpen) {
+                    chatArea.scrollTop = chatArea.scrollHeight;
+                    lastSeenMessageCount = currentMessageCount;
+                    localStorage.setItem('lastSeenMsgCount', lastSeenMessageCount);
+                }
+                
+                updateChatBadge();
+            } else if (currentMessageCount === 0 && !isBackground) {
+                chatArea.innerHTML = '<div style="color: #888; text-align: center; font-size: 12px; margin-top: 20px;">ยินดีต้อนรับ! พิมพ์ข้อความเพื่อติดต่อแอดมินได้เลยครับ</div>';
+            }
+        }
+    })
+    .catch(err => {
+        if (!isBackground && currentMessageCount === 0) {
+            chatArea.innerHTML = '<div style="color: #ff4757; text-align: center; font-size: 12px; margin-top: 20px;">เกิดข้อผิดพลาดในการโหลดข้อความ</div>';
+        }
+    });
+}
+
+function openChatModal() {
+    document.getElementById('notifModal').style.display = 'none'; 
+    document.getElementById('chatModalOverlay').style.display = 'flex';
+    isChatOpen = true;
+    
+    // เคลียร์แจ้งเตือนแชทเมื่อเปิดหน้าต่าง
+    lastSeenMessageCount = currentMessageCount;
+    localStorage.setItem('lastSeenMsgCount', lastSeenMessageCount);
+    updateChatBadge();
+
+    const chatArea = document.getElementById('chatMessagesArea');
+    chatArea.scrollTop = chatArea.scrollHeight; // เลื่อนแชทลงล่างสุด
+
+    if (currentMessageCount === 0) {
+        fetchChatData(false); // โหลดข้อมูลครั้งแรก
+    }
+}
+
+function closeChatModal() {
+    document.getElementById('chatModalOverlay').style.display = 'none';
+    isChatOpen = false;
+}
+
+function sendChatMessage() {
+    const inputField = document.getElementById('chatInputMsg');
+    const text = inputField.value.trim();
+    if (!text) return;
+
+    renderMessage(text, 'user');
+    inputField.value = '';
+
+    // อัปเดตตัวนับเพื่อไม่ให้ดึงข้อมูลตัวเองกลับมาซ้ำ
+    currentMessageCount++;
+    lastSeenMessageCount = currentMessageCount;
+    localStorage.setItem('lastSeenMsgCount', lastSeenMessageCount);
+    
+    // เลื่อนแชทลงล่างสุดทันที
+    const chatArea = document.getElementById('chatMessagesArea');
+    chatArea.scrollTop = chatArea.scrollHeight;
+
+    fetch(CHAT_API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: "sendMessage", token: USER_TOKEN, text: text })
+    }).catch(err => console.error("ส่งข้อความไม่สำเร็จ:", err));
+}
+
+document.getElementById('chatInputMsg').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') sendChatMessage();
+});
+
+// เริ่มต้นทำงานทั้งหมดเมื่อหน้าเว็บโหลดเสร็จ
+window.addEventListener('DOMContentLoaded', () => {
+    fetchAnnouncements();
+    fetchChatData(true); // แอบดึงประวัติแชทหลังบ้านเพื่อเช็คแจ้งเตือน
+    
+    // ตั้งค่าให้ดึงข้อมูลแชทอัตโนมัติ ทุกๆ 5 วินาที
+    setInterval(() => {
+        fetchChatData(true);
+    }, 5000); 
+});
 </script>
 
 <style>
@@ -3762,4 +3931,21 @@ window.addEventListener('DOMContentLoaded', fetchAnnouncements);
     border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     z-index: 10; font-family: 'Kanit', sans-serif;
 }
+
+/* แอนิเมชันและการตกแต่งห้องแชท */
+@keyframes slideUpChat {
+    from { opacity: 0; transform: translateY(50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.msg-bubble {
+    max-width: 80%; padding: 10px 15px; font-family: 'Prompt', sans-serif; font-size: 14px; word-wrap: break-word; line-height: 1.4;
+}
+.msg-user {
+    align-self: flex-end; background: #d4af37; color: #000; border-radius: 20px 20px 0 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+.msg-admin {
+    align-self: flex-start; background: #333; color: #fff; border-radius: 20px 20px 20px 0; border: 1px solid #555; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+#chatMessagesArea::-webkit-scrollbar { width: 4px; }
+#chatMessagesArea::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 10px; }
 </style>
