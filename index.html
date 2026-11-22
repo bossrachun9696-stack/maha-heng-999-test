@@ -602,6 +602,99 @@
     font-family: 'Kanit', sans-serif;
 }
     </style>
+<style>
+/* ---------- หน้าตั้งค่าใหม่ ---------- */
+.btn-group > .center-wrapper { grid-column:1 / -1 !important; }
+.mh-tiles { grid-template-columns:repeat(2,1fr) !important; }
+@media (min-width:560px) { .mh-tiles { grid-template-columns:repeat(3,1fr) !important; } }
+.mh-dash { display:flex; flex-direction:column; gap:12px; width:100%; max-width:640px; margin:0 auto; padding:0 6px; box-sizing:border-box; font-family:'Kanit',sans-serif; }
+.mh-acc-card { display:flex; align-items:center; gap:12px; background:linear-gradient(135deg,#2f3542,#1e272e); color:#fff; border-radius:18px; padding:12px 14px; cursor:pointer; box-shadow:0 6px 18px rgba(0,0,0,.18); }
+.mh-acc-card .acc-info { flex:1; min-width:0; display:flex; flex-direction:column; }
+.mh-acc-card .acc-info b { font-size:1.05rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.mh-acc-card .acc-info small { color:#a4b0be; font-size:.75rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.mh-sec { background:#fff; border-radius:18px; padding:12px; box-shadow:0 6px 18px rgba(0,0,0,.08); border:1px solid #f1f2f6; }
+.mh-sec-t { font-weight:700; color:#2f3542; font-size:1rem; margin:0 2px 10px; display:flex; align-items:center; gap:6px; }
+.mh-sec-t span { display:inline-flex; width:28px; height:28px; border-radius:9px; background:#f1f2f6; align-items:center; justify-content:center; font-size:.95rem; }
+.mh-tiles { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:8px; }
+.mh-tile { position:relative; display:flex; align-items:center; gap:8px; min-height:52px; padding:8px 10px; border-radius:14px; border:1px solid #e9ecf2; background:#f8f9fc; color:#2f3542;
+    font-family:'Kanit',sans-serif; font-size:.9rem; font-weight:600; cursor:pointer; text-align:left; transition:transform .12s, background .2s, border-color .2s; }
+.mh-tile:active { transform:scale(.97); }
+.mh-tile .ic { flex:0 0 32px; height:32px; border-radius:10px; background:#fff; display:flex; align-items:center; justify-content:center; font-size:1.1rem; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+.mh-tile .tx { display:flex; flex-direction:column; line-height:1.2; }
+.mh-tile .tx small { font-size:.68rem; color:#8a94a6; font-weight:400; }
+.mh-tile.on { background:#e8fbef; border-color:#2ed573; color:#14804a; }
+.mh-tile.gold { background:linear-gradient(135deg,#fff3c4,#ffe08a); border-color:#f6c445; }
+.mh-tile.out { color:#e74c3c; }
+.mh-badge { position:absolute; top:-6px; right:-6px; min-width:20px; height:20px; padding:0 5px; border-radius:10px; background:#ff4757; color:#fff; font-size:11px; display:none; align-items:center; justify-content:center; border:2px solid #fff; box-sizing:border-box; }
+.mh-wide { width:100%; margin-top:10px; padding:12px; border-radius:14px; border:1px solid #e9ecf2; background:#f8f9fc; color:#2f3542; font-family:'Kanit',sans-serif; font-weight:600; font-size:.92rem; cursor:pointer; text-align:center; box-sizing:border-box; }
+.mh-wide small { font-weight:400; opacity:.75; font-size:.75rem; }
+.mh-wide.danger { background:#fff1f1; border-color:#ffd0d4; color:#e74c3c; }
+/* บัญชี / รูปโปรไฟล์ */
+.acc-av { width:28px; height:28px; border-radius:50%; flex:0 0 auto; background:#dfe4ea center/cover no-repeat; display:inline-flex; align-items:center; justify-content:center; font-weight:700; color:#fff; font-size:.85rem; }
+.acc-av.ini { background:linear-gradient(135deg,#b84cff,#4D96FF); }
+.acc-av.emo { background:#fff3c4; font-size:1rem; }
+.acc-av.big { width:46px; height:46px; font-size:1.3rem; border:2px solid rgba(255,255,255,.6); }
+.acc-av.huge { width:88px; height:88px; font-size:2.4rem; border:4px solid #fff; box-shadow:0 6px 18px rgba(0,0,0,.15); }
+#accChip { display:flex; align-items:center; gap:6px; background:#4D96FF; color:#fff; border:none; border-radius:10px; padding:4px 10px 4px 4px; font-family:'Kanit'; font-weight:600; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,.1); max-width:140px; }
+#accChip .acc-av { border:2px solid rgba(255,255,255,.8); }
+#accChip .acc-nm { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:.85rem; }
+.acc-badge { font-size:.72rem; padding:4px 10px; border-radius:20px; white-space:nowrap; font-weight:600; background:#2ed573; color:#fff; }
+.acc-badge.trial { background:#ff9f43; } .acc-badge.warn { background:#ff4757; } .acc-badge.adm { background:linear-gradient(135deg,#f6c445,#d4af37); color:#3b2b00; }
+.acc-sheet { max-width:380px; text-align:center; }
+.acc-sheet-name { font-size:1.3rem; font-weight:700; margin-top:10px; }
+.acc-sheet-mail { color:#888; font-size:.85rem; margin:2px 0 8px; }
+.acc-sheet-hint { color:#999; font-size:.75rem; margin-top:10px; }
+.res-close { background:none; border:none; color:#999; margin-top:12px; cursor:pointer; font-family:'Kanit'; }
+/* ผลรางวัล */
+#resultBanner { display:none; width:95%; max-width:800px; margin:6px auto 0; align-items:center; gap:10px; flex-wrap:wrap; justify-content:center; background:linear-gradient(135deg,#fff3c4,#ffd36e);
+    border:2px solid #f6c445; border-radius:14px; padding:8px 12px; font-family:'Kanit'; color:#5a3d00; cursor:pointer; box-sizing:border-box; }
+#resultBanner b { background:#fff; border-radius:10px; padding:2px 10px; font-size:1.05rem; }
+#resultBanner .rb-w { font-size:.8rem; opacity:.85; }
+.num.num-win { box-shadow:0 0 0 3px #ffd32a, 0 0 18px 4px rgba(255,211,42,.9) !important; position:relative; animation:mhWin 1.2s ease-in-out infinite alternate; z-index:2; }
+.num .win-tag { position:absolute; bottom:-7px; left:50%; transform:translateX(-50%); background:#ff4757; color:#fff; font-size:9px; padding:1px 5px; border-radius:6px; white-space:nowrap; font-family:'Kanit'; z-index:3; }
+@keyframes mhWin { from { transform:scale(1); } to { transform:scale(1.08); } }
+.res-box { max-width:420px; width:94%; text-align:left; font-family:'Kanit'; max-height:92vh; overflow-y:auto; }
+.res-head { font-size:1.3rem; font-weight:800; display:flex; flex-direction:column; }
+.res-head small { font-size:.8rem; font-weight:400; color:#888; }
+.res-inputs { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:12px 0 8px; }
+.res-inputs label, .res-prize label { display:flex; flex-direction:column; font-size:.85rem; color:#555; gap:4px; }
+.res-inputs input { font-size:2.2rem; font-weight:800; text-align:center; letter-spacing:6px; padding:8px; border-radius:14px; border:2px solid #f6c445; background:#fffbea; font-family:'Kanit'; width:100%; box-sizing:border-box; }
+.res-prize { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.res-prize input { padding:8px 10px; border-radius:10px; border:1px solid #dfe4ea; font-family:'Kanit'; font-size:1rem; width:100%; box-sizing:border-box; }
+#resPreview { margin:12px 0; }
+.res-list { display:flex; flex-direction:column; gap:6px; max-height:34vh; overflow-y:auto; }
+.res-row { display:flex; align-items:center; gap:10px; background:#fffbea; border:1px solid #ffe08a; border-radius:12px; padding:8px 10px; }
+.res-num { background:#ffd32a; color:#5a3d00; font-weight:800; border-radius:8px; padding:2px 8px; }
+.res-name { flex:1; } .res-name small { display:block; color:#999; font-size:.72rem; }
+.res-empty { color:#999; text-align:center; padding:10px; font-size:.9rem; }
+.res-sum { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-top:10px; }
+.res-sum div { background:#f8f9fc; border-radius:12px; padding:8px; text-align:center; display:flex; flex-direction:column; }
+.res-sum span { font-size:.75rem; color:#888; } .res-sum b { font-size:1.05rem; }
+.res-sum .pos b { color:#27ae60; } .res-sum .neg b { color:#e74c3c; }
+.res-note { font-size:.8rem; color:#e67e22; margin-top:6px; text-align:center; }
+.res-post { display:flex; gap:8px; align-items:center; font-size:.85rem; color:#555; margin:6px 0 10px; }
+.res-save { width:100%; padding:14px; border:none; border-radius:50px; background:linear-gradient(135deg,#ffb400,#ff6b00); color:#fff; font-weight:800; font-size:1.05rem; font-family:'Kanit'; cursor:pointer; }
+.res-foot { display:flex; justify-content:space-between; margin-top:10px; }
+.res-foot button { background:none; border:none; color:#999; cursor:pointer; font-family:'Kanit'; }
+/* การ์ดลูกค้าเป็นรูป */
+#btnCardImg { margin:10px auto 0; display:block; width:calc(100% - 30px); padding:12px; border:none; border-radius:14px; background:linear-gradient(135deg,#ff6b6b,#b84cff); color:#fff; font-family:'Kanit'; font-weight:700; font-size:.95rem; cursor:pointer; }
+/* ประกาศ / แชท */
+.ann-row { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:12px; border-radius:12px; margin-bottom:8px; background:#f8f9fc; cursor:pointer; font-family:'Prompt'; }
+.ann-row.unread { background:#fff0f0; border:1px solid #ffd0d4; }
+.ann-t { font-weight:600; color:#2f3542; } .ann-d { font-size:.72rem; color:#999; }
+.ann-new { background:#ff4757; color:#fff; font-size:10px; padding:2px 8px; border-radius:10px; white-space:nowrap; }
+.ann-none { color:#aaa; font-size:.85rem; padding:6px 4px; }
+.ann-img { max-width:100%; height:auto; border-radius:15px; box-shadow:0 4px 10px rgba(0,0,0,.5); cursor:zoom-in; }
+.chat-info { color:#aaa; text-align:center; font-size:13px; margin-top:20px; line-height:1.6; font-family:'Prompt'; }
+.chat-info b { color:#d4af37; }
+.chat-day { align-self:center; font-size:11px; color:#888; background:#22222c; border-radius:10px; padding:2px 10px; }
+.msg-time { display:block; font-size:10px; opacity:.6; margin-top:3px; text-align:right; }
+#chatAdminHead { display:flex; align-items:center; gap:8px; }
+#chatAdminHead small { font-weight:400; font-size:.75rem; opacity:.7; }
+#mhToast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(30px); background:#2f3542; color:#fff; padding:10px 18px; border-radius:30px; font-family:'Kanit';
+    font-size:.9rem; opacity:0; pointer-events:none; transition:all .25s; z-index:20000; max-width:90vw; text-align:center; }
+#mhToast.show { opacity:1; transform:translateX(-50%) translateY(0); } #mhToast.bad { background:#e74c3c; }
+</style>
 </head>
 <body>
 
@@ -674,15 +767,14 @@
     <div class="board-search-container" style="display: flex; gap: 8px;">
         <select id="boardSelectorJump" class="board-select" onchange="jumpToBoard()" style="flex: 1;">
         </select>
-        <button onclick="openSellerInfoModal()" style="background: #4D96FF; color: white; border: none; border-radius: 10px; padding: 0 15px; font-family: 'Kanit'; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-            👤 User
-        </button>
+        <button id="accChip" onclick="openAccountSheet()"><span class="acc-av ini">?</span><span class="acc-nm">บัญชี</span></button>
         
         <div id="userStatusDisplay" style="font-size: 0.85rem; padding: 0 10px; border-radius: 10px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); white-space: nowrap; display: flex; align-items: center; justify-content: center;">
             ⏳ ตรวจสอบสถานะ...
         </div>
     </div>
     <div id="syncBadge" onclick="flushNow()" style="width:95%; max-width:800px; text-align:right; font-size:0.75rem; color:#2ed573; margin:4px 0 -4px; cursor:pointer;">☁️ บันทึกแล้ว</div>
+    <div id="resultBanner"></div>
     <div class="wrapper" id="gameWrapper">
         <div class="edit-hint">👆 ลาก/ขยายด้วยสองนิ้ว | แตะเพื่อแก้ไข</div>
         <div class="bottom-btn-group">
@@ -934,40 +1026,41 @@
 </style>
 
 <div class="center-wrapper">
-    <div class="admin-dashboard">
+    <div class="mh-dash">
+        <div class="mh-acc-card" id="dashAccount" onclick="openAccountSheet()"></div>
 
-        <div class="menu-section">
-            <div class="section-title">📊 สรุปข้อมูล</div>
-            <div class="btn-stack">
-                <button class="modern-btn btn-summary" onclick="openSummaryModal()">📊 สรุปยอด</button>
-                <button class="modern-btn btn-blue" onclick="openCardSlider()">👤 ลูกค้า</button>
-                <button class="modern-btn btn-save-neon" onclick="openBackupModal()">💾 สำรองข้อมูล</button>
+        <div class="mh-sec">
+            <div class="mh-sec-t"><span>🎯</span> งวดนี้</div>
+            <div class="mh-tiles">
+                <button class="mh-tile gold" onclick="openResultModal()"><span class="ic">🏆</span><span class="tx">ใส่ผลรางวัล</span></button>
+                <button class="mh-tile" onclick="openSummaryModal()"><span class="ic">📊</span><span class="tx">สรุปยอด</span></button>
+                <button class="mh-tile" onclick="openCardSlider()"><span class="ic">💌</span><span class="tx">การ์ดลูกค้า</span></button>
+                <button class="mh-tile" onclick="openRoundHistory()"><span class="ic">📜</span><span class="tx">งวดเก่า</span></button>
+            </div>
+            <button class="mh-wide danger" onclick="resetBoard()">🗑️ ปิดงวดนี้ แล้วเริ่มงวดใหม่ <small>(งวดเดิมเก็บไว้ดูย้อนหลัง)</small></button>
+        </div>
+
+        <div class="mh-sec">
+            <div class="mh-sec-t"><span>🎨</span> หน้าตาแผง</div>
+            <div class="mh-tiles">
+                <button class="mh-tile" onclick="openBgSelector()"><span class="ic">🖼️</span><span class="tx">พื้นหลัง</span></button>
+                <button class="mh-tile" onclick="openGridDesignModal()"><span class="ic">🎨</span><span class="tx">สีตาราง</span></button>
+                <button id="btnToggleEdit" class="mh-tile" onclick="toggleEditMode()"><span class="ic">🔧</span><span class="tx">จัดวาง</span></button>
+                <button id="btnFilterNum" class="mh-tile" onclick="toggleFilterBooked()"><span class="ic">🙈</span><span class="tx">ซ่อนเบอร์ที่จอง</span></button>
+                <button id="btnToggleMode" class="mh-tile" onclick="toggleDisplayMode()"><span class="ic">🔢</span><span class="tx">ตาราง 00-99</span></button>
+                <button class="mh-tile" onclick="openSellerInfoModal()"><span class="ic">💳</span><span class="tx">ผู้รับเงิน / QR</span></button>
             </div>
         </div>
 
-        <div class="menu-section">
-            <div class="section-title">🎨 ปรับแต่งแผง</div>
-            <div class="btn-stack">
-                <div class="btn-grid-mini">
-                    <button class="modern-btn btn-dark" style="border: 1px solid #FF6B6B;" onclick="openBgSelector()">🖼️ พื้นหลัง</button>
-                    <button class="modern-btn btn-dark" style="border: 1px solid #4D96FF;" onclick="openGridDesignModal()">🎨 ธีม</button>
-                </div>
-                <div class="btn-grid-mini">
-                    <button id="btnToggleEdit" class="modern-btn btn-dark" style="border: 1px solid #FF9F43;" onclick="toggleEditMode()">🔧 จัดวาง</button>
-                    <button id="btnFilterNum" class="modern-btn btn-dark" style="border: 1px solid #3498db;" onclick="toggleFilterBooked()">🔍 ซ่อนหมายเลข</button>
-                </div>
-                <button id="btnToggleMode" class="modern-btn btn-blue" onclick="toggleDisplayMode()">🔠 โหมด 10-19</button>
+        <div class="mh-sec">
+            <div class="mh-sec-t"><span>⚙️</span> ข้อมูล &amp; ช่วยเหลือ</div>
+            <div class="mh-tiles">
+                <button class="mh-tile" onclick="openBackupModal()"><span class="ic">💾</span><span class="tx">สำรอง / คัดลอก</span></button>
+                <button class="mh-tile" onclick="openAnnounceList()"><span class="ic">📢</span><span class="tx">ประกาศ</span><span id="tileAnnBadge" class="mh-badge">0</span></button>
+                <button class="mh-tile" onclick="openChatModal()"><span class="ic">💬</span><span class="tx">ติดต่อแอดมิน</span><span id="tileChatBadge" class="mh-badge">0</span></button>
+                <button class="mh-tile out" onclick="logoutApp()"><span class="ic">🚪</span><span class="tx">ออกจากระบบ</span></button>
             </div>
         </div>
-
-        <div class="menu-section section-system">
-            <div class="btn-grid-mini">
-                <button class="modern-btn btn-red" onclick="resetBoard()">🗑️ ล้างแผง (เริ่มงวดใหม่)</button>
-                <button class="modern-btn btn-dark" style="border:1px solid #fbc531;" onclick="openRoundHistory()">📜 งวดเก่า</button>
-                <button class="modern-btn" style="background: #1e272e; grid-column: span 2;" onclick="logoutApp()">🚪 ออกระบบ</button>
-            </div>
-        </div>
-
     </div>
 </div>
 
@@ -1364,6 +1457,7 @@ function toggleDisplayMode() {
         subscribeCloud();
         offerLocalImport();
         if (typeof startAdminComms === "function") startAdminComms();
+        if (typeof paintAccount === "function") { paintAccount(); paintTiles(); mhPaintResult(); }
     }
 
     // ---------- โหลดข้อมูลจากคลาวด์ ----------
@@ -1394,7 +1488,7 @@ function toggleDisplayMode() {
             if (design.bgPath && URLS.has(design.bgPath)) design.bgImage = URLS.get(design.bgPath);
             if (!design.customBoxes) design.customBoxes = [];
             const st = { ...defaultSettings, ...(row.settings || {}) };
-            const b = { id: row.id, dbId: row.id, roundId: rd.id, drawDate: rd.draw_date || "", name: row.name, data: {},
+            const b = { id: row.id, dbId: row.id, roundId: rd.id, drawDate: rd.draw_date || "", name: row.name, data: {}, result: { top: rd.result_top || "", bottom: rd.result_bottom || "" },
                 settings: { price: st.price, top: st.top, bottom: st.bottom }, design, displayMode: row.display_mode || 0,
                 sellerInfo: { text: row.seller?.text || "", color: row.seller?.color || "#333333", imagePath: row.seller?.image_path || null,
                               image: row.seller?.image_path ? (URLS.get(row.seller.image_path) || "") : "" } };
@@ -1551,7 +1645,7 @@ function toggleDisplayMode() {
             await flushNow();
             must(await sb.from("mh_rounds").update({ closed: true, closed_at: new Date().toISOString() }).eq("id", b.roundId));
             const rd = must(await sb.from("mh_rounds").insert({ board_id: b.dbId }).select().single());
-            b.roundId = rd.id; b.data = {}; b.drawDate = "";
+            b.roundId = rd.id; b.data = {}; b.drawDate = ""; b.result = {};
             SYNC.snap[b.dbId].books = {}; SYNC.snap[b.dbId].drawDate = "";
             renderBoardUI();
         } catch (e) { alert(thaiErr(e)); }
@@ -1571,7 +1665,7 @@ function toggleDisplayMode() {
                 const x = bk.filter(y => y.round_id === r.id).sort((a, c) => a.num.localeCompare(c.num)), tot = x.reduce((a, y) => a + money(y.price), 0), paid = x.filter(y => y.paid).reduce((a, y) => a + money(y.price), 0);
                 const d = r.draw_date ? (([y, m, dd]) => `${dd}/${m}/${+y + 543}`)(String(r.draw_date).split("-")) : "ไม่ได้ใส่วันที่";
                 return `<details style="border-bottom:1px solid #eee; padding:10px 4px;"><summary style="cursor:pointer;"><b>งวด ${escH(d)}</b>
-                    <span style="color:#888; font-size:0.85rem;"> · ${x.length} เบอร์ · ยอด ${tot.toLocaleString()} · จ่ายแล้ว ${paid.toLocaleString()}</span></summary>
+                    <span style="color:#888; font-size:0.85rem;"> · ${x.length} เบอร์ · ยอด ${tot.toLocaleString()} · จ่ายแล้ว ${paid.toLocaleString()}</span>${r.result_top || r.result_bottom ? `<div style="font-size:0.85rem; color:#b37400;">🏆 บน ${escH(r.result_top || "-")} · ล่าง ${escH(r.result_bottom || "-")}</div>` : ""}</summary>
                     <div style="font-size:0.9rem; margin-top:8px; line-height:1.7;">${x.map(y => `<span style="display:inline-block; margin:2px 4px; padding:2px 8px; border-radius:10px; background:${y.paid ? "#d1f2eb" : "#fadbd8"};">${escH(y.num)} ${escH(y.name)} (${escH(y.price)})</span>`).join("") || "ไม่มีการจอง"}</div></details>`;
             }).join("") : `<div style="padding:15px; color:#888; text-align:center;">ยังไม่มีงวดเก่า (กด “ล้างแผง” เพื่อปิดงวดแล้วเก็บไว้ที่นี่)</div>`;
         } catch (e) { box.innerHTML = `<div style="color:#ff4757; padding:15px;">${escH(thaiErr(e))}</div>`; }
@@ -1647,7 +1741,7 @@ function toggleDisplayMode() {
 
     // ---------- โหมดทดลอง (?demo) ใช้ทดสอบหน้าจอ ไม่ต่อเน็ต ----------
     function makeDemoClient() {
-        const D = window.__mhDemo = { session: null, t: { mh_boards: [], mh_rounds: [], mh_bookings: [] }, files: {} };
+        const D = window.__mhDemo = { session: null, t: { mh_boards: [], mh_rounds: [], mh_bookings: [], mh_announcements: [{ id: "a1", title: "ทดสอบประกาศ", detail: "รายละเอียด", images: [], is_new: true, created_at: new Date().toISOString() }], profiles: [] }, files: {} };
         const uid = () => "x" + Math.random().toString(36).slice(2, 10);
         const ok = (data) => ({ data, error: null }), bad = (m) => ({ data: null, error: { message: m } });
         function q(table) {
@@ -1700,9 +1794,10 @@ function toggleDisplayMode() {
                 async signInWithPassword({ email, password }) { if (password !== "1234") return bad("Invalid login credentials"); D.session = { user: { id: "u-" + email, email } }; return ok(D.session); },
                 async signOut() { D.session = null; return ok(null); }
             },
-            async rpc(name) {
+            async rpc(name, args) {
+                if (window.__mhDemoRpc && window.__mhDemoRpc[name]) return ok(await window.__mhDemoRpc[name](args || {}));
                 if (name === "ext_kind_access") return ok(/nolic/.test(D.session?.user?.email || "") ? { ok: false, reason: "no_license", ext_name: "มหาเฮง 999", price: 199, trial_days: 9, trial_used: false, darkchat_url: DARKCHAT_URL }
-                    : /trial/.test(D.session?.user?.email || "") ? { ok: true, trial_expires_at: new Date(Date.now() + 2 * 864e5).toISOString() } : { ok: true });
+                    : /trial/.test(D.session?.user?.email || "") ? { ok: true, license: "trial", trial_expires_at: new Date(Date.now() + 2 * 864e5).toISOString() } : { ok: true, license: "full", is_admin: /admin/.test(D.session?.user?.email || "") });
                 return ok(null);
             },
             from: q,
@@ -2310,7 +2405,7 @@ function confirmBooking() {
         document.getElementById("detailedSummaryModal").style.display = "flex";   
     }
 
-    function addNewBoard() { boards.push({ id: null, dbId: null, roundId: null, drawDate: "", name: "แผงที่ "+(boards.length+1), data: {}, settings: {price:"40", top:"1500", bottom:"1500"}, design: JSON.parse(JSON.stringify(defaultDesign)), sellerInfo: { text: "", color: "#333333", image: "" }, displayMode: 0 }); currentBoardIdx = boards.length-1; saveAll(); renderBoardUI(); }
+    function addNewBoard() { boards.push({ id: null, dbId: null, roundId: null, drawDate: "", result: {}, name: "แผงที่ "+(boards.length+1), data: {}, settings: {price:"40", top:"1500", bottom:"1500"}, design: JSON.parse(JSON.stringify(defaultDesign)), sellerInfo: { text: "", color: "#333333", image: "" }, displayMode: 0 }); currentBoardIdx = boards.length-1; saveAll(); renderBoardUI(); }
     function deleteCurrentBoard() {
         if (boards.length <= 1) { alert("ต้องมีอย่างน้อย 1 แผง"); return; }
         const b = boards[currentBoardIdx];
@@ -3330,71 +3425,6 @@ async function pasteBoardData() {
         alert("❌ ข้อมูลที่วางไม่ถูกต้อง หรือคัดลอกมาไม่ครบ กรุณาลองใหม่!");
     }
 }
-// ==========================================
-// ระบบการแจ้งเตือน & เชื่อม Google Sheets
-// ==========================================
-
-// 1. นำ URL ของ Web App จาก Google Apps Script มาวางที่นี่
-const NOTIFY_SHEET_URL = "วาง_URL_WEB_APP_ที่ได้จาก_GOOGLE_SHEET_ตรงนี้"; 
-
-function toggleNotifModal() {
-    document.getElementById('notifModal').style.display = 'flex';
-    // ซ่อนตัวเลขสีแดงเมื่อกดเปิดอ่าน
-    document.getElementById('notifBadge').style.display = 'none';
-}
-
-
-async function fetchNotifications() {
-    if(!NOTIFY_SHEET_URL || NOTIFY_SHEET_URL.includes("วาง_URL")) return;
-    
-    try {
-        let response = await fetch(NOTIFY_SHEET_URL);
-        let data = await response.json();
-        
-        let adminHtml = '';
-        let privateHtml = '';
-        let notifCount = 0;
-        
-        // ตรงนี้ให้กำหนดชื่อของผู้ใช้แอปนี้ เพื่อดึงเฉพาะข้อความของคนนี้ (เช่น "User1")
-        // หากมีระบบล็อกอิน สามารถเปลี่ยนเป็นตัวแปรชื่อผู้ใช้ได้
-        let currentUser = "User1"; 
-
-        data.forEach(msg => {
-            if(msg.type === 'admin') {
-                adminHtml += `<div style="padding:10px; background:#e3f2fd; border-radius:8px; margin-bottom:8px; border-left:4px solid #4D96FF; font-size:0.9rem;">
-                    <div style="font-size: 0.75rem; color: #888; margin-bottom: 3px;">${msg.date}</div>
-                    <b>[ประกาศ]</b> ${msg.text}
-                </div>`;
-                notifCount++;
-            } else if (msg.type === 'private' && msg.target === currentUser) {
-                privateHtml += `<div style="padding:10px; background:#fff0f0; border-radius:8px; margin-bottom:8px; border-left:4px solid #ff4757; font-size:0.9rem;">
-                    <div style="font-size: 0.75rem; color: #888; margin-bottom: 3px;">${msg.date}</div>
-                    <b>[ส่วนตัว]</b> ${msg.text}
-                </div>`;
-                notifCount++;
-            }
-        });
-
-        document.getElementById('notif-admin-content').innerHTML = adminHtml || `<div style="text-align:center; color:#999; padding: 20px;">ไม่มีประกาศจากแอดมิน</div>`;
-        document.getElementById('notif-private-content').innerHTML = privateHtml || `<div style="text-align:center; color:#999; padding: 20px;">ไม่มีข้อความส่วนตัว</div>`;
-        
-        // อัปเดตตัวเลขแจ้งเตือนที่กระดิ่ง
-        if(notifCount > 0) {
-            let badge = document.getElementById('notifBadge');
-            badge.innerText = notifCount;
-            badge.style.display = 'block';
-        }
-    } catch (error) {
-        console.error("ดึงข้อมูลแจ้งเตือนไม่สำเร็จ:", error);
-    }
-}
-
-// สั่งให้ดึงข้อมูลอัตโนมัติเมื่อเปิดหน้าเว็บ
-window.addEventListener('DOMContentLoaded', () => {
-    fetchNotifications();
-    // ดึงข้อมูลใหม่ทุกๆ 1 นาที (60000 มิลลิวินาที)
-    setInterval(fetchNotifications, 60000); 
-});
 function toggleEditMode() {
     // 1. สลับสถานะโหมดแก้ไข
     isEditMode = !isEditMode;
@@ -3438,9 +3468,39 @@ function toggleEditMode() {
         }
     }
 }
-// เริ่มระบบ (หลังโหลดฟังก์ชันทั้งหมดแล้ว)
-bootApp();
 </script>
+<div id="resultModal" class="modal-overlay" style="z-index:4300;">
+    <div class="modal-box res-box">
+        <div class="res-head">🏆 ใส่ผลรางวัล<small id="resBoardName"></small></div>
+        <div class="res-inputs">
+            <label>⬆️ เลขบน<input id="resTop" inputmode="numeric" maxlength="2" placeholder="--" oninput="mhResultPreview()"></label>
+            <label>⬇️ เลขล่าง<input id="resBottom" inputmode="numeric" maxlength="2" placeholder="--" oninput="mhResultPreview()"></label>
+        </div>
+        <div class="res-prize">
+            <label>ถูกบน จ่าย<input id="resPrizeTop" inputmode="decimal" oninput="mhResultPreview()"></label>
+            <label>ถูกล่าง จ่าย<input id="resPrizeBottom" inputmode="decimal" oninput="mhResultPreview()"></label>
+        </div>
+        <div id="resPreview"></div>
+        <label class="res-post"><input type="checkbox" id="resPost" checked> ส่งสรุปผลเข้าห้องแชท DarkChat ที่เชื่อมแผงนี้ไว้</label>
+        <button id="btnSaveResult" class="res-save" onclick="saveResult(false)">💾 บันทึกผล</button>
+        <div class="res-foot">
+            <button onclick="saveResult(true)">ล้างผล</button>
+            <button onclick="closeModal('resultModal')">ปิด</button>
+        </div>
+    </div>
+</div>
+<div id="accountModal" class="modal-overlay" style="z-index:4300;" onclick="if(event.target===this)closeModal('accountModal')">
+    <div class="modal-box acc-sheet">
+        <div id="accSheetBody"></div>
+        <div class="mh-tiles" style="margin-top:14px;">
+            <button class="mh-tile" onclick="closeModal('accountModal'); openSellerInfoModal()"><span class="ic">💳</span><span class="tx">ผู้รับเงิน / QR</span></button>
+            <button class="mh-tile" onclick="closeModal('accountModal'); openChatModal()"><span class="ic">💬</span><span class="tx">ติดต่อแอดมิน</span></button>
+        </div>
+        <a class="mh-wide" style="text-decoration:none; display:block; margin-top:10px;" href="https://bossrachun9696-stack.github.io/darkchat/" target="_blank">🧩 เปิด DarkChat (ซื้อ/ต่อสิทธิ์)</a>
+        <button class="mh-wide danger" style="margin-top:8px;" onclick="logoutApp()">🚪 ออกจากระบบ</button>
+        <button class="res-close" onclick="closeModal('accountModal')">ปิด</button>
+    </div>
+</div>
 <div id="roundHistoryModal" class="modal-overlay" style="z-index:4200;">
     <div class="modal-box" style="max-width:480px; text-align:left;">
         <div id="roundHistoryTitle" style="font-size:1.2rem; font-weight:900; margin-bottom:10px;">📜 งวดเก่า</div>
@@ -3464,6 +3524,7 @@ bootApp();
         
         <div class="seller-section" id="sellerSectionDisplay"></div>
         <div class="slider-dots" id="sliderDots"></div>
+        <button id="btnCardImg" onclick="saveCustomerCardImage()">📸 บันทึกการ์ดนี้เป็นรูป / ส่งต่อ</button>
     </div>
 </div>
 
@@ -3520,7 +3581,7 @@ bootApp();
         </div>
         
         <div id="notif-private-content" style="text-align: center; padding: 20px; display: none; font-family: 'Prompt';">
-            <div style="margin-bottom: 15px; color: #555; font-size: 14px;">สอบถามรายละเอียด หรือ แจ้งปัญหาการใช้งานได้ที่นี่ครับ</div>
+            <div style="margin-bottom: 15px; color: #555; font-size: 14px;">สอบถามหรือแจ้งปัญหาได้ที่นี่ ข้อความจะเข้าแชทส่วนตัวกับแอดมินใน DarkChat</div>
             <button onclick="openChatModal()" style="background: linear-gradient(135deg, #d4af37, #aa7700); color: #000; border: none; padding: 12px 25px; border-radius: 30px; font-family: 'Prompt', sans-serif; font-weight: 600; font-size: 16px; cursor: pointer; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); width: 100%;">
                 💬 เปิดช่องแชทส่วนตัว
             </button>
@@ -3558,7 +3619,7 @@ bootApp();
     <div class="chat-box" style="width: 90%; max-width: 400px; background: #1a1a24; border-radius: 20px; display: flex; flex-direction: column; height: 75vh; box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); border: 1px solid #d4af37; animation: slideUpChat 0.3s ease-out;">
         
         <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: linear-gradient(135deg, #d4af37, #8e6300); border-radius: 19px 19px 0 0; color: #000;">
-            <h3 style="margin: 0; font-family: 'Prompt', sans-serif; font-size: 18px; font-weight: 600;">💬 ศูนย์ช่วยเหลือ (แอดมิน)</h3>
+            <h3 id="chatAdminHead" style="margin: 0; font-family: 'Prompt', sans-serif; font-size: 18px; font-weight: 600;">💬 ติดต่อแอดมิน</h3>
             <span onclick="closeChatModal()" style="font-size: 28px; cursor: pointer; font-weight: bold; line-height: 1;">&times;</span>
         </div>
 
@@ -3573,272 +3634,457 @@ bootApp();
 </div>
 
 <script>
-const SCRIPT_URL_ANNOUNCE = 'https://script.google.com/macros/s/AKfycbxz6qKBDudsQbjHPyauaPeyG1tmzD0k_uauEazUigyypq0B9edNk6wou-5wiMv1Aa8D_A/exec';
-const CHAT_API_URL = "https://script.google.com/macros/s/AKfycbyrbGznVJRcO-5Ai-I4zYzQSSJ5kw6Mp_C5MaOak1KYxQet0oe5_G98YezUfR2vkKnaDg/exec"; 
-
-let announcementsData = [];
-let unreadAnnounceCount = 0;
-let unreadChatCount = 0;
-
-// ผู้ใช้สำหรับแชทกับแอดมิน = อีเมลที่เข้าระบบ (ตั้งค่าหลังเข้าระบบ)
-let USER_TOKEN = null;
-// ==========================================
-// ฟังก์ชันปิดสไลด์และหน้าต่าง
-// ==========================================
-function moveSlider(direction) {
-    const track = document.getElementById('sliderTrack');
-    if (track) {
-        const scrollAmount = 250 * direction;
-        track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
+// =====================================================================
+// 🎯 มหาเฮง รอบ 3: ผลรางวัล · การ์ดลูกค้าเป็นรูป · แชทแอดมิน/ประกาศผ่าน DarkChat · รูปโปรไฟล์ · หน้าตั้งค่าใหม่
+// (ไม่ใช้ Google Sheets / Apps Script แล้ว ทุกอย่างอยู่ใน Supabase)
+// =====================================================================
+const MHX = { profile: null, support: null, msgs: [], ann: [], chatOpen: false, chatTimer: null, started: false };
+const mhMoney = (v) => parseFloat(String(v ?? "").replace(/[^0-9.]/g, "")) || 0;
+const mhFmt = (n) => Number(n || 0).toLocaleString("th-TH");
+function mhToast(t, bad) {
+    let el = document.getElementById("mhToast");
+    if (!el) { el = document.createElement("div"); el.id = "mhToast"; document.body.appendChild(el); }
+    el.textContent = t; el.className = bad ? "bad show" : "show";
+    clearTimeout(el._t); el._t = setTimeout(() => (el.className = ""), 2600);
 }
 
-function closeCardSlider() {
-    const sliderOverlay = document.getElementById('cardSliderOverlay');
-    if (sliderOverlay) {
-        sliderOverlay.style.display = 'none';
-    }
+// ---------- เลขที่ถูกรางวัล (ตรงกับฝั่งฐานข้อมูล mh_hit) ----------
+function mhHit(num, mode, res) {
+    if (!/^\d{2}$/.test(res || "")) return false;
+    if (!String(num).includes("-")) return num === res;
+    const [a, b] = String(num).split("-");
+    if (mode === 1) return +res >= +a && +res <= +b;
+    return res === a || res === b;
+}
+function mhWinners(b, top, bottom) {
+    const out = [];
+    const pt = mhMoney(b.settings?.top), pb = mhMoney(b.settings?.bottom);
+    Object.keys(b.data || {}).sort().forEach(n => {
+        const x = b.data[n];
+        if (mhHit(n, b.displayMode || 0, top)) out.push({ num: n, name: x.name, kind: "บน", pay: pt, paid: !!x.isPaid });
+        if (mhHit(n, b.displayMode || 0, bottom)) out.push({ num: n, name: x.name, kind: "ล่าง", pay: pb, paid: !!x.isPaid });
+    });
+    return out;
+}
+function mhRoundMoney(b) {
+    let sold = 0, unpaid = 0;
+    Object.values(b.data || {}).forEach(x => { const p = mhMoney(x.price); sold += p; if (!x.isPaid) unpaid += p; });
+    return { sold, unpaid };
 }
 
-function closeSummaryModal() {
-    const summaryModal = document.getElementById('summaryModal');
-    if (summaryModal) {
-        summaryModal.style.display = 'none';
+// ---------- ไฮไลต์เบอร์ที่ถูก + ป้ายผลบนแผง ----------
+function mhPaintResult() {
+    const b = boards[currentBoardIdx]; if (!b) return;
+    const r = b.result || {}, has = r.top || r.bottom;
+    const ban = document.getElementById("resultBanner");
+    if (ban) {
+        if (!has) { ban.style.display = "none"; }
+        else {
+            const w = mhWinners(b, r.top, r.bottom);
+            ban.style.display = "flex";
+            ban.innerHTML = `<span>🏆 ผลงวดนี้</span><b>บน ${escH(r.top || "-")}</b><b>ล่าง ${escH(r.bottom || "-")}</b>
+                <span class="rb-w">${w.length ? `ถูก ${w.length} รายการ` : "ไม่มีผู้ถูก"}</span>`;
+            ban.onclick = openResultModal;
+        }
     }
+    document.querySelectorAll("#grid .num").forEach(d => {
+        const n = d.querySelector(".val")?.textContent?.trim();
+        const t = has && mhHit(n, b.displayMode || 0, r.top), m = has && mhHit(n, b.displayMode || 0, r.bottom);
+        d.classList.toggle("num-win", !!(t || m));
+        d.querySelector(".win-tag")?.remove();
+        if (t || m) { const s = document.createElement("span"); s.className = "win-tag"; s.textContent = t && m ? "บน+ล่าง" : t ? "ถูกบน" : "ถูกล่าง"; d.appendChild(s); }
+    });
 }
 
-// ==========================================
-// ระบบแจ้งเตือน (ประกาศ)
-// ==========================================
-function updateMainBadge() {
-    const mainBadge = document.getElementById('notifBadge'); 
-    if (mainBadge) {
-        const totalUnread = unreadAnnounceCount + unreadChatCount;
-        mainBadge.innerText = totalUnread;
-        mainBadge.style.display = totalUnread > 0 ? 'flex' : 'none';
-    }
+// ---------- 🏆 ใส่ผลรางวัล ----------
+function openResultModal() {
+    const b = boards[currentBoardIdx]; if (!b) return;
+    const r = b.result || {};
+    document.getElementById("resBoardName").innerText = `${b.name}${b.drawDate ? " · งวด " + fmtThaiDate(b.drawDate) : ""}`;
+    document.getElementById("resTop").value = r.top || "";
+    document.getElementById("resBottom").value = r.bottom || "";
+    document.getElementById("resPrizeTop").value = b.settings?.top || "";
+    document.getElementById("resPrizeBottom").value = b.settings?.bottom || "";
+    document.getElementById("resPost").checked = true;
+    mhResultPreview();
+    document.getElementById("resultModal").style.display = "flex";
+    setTimeout(() => document.getElementById("resTop").focus(), 80);
+}
+function fmtThaiDate(iso) { const [y, m, d] = String(iso).split("-"); return y && m && d ? `${d}/${m}/${+y + 543}` : iso; }
+function mhResultPreview() {
+    const b = boards[currentBoardIdx];
+    const clean = (id) => { const i = document.getElementById(id); i.value = i.value.replace(/\D/g, "").slice(0, 2); return i.value; };
+    const top = clean("resTop"), bottom = clean("resBottom");
+    const tmp = { ...b, settings: { ...b.settings, top: document.getElementById("resPrizeTop").value, bottom: document.getElementById("resPrizeBottom").value } };
+    const box = document.getElementById("resPreview");
+    if (top.length < 2 && bottom.length < 2) { box.innerHTML = `<div class="res-empty">ใส่เลขบนหรือล่าง (2 หลัก) แล้วระบบจะหาผู้ถูกให้ทันที</div>`; return; }
+    const w = mhWinners(tmp, top.length === 2 ? top : "", bottom.length === 2 ? bottom : "");
+    const pay = w.reduce((a, x) => a + x.pay, 0), { sold, unpaid } = mhRoundMoney(b), profit = sold - pay;
+    box.innerHTML = `
+        <div class="res-list">${w.length ? w.map(x => `<div class="res-row"><span class="res-num">${escH(x.num)}</span>
+            <span class="res-name">${escH(x.name)} <small>ถูก${x.kind}${x.paid ? "" : " · ยังไม่จ่ายค่าเบอร์"}</small></span>
+            <b>${mhFmt(x.pay)}</b></div>`).join("") : `<div class="res-empty">😅 ไม่มีผู้ถูกรางวัล</div>`}</div>
+        <div class="res-sum">
+            <div><span>ขายได้</span><b>${mhFmt(sold)}</b></div>
+            <div><span>จ่ายรางวัล</span><b>${mhFmt(pay)}</b></div>
+            <div class="${profit >= 0 ? "pos" : "neg"}"><span>${profit >= 0 ? "กำไร" : "ขาดทุน"}</span><b>${mhFmt(Math.abs(profit))}</b></div>
+        </div>
+        ${unpaid ? `<div class="res-note">⏳ ยังค้างจ่ายค่าเบอร์ ${mhFmt(unpaid)} บาท</div>` : ""}`;
+}
+async function saveResult(clear) {
+    const b = boards[currentBoardIdx]; if (!b) return;
+    const top = clear ? "" : document.getElementById("resTop").value, bottom = clear ? "" : document.getElementById("resBottom").value;
+    if (!clear && top.length !== 2 && bottom.length !== 2) { alert("ใส่เลขบนหรือล่างให้ครบ 2 หลัก"); return; }
+    if ((top && top.length !== 2) || (bottom && bottom.length !== 2)) { alert("เลขต้องมี 2 หลัก เช่น 05"); return; }
+    if (clear && !confirm("ล้างผลรางวัลของงวดนี้?")) return;
+    const pt = document.getElementById("resPrizeTop").value.trim(), pb = document.getElementById("resPrizeBottom").value.trim();
+    const post = !clear && document.getElementById("resPost").checked;
+    const btn = document.getElementById("btnSaveResult"); btn.disabled = true; btn.innerText = "กำลังบันทึก...";
+    try {
+        await flushNow();   // ให้เบอร์ล่าสุดขึ้นคลาวด์ก่อน สรุปจะได้ตรง
+        if (!clear && (pt !== String(b.settings.top ?? "") || pb !== String(b.settings.bottom ?? ""))) {
+            b.settings.top = pt; b.settings.bottom = pb;
+            saveAll(); await flushNow();
+        }
+        const r = await sb.rpc("mh_set_result", { p_round: b.roundId, p_top: top || null, p_bottom: bottom || null,
+                                                  p_prize_top: pt || null, p_prize_bottom: pb || null, p_post: post });
+        if (r.error) throw r.error;
+        b.result = { top, bottom };
+        closeModal("resultModal");
+        renderGrid();
+        mhToast(clear ? "ล้างผลแล้ว" : post ? (r.data?.sent ? `✅ บันทึกผลแล้ว · ส่งสรุปเข้าแชท ${r.data.sent} ห้อง` : "✅ บันทึกผลแล้ว (ยังไม่ได้เชื่อมห้องแชทกับแผงนี้)") : "✅ บันทึกผลแล้ว");
+    } catch (e) {
+        alert(/mh_set_result|Could not find/i.test(e.message || "") ? "ยังไม่ได้ติดตั้งฐานข้อมูลรอบนี้: ให้รัน supabase-mh-v3.sql ใน Supabase ก่อน" : thaiErr(e));
+    } finally { btn.disabled = false; btn.innerText = "💾 บันทึกผล"; }
 }
 
-function switchNotifTab(tab) {
-    if (tab === 'admin') {
-        document.getElementById('notifModal').style.display = 'none'; 
-        openAnnounceList(); 
-    } else {
-        document.getElementById('tab-private').style.background = '#27fa5c';
-        document.getElementById('tab-private').style.color = '#333';
-        document.getElementById('tab-admin').style.background = '#f1f2f6';
-        document.getElementById('tab-admin').style.color = '#333';
-        document.getElementById('notif-private-content').style.display = 'block';
+// ---------- 📸 การ์ดลูกค้าเป็นรูปภาพ ----------
+async function mhLoadImg(src) {
+    if (!src) return null;
+    try {
+        const blob = /^data:/.test(src) ? await (await fetch(src)).blob() : await (await fetch(src, { mode: "cors" })).blob();
+        return await createImageBitmap(blob);
+    } catch (e) { return null; }
+}
+function mhWrap(ctx, text, maxW) {
+    const words = String(text || "").split(/(\s+)/), lines = []; let cur = "";
+    for (const w of words) {
+        if (ctx.measureText(cur + w).width > maxW && cur.trim()) { lines.push(cur.trim()); cur = w.trimStart(); }
+        else cur += w;
+        while (ctx.measureText(cur).width > maxW && cur.length > 1) {   // ภาษาไทยไม่มีช่องว่าง: ตัดตามตัวอักษร
+            let k = cur.length; while (k > 1 && ctx.measureText(cur.slice(0, k)).width > maxW) k--;
+            lines.push(cur.slice(0, k)); cur = cur.slice(k);
+        }
     }
+    if (cur.trim()) lines.push(cur.trim());
+    return lines;
+}
+async function mhCardCanvas(cust, b) {
+    const W = 720, P = 40, ctx0 = document.createElement("canvas").getContext("2d");
+    const font = (s, w) => `${w || 600} ${s}px Kanit, Prompt, sans-serif`;
+    const nums = cust.numbers.slice().sort();
+    const paidOf = (n) => !!b.data[n]?.isPaid;
+    const priceOf = (n) => mhMoney(b.data[n]?.price) || mhMoney(b.settings?.price);
+    const total = nums.reduce((a, n) => a + priceOf(n), 0), paid = nums.filter(paidOf).reduce((a, n) => a + priceOf(n), 0);
+    const r = b.result || {};
+    const wins = mhWinners(b, r.top, r.bottom).filter(w => w.name === cust.name);
+    const qr = await mhLoadImg(b.sellerInfo?.image);
+    // คำนวณความสูง
+    const chipW = nums[0]?.includes("-") ? 150 : 96, perRow = Math.max(1, Math.floor((W - P * 2 + 12) / (chipW + 12)));
+    const rows = Math.ceil(nums.length / perRow);
+    ctx0.font = font(26, 500);
+    const sellerLines = mhWrap(ctx0, b.sellerInfo?.text || "", qr ? W - P * 2 - 250 : W - P * 2);
+    const qrH = qr ? 230 : 0, sellerH = (b.sellerInfo?.text || qr) ? Math.max(qrH, sellerLines.length * 36 + 50) + 40 : 0;
+    const H = 170 + 70 + rows * 66 + 30 + 150 + (wins.length ? 60 + wins.length * 40 : 0) + sellerH + 70;
+    const c = document.createElement("canvas"); c.width = W; c.height = H;
+    const ctx = c.getContext("2d");
+    // พื้น
+    const g = ctx.createLinearGradient(0, 0, W, H); g.addColorStop(0, "#fff7d6"); g.addColorStop(1, "#ffe0ec");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    const rr = (x, y, w, h, rad, fill) => { ctx.beginPath(); ctx.roundRect(x, y, w, h, rad); ctx.fillStyle = fill; ctx.fill(); };
+    rr(16, 16, W - 32, H - 32, 28, "#ffffff");
+    // หัว
+    const hg = ctx.createLinearGradient(0, 0, W, 0); hg.addColorStop(0, "#ff6b6b"); hg.addColorStop(1, "#b84cff");
+    ctx.save(); ctx.beginPath(); ctx.roundRect(16, 16, W - 32, 130, [28, 28, 0, 0]); ctx.fillStyle = hg; ctx.fill(); ctx.restore();
+    ctx.fillStyle = "#fff"; ctx.textAlign = "center";
+    ctx.font = font(24, 500); ctx.fillText(`${b.name}${b.drawDate ? " · งวด " + fmtThaiDate(b.drawDate) : ""}`, W / 2, 62);
+    ctx.font = font(46, 700); ctx.fillText(cust.name, W / 2, 118, W - 80);
+    let y = 200;
+    ctx.textAlign = "left"; ctx.fillStyle = "#666"; ctx.font = font(24, 500);
+    ctx.fillText(`เบอร์ที่ซื้อ (${nums.length})`, P, y); y += 22;
+    nums.forEach((n, i) => {
+        const col = i % perRow, row = Math.floor(i / perRow), x = P + col * (chipW + 12), yy = y + row * 66;
+        const win = wins.some(w => w.num === n);
+        rr(x, yy, chipW, 54, 27, win ? "#ffd32a" : paidOf(n) ? "#d1f7e2" : "#ffe1e1");
+        ctx.fillStyle = win ? "#7a4b00" : paidOf(n) ? "#14804a" : "#c0392b"; ctx.font = font(30, 700); ctx.textAlign = "center";
+        ctx.fillText(n, x + chipW / 2, yy + 38); ctx.textAlign = "left";
+    });
+    y += rows * 66 + 20;
+    ctx.fillStyle = "#999"; ctx.font = font(20, 400); ctx.fillText("🟩 จ่ายแล้ว   🟥 ยังไม่จ่าย" + (wins.length ? "   🟨 ถูกรางวัล" : ""), P, y); y += 30;
+    // ยอด
+    rr(P, y, W - P * 2, 120, 20, "#f7f3ff");
+    ctx.fillStyle = "#555"; ctx.font = font(26, 500); ctx.fillText("ยอดรวม", P + 24, y + 48); ctx.fillText(total - paid > 0 ? "ค้างจ่าย" : "สถานะ", P + 24, y + 96);
+    ctx.textAlign = "right"; ctx.fillStyle = "#2f3542"; ctx.font = font(38, 700); ctx.fillText(`฿${mhFmt(total)}`, W - P - 24, y + 50);
+    ctx.fillStyle = total - paid > 0 ? "#e74c3c" : "#27ae60"; ctx.font = font(30, 700);
+    ctx.fillText(total - paid > 0 ? `฿${mhFmt(total - paid)}` : "✅ จ่ายครบแล้ว", W - P - 24, y + 98); ctx.textAlign = "left";
+    y += 150;
+    if (wins.length) {
+        ctx.fillStyle = "#b37400"; ctx.font = font(28, 700); ctx.fillText(`🏆 ถูกรางวัล (บน ${r.top || "-"} · ล่าง ${r.bottom || "-"})`, P, y); y += 44;
+        ctx.font = font(26, 500); ctx.fillStyle = "#333";
+        wins.forEach(w => { ctx.fillText(`• ${w.num} ถูก${w.kind}  รับ ฿${mhFmt(w.pay)}`, P + 10, y); y += 40; });
+        y += 16;
+    }
+    // ผู้รับเงิน
+    if (b.sellerInfo?.text || qr) {
+        ctx.strokeStyle = "#eee"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(P, y - 10); ctx.lineTo(W - P, y - 10); ctx.stroke();
+        let tx = P;
+        if (qr) { const s = Math.min(220 / qr.width, 220 / qr.height); ctx.drawImage(qr, P, y + 6, qr.width * s, qr.height * s); tx = P + 250; }
+        ctx.fillStyle = "#888"; ctx.font = font(22, 500); ctx.fillText("ชำระเงิน / ผู้รับเงิน", tx, y + 34);
+        ctx.fillStyle = b.sellerInfo?.color || "#333"; ctx.font = font(26, 600);
+        sellerLines.forEach((l, i) => ctx.fillText(l, tx, y + 76 + i * 36));
+        y += sellerH;
+    }
+    ctx.fillStyle = "#bbb"; ctx.font = font(18, 400); ctx.textAlign = "center";
+    ctx.fillText("ขอบคุณที่อุดหนุน 🙏 · มหาเฮง 999", W / 2, H - 40);
+    return c;
+}
+async function saveCustomerCardImage() {
+    const cust = summaryCustomers?.[currentSlideIndex], b = boards[currentBoardIdx];
+    if (!cust || !b) return;
+    const btn = document.getElementById("btnCardImg"); btn.disabled = true; btn.innerText = "กำลังสร้างรูป...";
+    try {
+        try { await document.fonts.ready; } catch (e) {}
+        const c = await mhCardCanvas(cust, b);
+        const blob = await new Promise(res => c.toBlob(res, "image/png"));
+        const file = new File([blob], `การ์ด-${cust.name}.png`.replace(/[\\/:*?"<>|]/g, ""), { type: "image/png" });
+        window.__mhLastCard = c.toDataURL("image/png").length;
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            try { await navigator.share({ files: [file], title: `การ์ดของ ${cust.name}` }); return; } catch (e) { if (e.name === "AbortError") return; }
+        }
+        const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = file.name;
+        document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+        mhToast("📸 บันทึกรูปการ์ดแล้ว");
+    } catch (e) { alert("สร้างรูปไม่สำเร็จ: " + (e.message || e)); }
+    finally { btn.disabled = false; btn.innerText = "📸 บันทึกการ์ดนี้เป็นรูป / ส่งต่อ"; }
 }
 
+// ---------- 👤 รูปโปรไฟล์ (บัญชีเดียวกับ DarkChat) ----------
+function mhAvatarHtml(av, name, cls) {
+    if (av && /^(https?:|data:)/.test(av)) return `<span class="${cls}" style="background-image:url('${String(av).replace(/'/g, "%27")}')"></span>`;
+    if (av && [...av].length <= 4) return `<span class="${cls} emo">${escH(av)}</span>`;
+    return `<span class="${cls} ini">${escH((name || "?").charAt(0).toUpperCase())}</span>`;
+}
+async function loadMyProfile() {
+    let p = null;
+    try { const r = await sb.from("profiles").select("nickname,username,avatar").eq("id", me.id).maybeSingle(); p = r.data; } catch (e) {}
+    MHX.profile = { name: p?.nickname || p?.username || (me.email || "").split("@")[0], avatar: p?.avatar || "" };
+    paintAccount();
+}
+function accessLabel() {
+    if (ACCESS?.is_admin) return { t: "👑 แอดมิน", c: "adm" };
+    if (ACCESS?.trial_expires_at) { const d = Math.max(0, Math.ceil((new Date(ACCESS.trial_expires_at) - Date.now()) / 864e5)); return { t: `ทดลองใช้ เหลือ ${d} วัน`, c: d <= 3 ? "warn" : "trial" }; }
+    return { t: "✅ ใช้งานได้เต็ม", c: "ok" };
+}
+function paintAccount() {
+    const p = MHX.profile || { name: me?.email || "", avatar: "" };
+    const chip = document.getElementById("accChip");
+    if (chip) chip.innerHTML = `${mhAvatarHtml(p.avatar, p.name, "acc-av")}<span class="acc-nm">${escH(p.name)}</span>`;
+    const card = document.getElementById("dashAccount");
+    if (card) {
+        const s = accessLabel();
+        card.innerHTML = `${mhAvatarHtml(p.avatar, p.name, "acc-av big")}
+            <div class="acc-info"><b>${escH(p.name)}</b><small>${escH(me?.email || "")}</small></div>
+            <span class="acc-badge ${s.c}">${escH(s.t)}</span>`;
+    }
+}
+function openAccountSheet() {
+    const p = MHX.profile || { name: me?.email || "", avatar: "" }, s = accessLabel();
+    document.getElementById("accSheetBody").innerHTML = `
+        ${mhAvatarHtml(p.avatar, p.name, "acc-av huge")}
+        <div class="acc-sheet-name">${escH(p.name)}</div>
+        <div class="acc-sheet-mail">${escH(me?.email || "")}</div>
+        <span class="acc-badge ${s.c}">${escH(s.t)}</span>
+        <div class="acc-sheet-hint">รูปและชื่อมาจากบัญชี DarkChat · เปลี่ยนได้ที่ DarkChat > ตั้งค่า > โปรไฟล์</div>`;
+    document.getElementById("accountModal").style.display = "flex";
+}
+
+// ---------- 📢 ประกาศจากแอดมิน (Supabase) ----------
+let announcementsData = [], unreadAnnounceCount = 0, unreadChatCount = 0;
+function readAnnIds() { try { return JSON.parse(localStorage.getItem("mh_read_ann") || "[]"); } catch (e) { return []; } }
 async function fetchAnnouncements() {
     try {
-        const response = await fetch(SCRIPT_URL_ANNOUNCE);
-        const data = await response.json();
-        if (data.error) return;
-        announcementsData = data;
+        const r = await sb.from("mh_announcements").select("*").order("created_at", { ascending: false }).limit(50);
+        if (r.error) return;
+        announcementsData = r.data || [];
         renderAnnouncements();
-    } catch (error) { console.error("Error fetching announcements:", error); }
+    } catch (e) {}
 }
-
 function renderAnnouncements() {
-    const menuBadge = document.getElementById('adminMenuBadge');
-    const newContainer = document.getElementById('newAnnounceList');
-    const oldContainer = document.getElementById('oldAnnounceList');
-    
-    if (!newContainer || !oldContainer) return;
-    newContainer.innerHTML = ''; oldContainer.innerHTML = '';
-
-    let readItems = JSON.parse(localStorage.getItem('readAnnouncements')) || [];
-    let count = 0;
-
+    const newC = document.getElementById("newAnnounceList"), oldC = document.getElementById("oldAnnounceList");
+    if (!newC || !oldC) return;
+    newC.innerHTML = ""; oldC.innerHTML = "";
+    const read = readAnnIds(); let cnt = 0;
     announcementsData.forEach(item => {
-        let isRead = readItems.includes(item.id);
-        let itemHtml = document.createElement('div');
-        itemHtml.style = `padding:12px; border-bottom:1px solid #eee; cursor:pointer; background:${isRead ? '#fff' : '#fff0f0'}; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;`;
-        
-        if (item.status === 'new') {
-            itemHtml.innerHTML = `<span style="font-family:'Prompt';">${item.title}</span> ${isRead ? '' : '<span style="color:#ff4757; font-size:10px; font-weight:bold;">🆕 ใหม่</span>'}`;
-            if (!isRead) count++;
-            newContainer.appendChild(itemHtml);
-        } else {
-            itemHtml.innerHTML = `<span style="color:#777; font-family:'Prompt';">${item.title}</span>`;
-            oldContainer.appendChild(itemHtml);
-        }
-        itemHtml.onclick = () => openDetail(item);
+        const isRead = read.includes(item.id), row = document.createElement("div");
+        row.className = "ann-row" + (item.is_new && !isRead ? " unread" : "");
+        const d = new Date(item.created_at);
+        row.innerHTML = `<div><div class="ann-t">${escH(item.title)}</div><div class="ann-d">${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear() + 543}</div></div>
+            ${item.is_new && !isRead ? `<span class="ann-new">ใหม่</span>` : ""}`;
+        row.onclick = () => openDetail(item);
+        if (item.is_new) { if (!isRead) cnt++; newC.appendChild(row); } else oldC.appendChild(row);
     });
-
-    unreadAnnounceCount = count;
-    if (menuBadge) {
-        menuBadge.innerText = unreadAnnounceCount;
-        menuBadge.style.display = unreadAnnounceCount > 0 ? 'flex' : 'none';
-    }
-    updateMainBadge(); 
+    if (!newC.children.length) newC.innerHTML = `<div class="ann-none">ยังไม่มีประกาศใหม่</div>`;
+    if (!oldC.children.length) oldC.innerHTML = `<div class="ann-none">-</div>`;
+    unreadAnnounceCount = cnt;
+    const mb = document.getElementById("adminMenuBadge"); if (mb) { mb.innerText = cnt; mb.style.display = cnt ? "flex" : "none"; }
+    const tb = document.getElementById("tileAnnBadge"); if (tb) { tb.innerText = cnt; tb.style.display = cnt ? "flex" : "none"; }
+    updateMainBadge();
 }
-
-function openAnnounceList() {
-    document.getElementById('announceListModal').style.display = 'flex';
-}
-
+function openAnnounceList() { document.getElementById("notifModal").style.display = "none"; document.getElementById("announceListModal").style.display = "flex"; }
 function openDetail(item) {
-    let readItems = JSON.parse(localStorage.getItem('readAnnouncements')) || [];
-    if (!readItems.includes(item.id)) {
-        readItems.push(item.id);
-        localStorage.setItem('readAnnouncements', JSON.stringify(readItems));
-        renderAnnouncements(); 
-    }
-    document.getElementById('detailTitle').innerText = item.title;
-    document.getElementById('detailContent').innerText = item.detail;
-    
-    const imgDiv = document.getElementById('detailImages');
-    imgDiv.innerHTML = ''; 
-    if (item.images && item.images.length > 0) {
-        item.images.forEach(url => {
-            let img = document.createElement('img');
-            img.src = url;
-            img.style = "max-width:100%; height:auto; border-radius:15px; box-shadow:0 4px 10px rgba(0,0,0,0.5); border:1px solid #333;";
-            imgDiv.appendChild(img);
-        });
-    }
-    document.getElementById('announceDetailModal').style.display = 'flex';
+    const read = readAnnIds();
+    if (!read.includes(item.id)) { read.push(item.id); localStorage.setItem("mh_read_ann", JSON.stringify(read.slice(-200))); renderAnnouncements(); }
+    document.getElementById("detailTitle").innerText = item.title;
+    document.getElementById("detailContent").innerText = item.detail || "";
+    const imgDiv = document.getElementById("detailImages"); imgDiv.innerHTML = "";
+    (item.images || []).forEach(url => { const img = document.createElement("img"); img.src = url; img.className = "ann-img"; img.onclick = () => viewImage(url); imgDiv.appendChild(img); });
+    document.getElementById("announceDetailModal").style.display = "flex";
 }
 
-// ==========================================
-// ระบบแชทส่วนตัว
-// ==========================================
-let currentMessageCount = 0;
-let lastSeenMessageCount = parseInt(localStorage.getItem('lastSeenMsgCount')) || 0;
-let isChatOpen = false;
-
+// ---------- 💬 แชทกับแอดมิน = ข้อความส่วนตัวใน DarkChat ----------
+function updateMainBadge() {
+    const total = unreadAnnounceCount + unreadChatCount, b = document.getElementById("notifBadge");
+    if (b) { b.innerText = total; b.style.display = total > 0 ? "flex" : "none"; }
+}
+function switchNotifTab(tab) { if (tab === "admin") openAnnounceList(); else openChatModal(); }
+function toggleNotifModal() { document.getElementById("notifModal").style.display = "flex"; }
+function lastSeenChat() { return localStorage.getItem("mh_chat_seen_" + (me?.id || "")) || ""; }
 function updateChatBadge() {
-    const badge = document.getElementById('chatMenuBadge');
-    unreadChatCount = currentMessageCount - lastSeenMessageCount;
-    if (unreadChatCount < 0) unreadChatCount = 0;
-    
-    if (badge) {
-        badge.innerText = unreadChatCount;
-        badge.style.display = unreadChatCount > 0 ? 'flex' : 'none';
-    }
-    updateMainBadge(); 
+    const seen = lastSeenChat();
+    unreadChatCount = MHX.chatOpen ? 0 : MHX.msgs.filter(m => !m.mine && m.created_at > seen).length;
+    [["chatMenuBadge"], ["tileChatBadge"]].forEach(([id]) => { const b = document.getElementById(id); if (b) { b.innerText = unreadChatCount; b.style.display = unreadChatCount ? "flex" : "none"; } });
+    updateMainBadge();
 }
-
-function renderMessage(text, sender) {
-    const chatArea = document.getElementById('chatMessagesArea');
-    const msgDiv = document.createElement('div');
-    msgDiv.classList.add('msg-bubble');
-    
-    if (sender === 'user') {
-        msgDiv.classList.add('msg-user');
-    } else {
-        msgDiv.classList.add('msg-admin');
-    }
-    
-    msgDiv.innerText = text;
-    chatArea.appendChild(msgDiv);
-}
-
-function fetchChatData(isBackground = false) {
-    if (!USER_TOKEN) return; 
-
-    const chatArea = document.getElementById('chatMessagesArea');
-    if (!isBackground && currentMessageCount === 0) {
-        chatArea.innerHTML = '<div style="color: #888; text-align: center; font-size: 12px; margin-top: 20px;">กำลังโหลดข้อความ...</div>';
-    }
-
-    fetch(CHAT_API_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: "getMessages", token: USER_TOKEN })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === "success") {
-            if (data.messages.length > currentMessageCount) {
-                if (currentMessageCount === 0) chatArea.innerHTML = ''; 
-                
-                for (let i = currentMessageCount; i < data.messages.length; i++) {
-                    renderMessage(data.messages[i].text, data.messages[i].sender);
-                }
-                
-                currentMessageCount = data.messages.length;
-
-                if (isChatOpen) {
-                    chatArea.scrollTop = chatArea.scrollHeight;
-                    lastSeenMessageCount = currentMessageCount;
-                    localStorage.setItem('lastSeenMsgCount', lastSeenMessageCount);
-                }
-                
-                updateChatBadge();
-            } else if (currentMessageCount === 0 && !isBackground) {
-                // เพิ่มรหัส Token โชว์ให้เห็นตอนไม่มีข้อความ
-                chatArea.innerHTML = '<div style="color: #888; text-align: center; font-size: 12px; margin-top: 20px;">ยินดีต้อนรับ! พิมพ์ข้อความเพื่อติดต่อแอดมินได้เลยครับ<br><small style="color:#d4af37;">(รหัสของคุณ: ' + USER_TOKEN + ')</small></div>';
-            }
-        }
-    })
-    .catch(err => {
-        if (!isBackground && currentMessageCount === 0) {
-            chatArea.innerHTML = '<div style="color: #ff4757; text-align: center; font-size: 12px; margin-top: 20px;">เกิดข้อผิดพลาดในการโหลดข้อความ</div>';
-        }
-    });
-}
-
-function openChatModal() {
-    document.getElementById('notifModal').style.display = 'none'; 
-    document.getElementById('chatModalOverlay').style.display = 'flex';
-    isChatOpen = true;
-    
-    lastSeenMessageCount = currentMessageCount;
-    localStorage.setItem('lastSeenMsgCount', lastSeenMessageCount);
+function markChatSeen() {
+    const last = MHX.msgs[MHX.msgs.length - 1];
+    if (last) localStorage.setItem("mh_chat_seen_" + me.id, last.created_at);
     updateChatBadge();
-
-    const chatArea = document.getElementById('chatMessagesArea');
-    chatArea.scrollTop = chatArea.scrollHeight; 
-
-    if (currentMessageCount === 0) {
-        fetchChatData(false); 
+}
+function renderChat() {
+    const area = document.getElementById("chatMessagesArea"); if (!area) return;
+    const s = MHX.support;
+    if (s && s.ok === false) { area.innerHTML = `<div class="chat-info">ระบบยังไม่ได้ตั้งแอดมิน</div>`; return; }
+    if (s?.is_me) { area.innerHTML = `<div class="chat-info">👑 คุณคือแอดมิน<br>ข้อความจากลูกค้ามหาเฮงจะเข้าแชทส่วนตัวใน <b>DarkChat</b> (ขึ้นต้นด้วย 🎯 [มหาเฮง]) ตอบจากที่นั่นได้เลย</div>`; return; }
+    if (!MHX.msgs.length) { area.innerHTML = `<div class="chat-info">ยินดีต้อนรับ! พิมพ์ข้อความถึงแอดมินได้เลย<br><small>ข้อความจะเข้าแชทส่วนตัวใน DarkChat ของคุณด้วย ตอบกลับที่ไหนก็เห็นทั้งสองที่</small></div>`; return; }
+    let lastDay = "";
+    area.innerHTML = MHX.msgs.map(m => {
+        const d = new Date(m.created_at), day = `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear() + 543}`;
+        const sep = day !== lastDay ? `<div class="chat-day">${day}</div>` : ""; lastDay = day;
+        const txt = String(m.text || "").replace(/^🎯 \[มหาเฮง\] /, "");
+        return `${sep}<div class="msg-bubble ${m.mine ? "msg-user" : "msg-admin"}">${escH(txt)}<span class="msg-time">${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}</span></div>`;
+    }).join("");
+    area.scrollTop = area.scrollHeight;
+}
+async function fetchChatData() {
+    if (!me || !sb) return;
+    try {
+        if (!MHX.support) {
+            const i = await sb.rpc("mh_support_info");
+            if (i.error) { MHX.support = null; return; }
+            MHX.support = i.data || { ok: false };
+            const h = document.getElementById("chatAdminHead");
+            if (h && MHX.support.ok) h.innerHTML = `${mhAvatarHtml(MHX.support.avatar, MHX.support.name, "acc-av")}<span>${escH(MHX.support.name)} <small>แอดมิน</small></span>`;
+        }
+        if (!MHX.support.ok || MHX.support.is_me) { renderChat(); return; }
+        const r = await sb.rpc("mh_support_list", { p_limit: 80 });
+        if (r.error) return;
+        const before = MHX.msgs.length ? MHX.msgs[MHX.msgs.length - 1].id : null;
+        MHX.msgs = r.data || [];
+        const after = MHX.msgs.length ? MHX.msgs[MHX.msgs.length - 1].id : null;
+        if (MHX.chatOpen && before !== after) { renderChat(); markChatSeen(); }
+        else if (!MHX.chatOpen && before !== after && before !== null) {
+            const last = MHX.msgs[MHX.msgs.length - 1];
+            if (last && !last.mine) mhToast("💬 แอดมินตอบแล้ว: " + String(last.text).slice(0, 40));
+        }
+        updateChatBadge();
+    } catch (e) {}
+}
+function openChatModal() {
+    document.getElementById("notifModal").style.display = "none";
+    document.getElementById("chatModalOverlay").style.display = "flex";
+    MHX.chatOpen = true;
+    renderChat(); markChatSeen();
+    fetchChatData();
+}
+function closeChatModal() { document.getElementById("chatModalOverlay").style.display = "none"; MHX.chatOpen = false; updateChatBadge(); }
+async function sendChatMessage() {
+    const inp = document.getElementById("chatInputMsg"), text = inp.value.trim();
+    if (!text) return;
+    if (MHX.support?.is_me) return mhToast("คุณคือแอดมิน ตอบลูกค้าใน DarkChat", true);
+    inp.value = ""; inp.disabled = true;
+    try {
+        const r = await sb.rpc("mh_support_send", { p_text: text });
+        if (r.error) throw r.error;
+        await fetchChatData();
+        renderChat(); markChatSeen();
+    } catch (e) {
+        inp.value = text;
+        const m = e.message || "";
+        alert(/slow_down/.test(m) ? "ส่งถี่เกินไป รอสักครู่แล้วลองใหม่" : /too_long/.test(m) ? "ข้อความยาวเกินไป (ไม่เกิน 900 ตัวอักษร)" :
+              /mh_support|Could not find/i.test(m) ? "ยังไม่ได้ติดตั้งฐานข้อมูลรอบนี้ (supabase-mh-v3.sql)" : thaiErr(e));
+    } finally { inp.disabled = false; inp.focus(); }
+}
+function startAdminComms() {
+    if (MHX.started) return;
+    MHX.started = true;
+    loadMyProfile();
+    fetchAnnouncements();
+    fetchChatData();
+    MHX.chatTimer = setInterval(() => { if (!document.hidden) fetchChatData(); }, 20000);
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) { fetchChatData(); fetchAnnouncements(); } });
+    if (!DEMO && sb.channel) {
+        try {
+            sb.channel("mh-comms-" + me.id)
+              .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `receiver_id=eq.${me.id}` }, () => fetchChatData())
+              .on("postgres_changes", { event: "*", schema: "public", table: "mh_announcements" }, (p) => {
+                  if (p.eventType === "INSERT") mhToast("📢 มีประกาศใหม่จากแอดมิน");
+                  fetchAnnouncements();
+              }).subscribe();
+        } catch (e) {}
     }
 }
+document.getElementById("chatInputMsg")?.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.isComposing) sendChatMessage(); });
 
-function closeChatModal() {
-    document.getElementById('chatModalOverlay').style.display = 'none';
-    isChatOpen = false;
+// ---------- ปุ่มในหน้าตั้งค่า (คุมหน้าตาเอง ไม่ให้สีหลุด) ----------
+function mhTile(id, icon, text, on) {
+    const b = document.getElementById(id); if (!b) return;
+    ["background", "border", "box-shadow", "color"].forEach(p => b.style.removeProperty(p));
+    b.classList.toggle("on", !!on);
+    b.innerHTML = `<span class="ic">${icon}</span><span class="tx">${text}</span>`;
 }
-
-function sendChatMessage() {
-    const inputField = document.getElementById('chatInputMsg');
-    const text = inputField.value.trim();
-    if (!text) return;
-
-    renderMessage(text, 'user');
-    inputField.value = '';
-
-    currentMessageCount++;
-    lastSeenMessageCount = currentMessageCount;
-    localStorage.setItem('lastSeenMsgCount', lastSeenMessageCount);
-    
-    const chatArea = document.getElementById('chatMessagesArea');
-    chatArea.scrollTop = chatArea.scrollHeight;
-
-    fetch(CHAT_API_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: "sendMessage", token: USER_TOKEN, text: text })
-    }).catch(err => console.error("ส่งข้อความไม่สำเร็จ:", err));
+function paintTiles() {
+    const b = boards[currentBoardIdx];
+    mhTile("btnToggleEdit", isEditMode ? "💾" : "🔧", isEditMode ? "บันทึกตำแหน่ง" : "จัดวาง", isEditMode);
+    mhTile("btnFilterNum", isFiltered ? "👁️" : "🙈", isFiltered ? "แสดงทุกเบอร์" : "ซ่อนเบอร์ที่จอง", isFiltered);
+    const mode = b ? (b.displayMode || 0) : 0;
+    mhTile("btnToggleMode", ["🔢", "🔟", "🔀"][mode], `ตาราง ${["00-99", "00-09", "จับคู่"][mode]}<small>แตะเพื่อเปลี่ยน</small>`, false);
 }
+(function hookTiles() {
+    const wrap = (name, after) => { const f = window[name]; if (typeof f !== "function" || f.__mh) return; const g = function () { const r = f.apply(this, arguments); try { after(); } catch (e) {} return r; }; g.__mh = true; window[name] = g; };
+    wrap("renderGrid", () => { paintTiles(); mhPaintResult(); });
+    wrap("toggleEditMode", paintTiles);
+    wrap("toggleFilterBooked", paintTiles);
+    const ra = window.renderBoardUI; if (typeof ra === "function" && !ra.__mh) wrap("renderBoardUI", () => { paintTiles(); mhPaintResult(); });
+})();
 
-document.getElementById('chatInputMsg').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') sendChatMessage();
-});
+// ---------- โหมดทดลอง (?demo) ----------
+window.__mhDemoRpc = {
+    mh_set_result: (a) => { const r = __mhDemo.t.mh_rounds.find(x => x.id === a.p_round); if (r) Object.assign(r, { result_top: a.p_top, result_bottom: a.p_bottom }); return { ok: true, sent: a.p_post ? 1 : 0 }; },
+    mh_support_info: () => ({ ok: true, admin_id: "adm", is_me: /admin/.test(me.email), name: "บอส", avatar: "😎" }),
+    mh_support_list: () => (__mhDemo.chat || []),
+    mh_support_send: (a) => { (__mhDemo.chat = __mhDemo.chat || []).push({ id: "m" + Date.now(), mine: true, text: "🎯 [มหาเฮง] " + a.p_text, created_at: new Date().toISOString() }); return "ok"; }
+};
 
-// เริ่มหลังเข้าระบบแล้ว (เรียกจาก enterApp)
-let adminCommsStarted = false;
-function startAdminComms() {
-    if (adminCommsStarted) return;
-    adminCommsStarted = true;
-    USER_TOKEN = me && me.email ? "MH-" + me.email : null;
-    fetchAnnouncements();
-    fetchChatData(true);
-    setInterval(() => { if (!document.hidden) fetchChatData(true); }, 15000);
-}
 </script>
 
 <style>
@@ -3870,3 +4116,4 @@ function startAdminComms() {
 #chatMessagesArea::-webkit-scrollbar { width: 4px; }
 #chatMessagesArea::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 10px; }
 </style>
+<script>bootApp();</script>
