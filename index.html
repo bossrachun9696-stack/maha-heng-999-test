@@ -1440,9 +1440,10 @@ function toggleDisplayMode() {
         me = (await sb.auth.getSession()).data.session?.user;
         if (!me) return showLogin();
         loginMsg.innerText = "กำลังโหลด...";
+        const pre = cloudPrefetch();   // เปิดเร็ว: ดึงแผง + งวด พร้อมกับตรวจสิทธิ์ (อ่านอย่างเดียว)
         try { ACCESS = await loadAccess(); } catch (e) { showLogin(thaiErr(e)); return; }
         if (ACCESS && ACCESS.ok === false) { showGate(ACCESS); return; }
-        try { await loadCloud(); }
+        try { await loadCloud(undefined, pre); }
         catch (e) { showLogin(thaiErr(e)); console.error(e); return; }
         enterApp();
     }
@@ -1471,15 +1472,24 @@ function toggleDisplayMode() {
         }
     }
     const fmtDT = (iso) => { const n = new Date(iso); return `${String(n.getDate()).padStart(2, "0")}/${String(n.getMonth() + 1).padStart(2, "0")}/${String(n.getFullYear() + 543).slice(-2)} ${String(n.getHours()).padStart(2, "0")}:${String(n.getMinutes()).padStart(2, "0")}`; };
-    async function loadCloud(keepId) {
-        let bs = must(await sb.from("mh_boards").select("*").order("sort").order("created_at"));
+    function cloudPrefetch() {
+        if (DEMO) return null;
+        return Promise.all([sb.from("mh_boards").select("*").order("sort").order("created_at"),
+                            sb.from("mh_rounds").select("*").eq("closed", false)]).catch(() => null);
+    }
+    async function loadCloud(keepId, pre) {
+        const P = pre ? await pre : null;
+        const okR = (r) => (r && !r.error ? r : null);
+        let bs = must(okR(P && P[0]) || await sb.from("mh_boards").select("*").order("sort").order("created_at"));
         if (!bs.length) bs = [must(await sb.from("mh_boards").insert({ name: "แผงที่ 1", design: {}, settings: { ...defaultSettings } }).select().single())];
-        let rounds = must(await sb.from("mh_rounds").select("*").eq("closed", false));
+        let rounds = must(okR(P && P[1]) || await sb.from("mh_rounds").select("*").eq("closed", false));
         for (const b of bs) if (!rounds.some(r => r.board_id === b.id)) {
             rounds.push(must(await sb.from("mh_rounds").insert({ board_id: b.id }).select().single()));
         }
         const rids = rounds.map(r => r.id); let books = [];
-        for (let i = 0; i < rids.length; i += 9) books = books.concat(must(await sb.from("mh_bookings").select("*").in("round_id", rids.slice(i, i + 9))));
+        const parts = [];
+        for (let i = 0; i < rids.length; i += 9) parts.push(sb.from("mh_bookings").select("*").in("round_id", rids.slice(i, i + 9)));
+        (await Promise.all(parts)).forEach(r => { books = books.concat(must(r)); });   // ดึงทุกชุดพร้อมกัน
         await signPaths([...books.map(x => x.image_path), ...bs.map(b => b.seller?.image_path), ...bs.map(b => b.design?.bgPath)]);
         SYNC.snap = {};
         boards = bs.map((row, i) => {
@@ -4117,3 +4127,9 @@ window.__mhDemoRpc = {
 #chatMessagesArea::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 10px; }
 </style>
 <script>bootApp();</script>
+<script>
+// เปิดเร็ว: เก็บไฟล์หน้าเว็บไว้ในเครื่อง (sw.js)
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+</script>
